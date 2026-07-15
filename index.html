@@ -1,0 +1,1501 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Каталонська граматика — тренажер</title>
+  <style>
+    :root {
+      --bg:#f5f5f0; --card:#fff; --ink:#1f1f1f; --muted:#666; --line:#d8d8d0;
+      --accent:#202124; --ok:#0a7a3d; --bad:#b3261e; --warn:#956000;
+      --soft:#eef3ff; --soft2:#f2f7f0;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--ink);line-height:1.45}
+    header{background:var(--accent);color:#fff;padding:22px 18px}
+    header h1{margin:0 0 6px;font-size:25px}
+    header p{margin:0;color:#ddd}
+    main{max-width:1240px;margin:0 auto;padding:18px;display:grid;grid-template-columns:1fr;gap:16px}
+    @media(min-width:980px){main{grid-template-columns:340px 1fr}}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+    h2,h3{margin-top:0}
+    label{display:block;margin-top:10px}
+    button,input,select{font-size:16px;border-radius:10px;border:1px solid var(--line);padding:10px 12px}
+    select,input{width:100%;margin:8px 0}
+    button{background:var(--accent);color:#fff;border-color:var(--accent);cursor:pointer;margin:4px 4px 4px 0}
+    button.secondary{background:#fff;color:var(--accent)}
+    button.danger{background:#8a1c14;border-color:#8a1c14}
+    button:disabled{opacity:.55;cursor:not-allowed}
+    button.lesson{display:block;width:100%;text-align:left;background:#fff;color:var(--accent);border-color:var(--line);margin:7px 0;padding:9px 11px}
+    button.lesson.active{background:var(--accent);color:#fff}
+    .muted{color:var(--muted)}
+    .phrase-box{background:var(--soft);border-radius:14px;padding:14px;margin:12px 0}
+    .phrase-main{font-size:23px;font-weight:bold;margin-bottom:6px}
+    .grammar-note{background:var(--soft2);border:1px solid #d7e7d2;border-radius:12px;padding:12px;margin:12px 0}
+    .step-title{font-size:21px;margin:6px 0 10px}
+    .task{font-size:19px;background:#fafafa;border:1px solid var(--line);border-radius:12px;padding:12px;margin:12px 0}
+    .feedback{display:none;padding:12px;border-radius:12px;margin-top:12px}
+    .feedback.ok{display:block;background:#e7f6ed;color:var(--ok);border:1px solid #bfe5cd}
+    .feedback.bad{display:block;background:#fdecea;color:var(--bad);border:1px solid #f5c7c3}
+    .feedback.assisted{display:block;background:#fff7e8;color:var(--warn);border:1px solid #ead3a0}
+    .progress{height:10px;background:#eee;border-radius:999px;overflow:hidden;margin:10px 0}
+    .bar{height:100%;width:0;background:var(--accent);transition:width .2s ease}
+    .score{font-size:18px;font-weight:bold}
+    .choices button{display:block;width:100%;background:#fff;color:var(--accent);text-align:left;border-color:var(--line);margin:8px 0}
+    .choices button.selected{border-color:var(--accent);background:#f0f0f0}
+    .word-bank span{display:inline-block;padding:8px 10px;margin:4px;border:1px solid var(--line);border-radius:10px;background:#fff;cursor:pointer}
+    .target{min-height:46px;border:1px dashed #999;border-radius:12px;background:#fafafa;padding:9px;margin:8px 0 12px}
+    table{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px}
+    td,th{border-top:1px solid var(--line);padding:7px 4px;text-align:left;vertical-align:top}
+    .hint-panel{margin-top:10px;padding:10px;border:1px solid var(--line);border-radius:12px;background:#fafafa}
+    .hint-warning{font-size:14px;color:var(--warn);margin:6px 0}
+    .metrics{display:grid;grid-template-columns:1fr;gap:10px;margin:12px 0}
+    @media(min-width:760px){.metrics{grid-template-columns:repeat(5,1fr)}}
+    .metric{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fafafa}
+    .metric .value{font-size:24px;font-weight:bold}
+    .level{padding:10px 12px;border-radius:12px;margin:10px 0;border:1px solid var(--line);background:#fafafa}
+    .level.ok{border-color:#bfe5cd;color:var(--ok);background:#e7f6ed}
+    .level.warn{border-color:#ead3a0;color:var(--warn);background:#fff7e8}
+    .level.bad{border-color:#f5c7c3;color:var(--bad);background:#fdecea}
+    .mistakes{max-height:300px;overflow:auto;border:1px solid var(--line);border-radius:12px;background:#fafafa;padding:8px}
+    .mistake{border-bottom:1px solid var(--line);padding:8px 4px;font-size:14px}
+    .mistake:last-child{border-bottom:none}
+    .hidden{display:none}
+    code{background:#eee;padding:2px 5px;border-radius:5px}
+  </style>
+</head>
+<body>
+<header>
+  <h1>Каталонська граматика — тренажер</h1>
+  <p>Українська → каталонська. Вправи для всіх осіб, приховані підказки та оцінювання без підглядання.</p>
+</header>
+
+<main>
+  <aside class="card">
+    <h2>Налаштування</h2>
+
+    <label for="blockSelect"><b>Блок лексики</b></label>
+    <select id="blockSelect"></select>
+    <p class="muted" id="blockDescription"></p>
+
+    <label for="personSelect"><b>Граматична особа</b></label>
+    <select id="personSelect">
+      <option value="random">Випадково — всі особи</option>
+      <option value="jo">jo</option>
+      <option value="tu">tu</option>
+      <option value="ell">ell / ella</option>
+      <option value="nosaltres">nosaltres</option>
+      <option value="vosaltres">vosaltres</option>
+      <option value="ells">ells / elles</option>
+    </select>
+
+    <h3>Мініуроки</h3>
+    <button class="lesson active" data-lesson="phrase">1. Переклад фрази</button>
+    <button class="lesson" data-lesson="choice">2. Обери фразу</button>
+    <button class="lesson" data-lesson="present">3. Теперішній час</button>
+    <button class="lesson" data-lesson="negative">4. Заперечення</button>
+    <button class="lesson" data-lesson="question">5. Питання</button>
+    <button class="lesson" data-lesson="modal">6. He de / Puc / Vull</button>
+    <button class="lesson" data-lesson="past">7. Минулий час</button>
+    <button class="lesson" data-lesson="future">8. Майбутній час</button>
+    <button class="lesson" data-lesson="build">9. Склади речення</button>
+    <button class="lesson" data-lesson="mixed">10. Змішана практика</button>
+
+    <h3>Поточний результат</h3>
+    <div class="progress"><div class="bar" id="bar"></div></div>
+    <p class="score"><span id="correct">0</span> / <span id="total">0</span></p>
+    <p class="muted">Зараховано правильно / усього спроб</p>
+
+    <button class="secondary" id="showReport">Показати звіт</button>
+    <button class="secondary" id="exportCsv">Експорт CSV</button>
+    <button class="danger" id="reset">Очистити результат</button>
+  </aside>
+
+  <section class="card">
+    <div id="practicePanel">
+      <h2 id="lessonTitle"></h2>
+
+      <div class="phrase-box">
+        <div class="phrase-main" id="ukPhrase"></div>
+        <div class="muted">Блок: <b id="activeBlockTitle"></b></div>
+        <div class="muted">Каталонська фраза після перевірки: <b id="caPhrase">—</b></div>
+      </div>
+
+      <div class="grammar-note" id="grammarNote"></div>
+      <div id="exercise"></div>
+      <div id="feedback" class="feedback"></div>
+
+      <button id="check">Перевірити</button>
+      <button class="secondary" id="next">Наступне завдання</button>
+      <p class="muted">Оцінюється тільки перша перевірка. Якщо відкрити підказку, відповідь можна перевірити, але бал за неї не нараховується.</p>
+    </div>
+
+    <div id="reportPanel" class="hidden">
+      <h2>Звіт про якість роботи</h2>
+      <p class="muted">Дані зберігаються локально в браузері цього пристрою.</p>
+
+      <div id="qualityLevel" class="level"></div>
+
+      <div class="metrics">
+        <div class="metric"><div class="value" id="mAccuracy">0%</div><div>Точність</div></div>
+        <div class="metric"><div class="value" id="mCorrect">0</div><div>Правильно без підказки</div></div>
+        <div class="metric"><div class="value" id="mHints">0</div><div>Використано підказок</div></div>
+        <div class="metric"><div class="value" id="mAttempts">0</div><div>Усього спроб</div></div>
+        <div class="metric"><div class="value" id="mTime">0 c</div><div>Середній час</div></div>
+      </div>
+
+      <h3>Результат за блоками</h3>
+      <table id="blockTable"><thead><tr><th>Блок</th><th>Правильно</th><th>Усього</th><th>Точність</th><th>Оцінка</th></tr></thead><tbody></tbody></table>
+
+      <h3>Результат за мініуроками</h3>
+      <table id="lessonTable"><thead><tr><th>Мініурок</th><th>Правильно</th><th>Усього</th><th>Точність</th><th>Оцінка</th></tr></thead><tbody></tbody></table>
+
+      <h3>Результат за особами</h3>
+      <table id="personTable"><thead><tr><th>Особа</th><th>Правильно</th><th>Усього</th><th>Точність</th><th>Оцінка</th></tr></thead><tbody></tbody></table>
+
+      <h3>Що потрібно повторити</h3>
+      <div id="recommendations"></div>
+
+      <h3>Останні незараховані відповіді</h3>
+      <div id="mistakes" class="mistakes"></div>
+
+      <button class="secondary" id="backToPractice">Повернутися до вправ</button>
+    </div>
+  </section>
+</main>
+
+<script>
+const BLOCKS = [
+  {
+    "id": "school",
+    "title": "Шкільний блок — 11 років",
+    "description": "Адаптована лексика для школи, навчання, друзів, емоцій і щоденних ситуацій.",
+    "phrases": [
+      {
+        "ca": "explicar una idea",
+        "uk": "пояснити ідею"
+      },
+      {
+        "ca": "donar la seva opinió",
+        "uk": "висловити свою думку"
+      },
+      {
+        "ca": "escoltar els companys",
+        "uk": "слухати однокласників"
+      },
+      {
+        "ca": "respectar els altres",
+        "uk": "поважати інших"
+      },
+      {
+        "ca": "ajudar un amic",
+        "uk": "допомогти другу"
+      },
+      {
+        "ca": "treballar en grup",
+        "uk": "працювати в групі"
+      },
+      {
+        "ca": "fer els deures",
+        "uk": "робити домашнє завдання"
+      },
+      {
+        "ca": "preparar un examen",
+        "uk": "готуватися до іспиту"
+      },
+      {
+        "ca": "entendre una pregunta",
+        "uk": "зрозуміти питання"
+      },
+      {
+        "ca": "demanar ajuda",
+        "uk": "попросити допомоги"
+      },
+      {
+        "ca": "cometre un error",
+        "uk": "зробити помилку"
+      },
+      {
+        "ca": "corregir un error",
+        "uk": "виправити помилку"
+      },
+      {
+        "ca": "aprendre una paraula nova",
+        "uk": "вивчити нове слово"
+      },
+      {
+        "ca": "llegir en veu alta",
+        "uk": "читати вголос"
+      },
+      {
+        "ca": "escriure una resposta",
+        "uk": "написати відповідь"
+      },
+      {
+        "ca": "tenir por de",
+        "uk": "боятися"
+      },
+      {
+        "ca": "estar orgullós de",
+        "uk": "пишатися"
+      },
+      {
+        "ca": "sentir-se segur",
+        "uk": "почуватися впевнено"
+      },
+      {
+        "ca": "tenir paciència",
+        "uk": "мати терпіння"
+      },
+      {
+        "ca": "fer una pregunta",
+        "uk": "поставити запитання"
+      },
+      {
+        "ca": "buscar informació",
+        "uk": "шукати інформацію"
+      },
+      {
+        "ca": "tenir cura del material",
+        "uk": "дбати про матеріали"
+      },
+      {
+        "ca": "recollir la classe",
+        "uk": "прибрати клас"
+      },
+      {
+        "ca": "protegir la natura",
+        "uk": "захищати природу"
+      },
+      {
+        "ca": "estalviar aigua",
+        "uk": "економити воду"
+      }
+    ]
+  },
+  {
+    "id": "block1",
+    "title": "Блок 1 — рішення, думки, відповідальність",
+    "description": "Перший блок попередньої лексики.",
+    "phrases": [
+      {
+        "ca": "fer un esforç",
+        "uk": "докласти зусиль"
+      },
+      {
+        "ca": "prendre una decisió",
+        "uk": "ухвалити рішення"
+      },
+      {
+        "ca": "tenir en compte",
+        "uk": "брати до уваги"
+      },
+      {
+        "ca": "posar-se d’acord",
+        "uk": "домовитися"
+      },
+      {
+        "ca": "anar amb compte",
+        "uk": "бути обережним"
+      },
+      {
+        "ca": "fer-se responsable de",
+        "uk": "брати на себе відповідальність за"
+      },
+      {
+        "ca": "tenir l’oportunitat de",
+        "uk": "мати можливість"
+      },
+      {
+        "ca": "donar suport a algú",
+        "uk": "підтримувати когось"
+      },
+      {
+        "ca": "fer una queixa",
+        "uk": "подати скаргу"
+      },
+      {
+        "ca": "arribar a una conclusió",
+        "uk": "дійти висновку"
+      },
+      {
+        "ca": "canviar d’opinió",
+        "uk": "змінити думку"
+      },
+      {
+        "ca": "estar d’acord amb",
+        "uk": "погоджуватися з"
+      },
+      {
+        "ca": "estar en desacord amb",
+        "uk": "не погоджуватися з"
+      },
+      {
+        "ca": "tenir dubtes sobre",
+        "uk": "мати сумніви щодо"
+      },
+      {
+        "ca": "resoldre un problema",
+        "uk": "вирішити проблему"
+      },
+      {
+        "ca": "aprofitar el temps",
+        "uk": "використовувати час з користю"
+      },
+      {
+        "ca": "perdre el temps",
+        "uk": "марнувати час"
+      },
+      {
+        "ca": "fer una proposta",
+        "uk": "зробити пропозицію"
+      },
+      {
+        "ca": "millorar les condicions",
+        "uk": "покращити умови"
+      },
+      {
+        "ca": "tenir experiència en",
+        "uk": "мати досвід у"
+      },
+      {
+        "ca": "fer front a una situació",
+        "uk": "дати раду ситуації"
+      },
+      {
+        "ca": "dependre de les circumstàncies",
+        "uk": "залежати від обставин"
+      },
+      {
+        "ca": "aconseguir un objectiu",
+        "uk": "досягти мети"
+      },
+      {
+        "ca": "tenir conseqüències",
+        "uk": "мати наслідки"
+      },
+      {
+        "ca": "valorar els avantatges i els inconvenients",
+        "uk": "оцінити переваги та недоліки"
+      }
+    ]
+  },
+  {
+    "id": "block2",
+    "title": "Блок 2 — правила, доступ, конфлікти",
+    "description": "Другий блок попередньої лексики.",
+    "phrases": [
+      {
+        "ca": "prendre mesures",
+        "uk": "вживати заходів"
+      },
+      {
+        "ca": "fer una excepció",
+        "uk": "зробити виняток"
+      },
+      {
+        "ca": "tenir la intenció de",
+        "uk": "мати намір"
+      },
+      {
+        "ca": "posar en pràctica",
+        "uk": "застосувати на практиці"
+      },
+      {
+        "ca": "fer una comparació",
+        "uk": "зробити порівняння"
+      },
+      {
+        "ca": "arribar a un acord",
+        "uk": "досягти домовленості"
+      },
+      {
+        "ca": "tenir confiança en",
+        "uk": "мати довіру до"
+      },
+      {
+        "ca": "perdre la confiança en",
+        "uk": "втратити довіру до"
+      },
+      {
+        "ca": "fer una reclamació",
+        "uk": "подати претензію / скаргу"
+      },
+      {
+        "ca": "donar una explicació",
+        "uk": "дати пояснення"
+      },
+      {
+        "ca": "demanar aclariments",
+        "uk": "попросити роз’яснення"
+      },
+      {
+        "ca": "tenir accés a",
+        "uk": "мати доступ до"
+      },
+      {
+        "ca": "limitar l’accés a",
+        "uk": "обмежити доступ до"
+      },
+      {
+        "ca": "fer servir una eina",
+        "uk": "використовувати інструмент"
+      },
+      {
+        "ca": "assumir un risc",
+        "uk": "взяти на себе ризик"
+      },
+      {
+        "ca": "evitar un conflicte",
+        "uk": "уникнути конфлікту"
+      },
+      {
+        "ca": "tenir una actitud positiva",
+        "uk": "мати позитивне ставлення"
+      },
+      {
+        "ca": "canviar de comportament",
+        "uk": "змінити поведінку"
+      },
+      {
+        "ca": "respectar les normes",
+        "uk": "дотримуватися правил"
+      },
+      {
+        "ca": "incomplir les normes",
+        "uk": "порушувати правила"
+      },
+      {
+        "ca": "tenir una bona relació amb",
+        "uk": "мати добрі стосунки з"
+      },
+      {
+        "ca": "fer una aportació",
+        "uk": "зробити внесок"
+      },
+      {
+        "ca": "arribar tard",
+        "uk": "запізнитися"
+      },
+      {
+        "ca": "complir un termini",
+        "uk": "вкластися у термін"
+      },
+      {
+        "ca": "prendre consciència de",
+        "uk": "усвідомити"
+      }
+    ]
+  },
+  {
+    "id": "block3",
+    "title": "Блок 3 — участь, аргументи, результат",
+    "description": "Третій блок попередньої лексики.",
+    "phrases": [
+      {
+        "ca": "tenir influència en",
+        "uk": "мати вплив на"
+      },
+      {
+        "ca": "participar en",
+        "uk": "брати участь у"
+      },
+      {
+        "ca": "parar atenció a",
+        "uk": "звертати увагу на"
+      },
+      {
+        "ca": "evitar errors",
+        "uk": "уникати помилок"
+      },
+      {
+        "ca": "treure una conclusió",
+        "uk": "зробити висновок"
+      },
+      {
+        "ca": "dependre d’algú",
+        "uk": "залежати від когось"
+      },
+      {
+        "ca": "comptar amb algú",
+        "uk": "покладатися на когось"
+      },
+      {
+        "ca": "adaptar-se a una situació",
+        "uk": "пристосуватися до ситуації"
+      },
+      {
+        "ca": "millorar el nivell",
+        "uk": "підвищити рівень"
+      },
+      {
+        "ca": "reduir el risc",
+        "uk": "зменшити ризик"
+      },
+      {
+        "ca": "obtenir un resultat",
+        "uk": "досягти результату"
+      },
+      {
+        "ca": "complir una promesa",
+        "uk": "дотримуватися обіцянки"
+      },
+      {
+        "ca": "trencar una promesa",
+        "uk": "порушити обіцянку"
+      },
+      {
+        "ca": "tenir avantatge sobre",
+        "uk": "мати перевагу над"
+      },
+      {
+        "ca": "expressar una opinió",
+        "uk": "висловити думку"
+      },
+      {
+        "ca": "defensar la pròpia posició",
+        "uk": "захищати власну позицію"
+      },
+      {
+        "ca": "acceptar les condicions",
+        "uk": "погодитися з умовами"
+      },
+      {
+        "ca": "rebutjar una proposta",
+        "uk": "відмовитися від пропозиції"
+      },
+      {
+        "ca": "fer una tria",
+        "uk": "зробити вибір"
+      },
+      {
+        "ca": "tenir present",
+        "uk": "брати до уваги"
+      },
+      {
+        "ca": "causar dificultats",
+        "uk": "викликати труднощі"
+      },
+      {
+        "ca": "trobar una solució",
+        "uk": "знайти рішення"
+      },
+      {
+        "ca": "tractar amb",
+        "uk": "мати справу з"
+      },
+      {
+        "ca": "millorar el resultat",
+        "uk": "покращити результат"
+      },
+      {
+        "ca": "assumir la responsabilitat de",
+        "uk": "нести відповідальність за"
+      }
+    ]
+  },
+  {
+    "id": "block4",
+    "title": "Блок 4 — права, обов’язки, потреби",
+    "description": "Четвертий блок попередньої лексики.",
+    "phrases": [
+      {
+        "ca": "prendre part en",
+        "uk": "брати участь у"
+      },
+      {
+        "ca": "fer referència a",
+        "uk": "посилатися на / стосуватися"
+      },
+      {
+        "ca": "estar relacionat amb",
+        "uk": "бути пов’язаним із"
+      },
+      {
+        "ca": "tenir lloc",
+        "uk": "відбуватися"
+      },
+      {
+        "ca": "dur a terme",
+        "uk": "здійснювати / виконувати"
+      },
+      {
+        "ca": "posar en dubte",
+        "uk": "ставити під сумнів"
+      },
+      {
+        "ca": "tenir dret a",
+        "uk": "мати право на"
+      },
+      {
+        "ca": "fer valer els drets",
+        "uk": "відстоювати права"
+      },
+      {
+        "ca": "complir les obligacions",
+        "uk": "виконувати обов’язки"
+      },
+      {
+        "ca": "assumir les conseqüències",
+        "uk": "прийняти наслідки"
+      },
+      {
+        "ca": "tenir una necessitat",
+        "uk": "мати потребу"
+      },
+      {
+        "ca": "satisfer una necessitat",
+        "uk": "задовольнити потребу"
+      },
+      {
+        "ca": "fer una previsió",
+        "uk": "зробити прогноз / передбачення"
+      },
+      {
+        "ca": "superar una dificultat",
+        "uk": "подолати труднощі"
+      },
+      {
+        "ca": "arribar a temps",
+        "uk": "прибути вчасно"
+      },
+      {
+        "ca": "mantenir el contacte",
+        "uk": "підтримувати контакт"
+      },
+      {
+        "ca": "perdre el contacte",
+        "uk": "втратити контакт"
+      },
+      {
+        "ca": "fer una entrevista",
+        "uk": "провести / пройти співбесіду"
+      },
+      {
+        "ca": "tenir una conversa",
+        "uk": "мати розмову"
+      },
+      {
+        "ca": "posar límits",
+        "uk": "встановити межі"
+      },
+      {
+        "ca": "respectar els límits",
+        "uk": "поважати межі"
+      },
+      {
+        "ca": "prendre una iniciativa",
+        "uk": "проявити ініціативу"
+      },
+      {
+        "ca": "tenir una responsabilitat",
+        "uk": "мати відповідальність"
+      },
+      {
+        "ca": "compartir una experiència",
+        "uk": "поділитися досвідом"
+      },
+      {
+        "ca": "fer un seguiment de",
+        "uk": "стежити за / контролювати перебіг"
+      }
+    ]
+  },
+  {
+    "id": "block5",
+    "title": "Блок 5 — думка, досвід, співжиття",
+    "description": "П’ятий блок попередньої лексики.",
+    "phrases": [
+      {
+        "ca": "tenir en comú",
+        "uk": "мати спільне"
+      },
+      {
+        "ca": "fer una observació",
+        "uk": "зробити зауваження / спостереження"
+      },
+      {
+        "ca": "arribar a una decisió",
+        "uk": "дійти рішення"
+      },
+      {
+        "ca": "tenir un paper important",
+        "uk": "мати важливу роль"
+      },
+      {
+        "ca": "posar-se en contacte amb",
+        "uk": "зв’язатися з"
+      },
+      {
+        "ca": "mantenir una actitud",
+        "uk": "зберігати ставлення / позицію"
+      },
+      {
+        "ca": "canviar de tema",
+        "uk": "змінити тему"
+      },
+      {
+        "ca": "donar importància a",
+        "uk": "надавати значення"
+      },
+      {
+        "ca": "tenir cura de",
+        "uk": "дбати про"
+      },
+      {
+        "ca": "fer-se càrrec de",
+        "uk": "взяти на себе / подбати про"
+      },
+      {
+        "ca": "anar més enllà de",
+        "uk": "виходити за межі"
+      },
+      {
+        "ca": "tenir dificultats per",
+        "uk": "мати труднощі з"
+      },
+      {
+        "ca": "trobar a faltar",
+        "uk": "сумувати за / відчувати брак"
+      },
+      {
+        "ca": "prendre una decisió encertada",
+        "uk": "ухвалити правильне рішення"
+      },
+      {
+        "ca": "fer una reflexió",
+        "uk": "зробити роздум / поміркувати"
+      },
+      {
+        "ca": "tenir una opinió formada",
+        "uk": "мати сформовану думку"
+      },
+      {
+        "ca": "posar un exemple",
+        "uk": "навести приклад"
+      },
+      {
+        "ca": "fer una crítica constructiva",
+        "uk": "зробити конструктивну критику"
+      },
+      {
+        "ca": "tenir una visió clara de",
+        "uk": "мати чітке бачення"
+      },
+      {
+        "ca": "actuar amb responsabilitat",
+        "uk": "діяти відповідально"
+      },
+      {
+        "ca": "respondre a una necessitat",
+        "uk": "відповідати потребі"
+      },
+      {
+        "ca": "crear consciència",
+        "uk": "формувати усвідомлення"
+      },
+      {
+        "ca": "fer un canvi",
+        "uk": "зробити зміну"
+      },
+      {
+        "ca": "millorar la convivència",
+        "uk": "покращити співжиття"
+      },
+      {
+        "ca": "afrontar un repte",
+        "uk": "прийняти виклик / впоратися з викликом"
+      }
+    ]
+  },
+  {
+    "id": "block6",
+    "title": "Блок 6 — аналіз, гіпотези, зміни",
+    "description": "Шостий блок попередньої лексики.",
+    "phrases": [
+      {
+        "ca": "tenir clar",
+        "uk": "чітко розуміти"
+      },
+      {
+        "ca": "fer una valoració",
+        "uk": "зробити оцінку"
+      },
+      {
+        "ca": "arribar a un punt comú",
+        "uk": "дійти спільної точки зору"
+      },
+      {
+        "ca": "tenir present que",
+        "uk": "мати на увазі, що"
+      },
+      {
+        "ca": "posar de manifest",
+        "uk": "показати / виявити"
+      },
+      {
+        "ca": "tenir conseqüències positives",
+        "uk": "мати позитивні наслідки"
+      },
+      {
+        "ca": "tenir conseqüències negatives",
+        "uk": "мати негативні наслідки"
+      },
+      {
+        "ca": "fer una hipòtesi",
+        "uk": "висунути гіпотезу"
+      },
+      {
+        "ca": "confirmar una hipòtesi",
+        "uk": "підтвердити гіпотезу"
+      },
+      {
+        "ca": "rebutjar una hipòtesi",
+        "uk": "відхилити гіпотезу"
+      },
+      {
+        "ca": "tenir un impacte en",
+        "uk": "мати вплив на"
+      },
+      {
+        "ca": "reduir les desigualtats",
+        "uk": "зменшити нерівність"
+      },
+      {
+        "ca": "augmentar les oportunitats",
+        "uk": "збільшити можливості"
+      },
+      {
+        "ca": "fomentar la participació",
+        "uk": "сприяти участі"
+      },
+      {
+        "ca": "promoure el respecte",
+        "uk": "сприяти повазі"
+      },
+      {
+        "ca": "evitar malentesos",
+        "uk": "уникати непорозумінь"
+      },
+      {
+        "ca": "resoldre un conflicte",
+        "uk": "вирішити конфлікт"
+      },
+      {
+        "ca": "prendre una posició",
+        "uk": "зайняти позицію"
+      },
+      {
+        "ca": "defensar un argument",
+        "uk": "захищати аргумент"
+      },
+      {
+        "ca": "qüestionar una idea",
+        "uk": "ставити під сумнів ідею"
+      },
+      {
+        "ca": "fer una anàlisi",
+        "uk": "зробити аналіз"
+      },
+      {
+        "ca": "treure profit de",
+        "uk": "отримати користь із"
+      },
+      {
+        "ca": "adaptar-se als canvis",
+        "uk": "пристосуватися до змін"
+      },
+      {
+        "ca": "mantenir l’equilibri",
+        "uk": "підтримувати рівновагу"
+      },
+      {
+        "ca": "assolir una meta",
+        "uk": "досягти мети"
+      }
+    ]
+  }
+];
+const PRESENT_FORMS = {"acceptar": ["accepto", "acceptes", "accepta", "acceptem", "accepteu", "accepten"], "aconseguir": ["aconsegueixo", "aconsegueixes", "aconsegueix", "aconseguim", "aconseguiu", "aconsegueixen"], "actuar": ["actuo", "actues", "actua", "actuem", "actueu", "actuen"], "adaptar": ["adapto", "adaptes", "adapta", "adaptem", "adapteu", "adapten"], "afrontar": ["afronto", "afrontes", "afronta", "afrontem", "afronteu", "afronten"], "ajudar": ["ajudo", "ajudes", "ajuda", "ajudem", "ajudeu", "ajuden"], "anar": ["vaig", "vas", "va", "anem", "aneu", "van"], "aprendre": ["aprenc", "aprens", "aprèn", "aprenem", "apreneu", "aprenen"], "aprofitar": ["aprofito", "aprofites", "aprofita", "aprofitem", "aprofiteu", "aprofiten"], "arribar": ["arribo", "arribes", "arriba", "arribem", "arribeu", "arriben"], "assolir": ["assoleixo", "assoleixes", "assoleix", "assolim", "assoliu", "assoleixen"], "assumir": ["assumeixo", "assumeixes", "assumeix", "assumim", "assumiu", "assumeixen"], "augmentar": ["augmento", "augmentes", "augmenta", "augmentem", "augmenteu", "augmenten"], "buscar": ["busco", "busques", "busca", "busquem", "busqueu", "busquen"], "canviar": ["canvio", "canvies", "canvia", "canviem", "canvieu", "canvien"], "causar": ["causo", "causes", "causa", "causem", "causeu", "causen"], "cometre": ["cometo", "comets", "comet", "cometem", "cometeu", "cometen"], "compartir": ["comparteixo", "comparteixes", "comparteix", "compartim", "compartiu", "comparteixen"], "complir": ["compleixo", "compleixes", "compleix", "complim", "compliu", "compleixen"], "comptar": ["compto", "comptes", "compta", "comptem", "compteu", "compten"], "confirmar": ["confirmo", "confirmes", "confirma", "confirmem", "confirmeu", "confirmen"], "corregir": ["corregeixo", "corregeixes", "corregeix", "corregim", "corregiu", "corregeixen"], "crear": ["creo", "crees", "crea", "creem", "creeu", "creen"], "defensar": ["defenso", "defenses", "defensa", "defensem", "defenseu", "defensen"], "demanar": ["demano", "demanes", "demana", "demanem", "demaneu", "demanen"], "dependre": ["depenc", "depens", "depèn", "depenem", "depeneu", "depenen"], "donar": ["dono", "dones", "dona", "donem", "doneu", "donen"], "dur": ["duc", "dus", "duu", "duem", "dueu", "duen"], "entendre": ["entenc", "entens", "entén", "entenem", "enteneu", "entenen"], "escoltar": ["escolto", "escoltes", "escolta", "escoltem", "escolteu", "escolten"], "escriure": ["escric", "escrius", "escriu", "escrivim", "escriviu", "escriuen"], "estalviar": ["estalvio", "estalvies", "estalvia", "estalviem", "estalvieu", "estalvien"], "estar": ["estic", "estàs", "està", "estem", "esteu", "estan"], "evitar": ["evito", "evites", "evita", "evitem", "eviteu", "eviten"], "explicar": ["explico", "expliques", "explica", "expliquem", "expliqueu", "expliquen"], "expressar": ["expresso", "expresses", "expressa", "expressem", "expresseu", "expressen"], "fer": ["faig", "fas", "fa", "fem", "feu", "fan"], "fomentar": ["fomento", "fomentes", "fomenta", "fomentem", "fomenteu", "fomenten"], "incomplir": ["incompleixo", "incompleixes", "incompleix", "incomplim", "incompliu", "incompleixen"], "limitar": ["limito", "limites", "limita", "limitem", "limiteu", "limiten"], "llegir": ["llegeixo", "llegeixes", "llegeix", "llegim", "llegiu", "llegeixen"], "mantenir": ["mantinc", "mantens", "manté", "mantenim", "manteniu", "mantenen"], "millorar": ["milloro", "millores", "millora", "millorem", "milloreu", "milloren"], "obtenir": ["obtinc", "obtens", "obté", "obtenim", "obteniu", "obtenen"], "parar": ["paro", "pares", "para", "parem", "pareu", "paren"], "participar": ["participo", "participes", "participa", "participem", "participeu", "participen"], "perdre": ["perdo", "perds", "perd", "perdem", "perdeu", "perden"], "posar": ["poso", "poses", "posa", "posem", "poseu", "posen"], "prendre": ["prenc", "prens", "pren", "prenem", "preneu", "prenen"], "preparar": ["preparo", "prepares", "prepara", "preparem", "prepareu", "preparen"], "promoure": ["promoc", "promous", "promou", "promovem", "promoveu", "promouen"], "protegir": ["protegeixo", "protegeixes", "protegeix", "protegim", "protegiu", "protegeixen"], "qüestionar": ["qüestiono", "qüestiones", "qüestiona", "qüestionem", "qüestioneu", "qüestionen"], "rebutjar": ["rebutjo", "rebutges", "rebutja", "rebutgem", "rebutgeu", "rebutgen"], "recollir": ["recullo", "reculls", "recull", "recollim", "recolliu", "recullen"], "reduir": ["redueixo", "redueixes", "redueix", "reduïm", "reduïu", "redueixen"], "resoldre": ["resolc", "resols", "resol", "resolem", "resoleu", "resolen"], "respectar": ["respecto", "respectes", "respecta", "respectem", "respecteu", "respecten"], "respondre": ["responc", "respons", "respon", "responem", "responeu", "responen"], "satisfer": ["satisfac", "satisfàs", "satisfà", "satisfem", "satisfeu", "satisfan"], "sentir": ["sento", "sents", "sent", "sentim", "sentiu", "senten"], "superar": ["supero", "superes", "supera", "superem", "supereu", "superen"], "tenir": ["tinc", "tens", "té", "tenim", "teniu", "tenen"], "tractar": ["tracto", "tractes", "tracta", "tractem", "tracteu", "tracten"], "treballar": ["treballo", "treballes", "treballa", "treballem", "treballeu", "treballen"], "trencar": ["trenco", "trenques", "trenca", "trenquem", "trenqueu", "trenquen"], "treure": ["trec", "treus", "treu", "traiem", "traieu", "treuen"], "trobar": ["trobo", "trobes", "troba", "trobem", "trobeu", "troben"], "valorar": ["valoro", "valores", "valora", "valorem", "valoreu", "valoren"]};
+const FUTURE_STEMS = {"acceptar": "acceptar", "aconseguir": "aconseguir", "actuar": "actuar", "adaptar": "adaptar", "afrontar": "afrontar", "ajudar": "ajudar", "anar": "anir", "aprendre": "aprendr", "aprofitar": "aprofitar", "arribar": "arribar", "assolir": "assolir", "assumir": "assumir", "augmentar": "augmentar", "buscar": "buscar", "canviar": "canviar", "causar": "causar", "cometre": "cometr", "compartir": "compartir", "complir": "complir", "comptar": "comptar", "confirmar": "confirmar", "corregir": "corregir", "crear": "crear", "defensar": "defensar", "demanar": "demanar", "dependre": "dependr", "donar": "donar", "dur": "dur", "entendre": "entendr", "escoltar": "escoltar", "escriure": "escriur", "estalviar": "estalviar", "estar": "estar", "evitar": "evitar", "explicar": "explicar", "expressar": "expressar", "fer": "far", "fomentar": "fomentar", "incomplir": "incomplir", "limitar": "limitar", "llegir": "llegir", "mantenir": "mantindr", "millorar": "millorar", "obtenir": "obtindr", "parar": "parar", "participar": "participar", "perdre": "perdr", "posar": "posar", "prendre": "prendr", "preparar": "preparar", "promoure": "promour", "protegir": "protegir", "qüestionar": "qüestionar", "rebutjar": "rebutjar", "recollir": "recollir", "reduir": "reduir", "resoldre": "resoldr", "respectar": "respectar", "respondre": "respondr", "satisfer": "satisfar", "sentir": "sentir", "superar": "superar", "tenir": "tindr", "tractar": "tractar", "treballar": "treballar", "trencar": "trencar", "treure": "traur", "trobar": "trobar", "valorar": "valorar"};
+const FUTURE_ENDINGS = ["é","às","à","em","eu","an"];
+
+const PERSONS = [
+  {id:"jo", label:"jo", subject:"Jo", reflexive:"em", suffix:"me", past:"vaig", modal:"he de"},
+  {id:"tu", label:"tu", subject:"Tu", reflexive:"et", suffix:"te", past:"vas", modal:"has de"},
+  {id:"ell", label:"ell / ella", subject:"Ell / ella", reflexive:"es", suffix:"se", past:"va", modal:"ha de"},
+  {id:"nosaltres", label:"nosaltres", subject:"Nosaltres", reflexive:"ens", suffix:"nos", past:"vam", modal:"hem de"},
+  {id:"vosaltres", label:"vosaltres", subject:"Vosaltres", reflexive:"us", suffix:"vos", past:"vau", modal:"heu de"},
+  {id:"ells", label:"ells / elles", subject:"Ells / elles", reflexive:"es", suffix:"se", past:"van", modal:"han de"}
+];
+
+const COMPLETIONS = {
+  "tenir por de":"tenir por de parlar català",
+  "estar orgullós de":"estar orgullosa del meu treball",
+  "fer-se responsable de":"fer-se responsable de la meva part",
+  "tenir l’oportunitat de":"tenir l’oportunitat de millorar",
+  "estar d’acord amb":"estar d’acord amb aquesta idea",
+  "estar en desacord amb":"estar en desacord amb aquesta decisió",
+  "tenir dubtes sobre":"tenir dubtes sobre aquest tema",
+  "tenir experiència en":"tenir experiència en aquest projecte",
+  "tenir confiança en":"tenir confiança en un amic",
+  "perdre la confiança en":"perdre la confiança en una persona",
+  "tenir accés a":"tenir accés a la biblioteca",
+  "limitar l’accés a":"limitar l’accés a aquesta informació",
+  "prendre consciència de":"prendre consciència de la importància d’estudiar",
+  "tenir influència en":"tenir influència en els altres",
+  "dependre d’algú":"dependre d’un amic",
+  "comptar amb algú":"comptar amb un amic",
+  "tenir avantatge sobre":"tenir avantatge sobre els altres",
+  "tractar amb":"tractar amb moltes persones",
+  "fer referència a":"fer referència a aquest tema",
+  "estar relacionat amb":"estar relacionada amb aquest tema",
+  "tenir dret a":"tenir dret a rebre ajuda",
+  "fer un seguiment de":"fer un seguiment del projecte",
+  "posar-se en contacte amb":"posar-se en contacte amb l’escola",
+  "tenir cura de":"tenir cura del material",
+  "fer-se càrrec de":"fer-se càrrec del problema",
+  "anar més enllà de":"anar més enllà de la resposta",
+  "tenir dificultats per":"tenir dificultats per entendre el text",
+  "tenir una visió clara de":"tenir una visió clara de l’objectiu",
+  "respondre a una necessitat":"respondre a una necessitat de la classe",
+  "tenir un impacte en":"tenir un impacte en la classe",
+  "treure profit de":"treure profit de cada error",
+  "sentir-se segur":"sentir-se segura"
+};
+
+const SINGULAR_ONLY = new Set(["estar orgullós de","estar relacionat amb","sentir-se segur"]);
+const THIRD_PERSON_ONLY = new Set(["tenir lloc"]);
+
+const LESSONS = {
+  phrase:{title:"Переклад фрази",label:"Переклад фрази",note:"<b>Завдання:</b> переклади українську фразу каталонською.",recommendation:"Повторити написання каталонських фраз."},
+  choice:{title:"Обери фразу",label:"Обери фразу",note:"<b>Завдання:</b> обери правильну каталонську фразу.",recommendation:"Повторити значення фраз, які плутаються."},
+  present:{title:"Теперішній час",label:"Теперішній час",note:"<b>Правило:</b> форма дієслова залежить від особи: jo, tu, ell/ella, nosaltres, vosaltres, ells/elles.",recommendation:"Повторити відмінювання дієслів у теперішньому часі."},
+  negative:{title:"Заперечення",label:"Заперечення",note:"<b>Правило:</b> заперечення: <b>no + дієслово</b>.",recommendation:"Повторити конструкцію no + дієслово."},
+  question:{title:"Питання",label:"Питання",note:"<b>Правило:</b> у питанні треба використати правильну форму дієслова для заданої особи.",recommendation:"Повторити форми дієслова для всіх осіб у питальних реченнях."},
+  modal:{title:"He de / Puc / Vull",label:"Модальні конструкції",note:"<b>Правило:</b> після he de / has de / ha de / hem de / heu de / han de ставимо інфінітив.",recommendation:"Повторити модальні конструкції для всіх осіб."},
+  past:{title:"Минулий час",label:"Минулий час",note:"<b>Правило:</b> vaig / vas / va / vam / vau / van + інфінітив.",recommendation:"Повторити перифрастичний минулий час для всіх осіб."},
+  future:{title:"Майбутній час",label:"Майбутній час",note:"<b>Правило:</b> форма майбутнього часу змінюється за особами.",recommendation:"Повторити форми майбутнього часу для всіх осіб."},
+  build:{title:"Склади речення",label:"Склади речення",note:"<b>Завдання:</b> склади речення з перемішаних слів.",recommendation:"Повторити порядок слів."},
+  mixed:{title:"Змішана практика",label:"Змішана практика",note:"<b>Завдання:</b> система сама вибирає тип вправи.",recommendation:"Повторити теми з найбільшою кількістю помилок."}
+};
+
+const MEMORY_STORAGE = {};
+function storageGet(key){
+  try{return window.localStorage.getItem(key)}
+  catch(e){return Object.prototype.hasOwnProperty.call(MEMORY_STORAGE,key)?MEMORY_STORAGE[key]:null}
+}
+function storageSet(key,value){
+  try{window.localStorage.setItem(key,value)}
+  catch(e){MEMORY_STORAGE[key]=value}
+}
+
+let selectedBlockId="school";
+let selectedPersonId="random";
+let currentLesson="phrase";
+let actualLesson="phrase";
+let currentPhrase=null;
+let generated=null;
+let currentPerson=null;
+let currentExpected="";
+let currentAnswerKind="";
+let selected="";
+let builtWords=[];
+let questionId="";
+let questionStartTime=Date.now();
+let checkedThisQuestion=false;
+let hintUsed=false;
+
+const oldRecords=storageGet("catGrammarBlockRecordsV2") || storageGet("catGrammarBlockRecordsV1") || "[]";
+let records=JSON.parse(oldRecords);
+
+const blockSelect=document.getElementById("blockSelect");
+const personSelect=document.getElementById("personSelect");
+const blockDescription=document.getElementById("blockDescription");
+const lessonTitle=document.getElementById("lessonTitle");
+const ukPhrase=document.getElementById("ukPhrase");
+const caPhrase=document.getElementById("caPhrase");
+const activeBlockTitle=document.getElementById("activeBlockTitle");
+const grammarNote=document.getElementById("grammarNote");
+const exercise=document.getElementById("exercise");
+const feedback=document.getElementById("feedback");
+const correctEl=document.getElementById("correct");
+const totalEl=document.getElementById("total");
+const bar=document.getElementById("bar");
+
+function normalize(text){
+  return (text||"").toLowerCase().trim().replace(/[’]/g,"'").replace(/[.?!,;:]/g,"").replace(/\s+/g," ");
+}
+function capitalize(text){return text?text.charAt(0).toUpperCase()+text.slice(1):text}
+function shuffle(arr){return [...arr].sort(()=>Math.random()-.5)}
+function currentBlock(){return BLOCKS.find(b=>b.id===selectedBlockId)||BLOCKS[0]}
+function currentBlockTitle(){return currentBlock().title}
+function getPhrases(){return currentBlock().phrases}
+
+function completeInfinitive(ca){
+  if(COMPLETIONS[ca]) return COMPLETIONS[ca];
+  let s=ca.replace(/a algú/g,"a un amic").replace(/amb algú/g,"amb un amic").replace(/d’algú/g,"d’un amic").replace(/d'algú/g,"d'un amic");
+  const endings=[
+    [" de"," de la situació"],[" d’"," d’aquest tema"],[" d'"," d'aquest tema"],
+    [" en"," en aquest projecte"],[" amb"," amb els companys"],[" a"," a aquesta idea"],
+    [" sobre"," sobre aquest tema"],[" per"," per entendre el text"]
+  ];
+  for(const [end,add] of endings){if(s.endsWith(end)) return s+add.slice(end.length)}
+  return s;
+}
+
+function futureForms(verb){
+  const stem=FUTURE_STEMS[verb];
+  return stem?FUTURE_ENDINGS.map(e=>stem+e):null;
+}
+
+function allowedPersonsForPhrase(ca){
+  if(THIRD_PERSON_ONLY.has(ca)) return [PERSONS[2]];
+  if(SINGULAR_ONLY.has(ca)) return PERSONS.slice(0,3);
+  return PERSONS;
+}
+
+function choosePerson(ca){
+  const allowed=allowedPersonsForPhrase(ca);
+  if(selectedPersonId!=="random"){
+    const fixed=allowed.find(p=>p.id===selectedPersonId);
+    if(fixed) return fixed;
+  }
+  return allowed[Math.floor(Math.random()*allowed.length)];
+}
+
+function analyzePhrase(phrase){
+  const fullInf=completeInfinitive(phrase.ca);
+  const first=fullInf.split(" ")[0];
+  const pronominal=first.endsWith("-se");
+  const verb=pronominal?first.slice(0,-3):first;
+  const forms=PRESENT_FORMS[verb];
+  const futures=futureForms(verb);
+  if(!forms||!futures){
+    return {supported:false,reason:"Для цієї фрази поки що доступні лише лексичні вправи.",fullInf,verb};
+  }
+  const rest=fullInf.slice(first.length).trim();
+  return {supported:true,fullInf,verb,pronominal,rest,forms,futures};
+}
+
+function pronominalInfinitive(person){
+  if(!generated.pronominal) return generated.fullInf;
+  const first=generated.fullInf.split(" ")[0];
+  const rest=generated.fullInf.slice(first.length);
+  return `${generated.verb}-${person.suffix}${rest}`;
+}
+
+function sentenceData(person){
+  const i=PERSONS.findIndex(p=>p.id===person.id);
+  const form=generated.forms[i];
+  const future=generated.futures[i];
+  const rest=generated.rest?` ${generated.rest}`:"";
+  const reflexive=generated.pronominal?`${person.reflexive} `:"";
+  const present=`${person.subject} ${reflexive}${form}${rest}.`;
+  const negative=`${person.subject} no ${reflexive}${form}${rest}.`;
+  const question=`${person.subject} ${reflexive}${form}${rest}?`;
+  const modal=`${person.subject} ${person.modal} ${pronominalInfinitive(person)}.`;
+  const past=`Ahir ${person.subject.toLowerCase()} ${generated.pronominal?person.reflexive+" ":""}${person.past} ${generated.verb}${rest}.`;
+  const futureSentence=`Demà ${person.subject.toLowerCase()} ${generated.pronominal?person.reflexive+" ":""}${future}${rest}.`;
+  return {form,future,present,negative,question,modal,past,futureSentence};
+}
+
+function pickPhrase(){
+  let list=getPhrases();
+  if(selectedPersonId!=="random"){
+    const compatible=list.filter(item=>allowedPersonsForPhrase(item.ca).some(p=>p.id===selectedPersonId));
+    if(compatible.length) list=compatible;
+  }
+  currentPhrase=list[Math.floor(Math.random()*list.length)];
+  generated=analyzePhrase(currentPhrase);
+  currentPerson=choosePerson(currentPhrase.ca);
+}
+
+function stats(){
+  const total=records.length;
+  const correct=records.filter(r=>r.correct).length;
+  const hints=records.filter(r=>r.assisted).length;
+  const avgTime=total?Math.round(records.reduce((s,r)=>s+(r.timeSec||0),0)/total):0;
+  return {total,correct,hints,avgTime};
+}
+function saveRecords(){
+  storageSet("catGrammarBlockRecordsV2",JSON.stringify(records));
+  updateMiniScore();
+}
+function updateMiniScore(){
+  const s=stats();
+  correctEl.textContent=s.correct;
+  totalEl.textContent=s.total;
+  bar.style.width=(s.total?Math.round(s.correct/s.total*100):0)+"%";
+}
+function setFeedback(kind,html){feedback.className="feedback "+kind;feedback.innerHTML=html}
+function clearFeedback(){feedback.className="feedback";feedback.innerHTML=""}
+function startQuestion(){
+  questionId=Date.now()+"-"+Math.random().toString(16).slice(2);
+  questionStartTime=Date.now();
+  checkedThisQuestion=false;
+  hintUsed=false;
+  selected="";
+  builtWords=[];
+}
+
+function render(){
+  clearFeedback();
+  startQuestion();
+  actualLesson=currentLesson==="mixed"?shuffle(["phrase","choice","present","negative","question","modal","past","future","build"])[0]:currentLesson;
+  lessonTitle.textContent=LESSONS[currentLesson].title;
+  grammarNote.innerHTML=LESSONS[currentLesson].note;
+  ukPhrase.textContent=currentPhrase.uk;
+  caPhrase.textContent="—";
+  activeBlockTitle.textContent=currentBlockTitle();
+
+  if(actualLesson==="phrase") return renderPhrase();
+  if(actualLesson==="choice") return renderChoice();
+  if(!generated.supported) return renderUnsupported();
+
+  currentPerson=choosePerson(currentPhrase.ca);
+  if(actualLesson==="present") return renderPresent();
+  if(actualLesson==="negative") return renderNegative();
+  if(actualLesson==="question") return renderQuestion();
+  if(actualLesson==="modal") return renderModalChoice();
+  if(actualLesson==="past") return renderBuildSentence(sentenceData(currentPerson).past,`Склади речення в минулому часі для ${currentPerson.label}`);
+  if(actualLesson==="future") return renderFuture();
+  if(actualLesson==="build") return renderBuildSentence(sentenceData(currentPerson).modal,`Склади речення для ${currentPerson.label}`);
+}
+
+function renderPhrase(){
+  currentAnswerKind="input";
+  currentExpected=currentPhrase.ca;
+  exercise.innerHTML=`<div class="step-title">Напиши каталонську фразу</div><div class="task">${currentPhrase.uk}</div><input id="answer" placeholder="Введи каталонською">`;
+}
+
+function renderChoice(){
+  currentAnswerKind="choice";
+  currentExpected=currentPhrase.ca;
+  const options=shuffle([currentPhrase.ca,...shuffle(getPhrases().filter(p=>p.ca!==currentPhrase.ca)).slice(0,3).map(p=>p.ca)]);
+  exercise.innerHTML=`<div class="step-title">Обери правильну каталонську фразу</div><div class="task">${currentPhrase.uk}</div><div class="choices">${options.map(o=>`<button type="button" data-value="${escapeAttr(o)}">${o}</button>`).join("")}</div>`;
+  attachChoiceHandlers();
+}
+
+function renderUnsupported(){
+  currentAnswerKind="input";
+  currentExpected=currentPhrase.ca;
+  exercise.innerHTML=`<div class="step-title">Лексична вправа</div><div class="task">${currentPhrase.uk}</div><p class="muted">${generated.reason}</p><input id="answer" placeholder="Введи каталонську фразу">`;
+}
+
+function conjugationHintTable(highlightIndex, tense="present"){
+  return `<table>
+    <tr><th>Особа</th><th>Форма</th></tr>
+    ${PERSONS.map((p,i)=>`<tr><td>${p.label}</td><td>${i===highlightIndex?"<b>":""}${tense==="future"?generated.futures[i]:generated.forms[i]}${i===highlightIndex?"</b>":""}</td></tr>`).join("")}
+  </table>`;
+}
+
+function hintBlock(html){
+  return `<button type="button" class="secondary" id="hintBtn">Показати підказку</button>
+    <p class="hint-warning">Після відкриття підказки відповідь не буде зарахована.</p>
+    <div id="hintPanel" class="hint-panel hidden">${html}</div>`;
+}
+
+function attachHintHandler(){
+  const btn=document.getElementById("hintBtn");
+  if(!btn) return;
+  btn.addEventListener("click",()=>{
+    if(checkedThisQuestion) return;
+    hintUsed=true;
+    document.getElementById("hintPanel").classList.remove("hidden");
+    btn.textContent="Підказку відкрито — бал не нараховується";
+    btn.disabled=true;
+  });
+}
+
+function renderPresent(){
+  const data=sentenceData(currentPerson);
+  const i=PERSONS.findIndex(p=>p.id===currentPerson.id);
+  currentAnswerKind="input";
+  currentExpected=data.form;
+  const reflexive=generated.pronominal?`${currentPerson.reflexive} `:"";
+  exercise.innerHTML=`
+    <div class="step-title">Встав форму дієслова <b>${generated.verb}</b> для <b>${currentPerson.label}</b></div>
+    <div class="task">${currentPerson.subject} ${reflexive}____${generated.rest?" "+generated.rest:""}.</div>
+    <input id="answer" placeholder="Впиши форму дієслова">
+    ${hintBlock(conjugationHintTable(i,"present"))}`;
+  attachHintHandler();
+}
+
+function renderNegative(){
+  const data=sentenceData(currentPerson);
+  currentAnswerKind="input";
+  currentExpected=data.negative;
+  exercise.innerHTML=`
+    <div class="step-title">Зроби заперечне речення для <b>${currentPerson.label}</b></div>
+    <div class="task">Було: <b>${data.present}</b></div>
+    <input id="answer" placeholder="Напиши повне заперечне речення каталонською">`;
+}
+
+function renderQuestion(){
+  const data=sentenceData(currentPerson);
+  const i=PERSONS.findIndex(p=>p.id===currentPerson.id);
+  currentAnswerKind="input";
+  currentExpected=data.form;
+  const reflexive=generated.pronominal?`${currentPerson.reflexive} `:"";
+  exercise.innerHTML=`
+    <div class="step-title">Встав форму дієслова <b>${generated.verb}</b> у питанні для <b>${currentPerson.label}</b></div>
+    <div class="task">${currentPerson.subject} ${reflexive}____${generated.rest?" "+generated.rest:""}?</div>
+    <input id="answer" placeholder="Впиши форму дієслова">
+    ${hintBlock(conjugationHintTable(i,"present"))}`;
+  attachHintHandler();
+}
+
+function renderModalChoice(){
+  const data=sentenceData(currentPerson);
+  currentAnswerKind="choice";
+  currentExpected=data.modal;
+  const wrong1=data.modal.replace(pronominalInfinitive(currentPerson),generated.forms[PERSONS.findIndex(p=>p.id===currentPerson.id)]);
+  const wrong2=data.present;
+  const wrong3=data.futureSentence;
+  const options=shuffle([data.modal,wrong1,wrong2,wrong3]);
+  exercise.innerHTML=`<div class="step-title">Обери правильне речення для <b>${currentPerson.label}</b></div><div class="task">Після <b>${currentPerson.modal}</b> має бути інфінітив.</div><div class="choices">${options.map(o=>`<button type="button" data-value="${escapeAttr(o)}">${o}</button>`).join("")}</div>`;
+  attachChoiceHandlers();
+}
+
+function renderFuture(){
+  const data=sentenceData(currentPerson);
+  const i=PERSONS.findIndex(p=>p.id===currentPerson.id);
+  currentAnswerKind="input";
+  currentExpected=data.future;
+  const reflexive=generated.pronominal?`${currentPerson.reflexive} `:"";
+  exercise.innerHTML=`
+    <div class="step-title">Встав форму дієслова <b>${generated.verb}</b> у майбутньому часі для <b>${currentPerson.label}</b></div>
+    <div class="task">Demà ${currentPerson.subject.toLowerCase()} ${reflexive}____${generated.rest?" "+generated.rest:""}.</div>
+    <input id="answer" placeholder="Впиши форму майбутнього часу">
+    ${hintBlock(conjugationHintTable(i,"future"))}`;
+  attachHintHandler();
+}
+
+function renderBuildSentence(sentence,title){
+  currentAnswerKind="build";
+  currentExpected=sentence.replace(/[.?!]/g,"");
+  const words=shuffle(currentExpected.split(" "));
+  exercise.innerHTML=`<div class="step-title">${title}</div><div class="target" id="target"></div><div class="word-bank">${words.map(w=>`<span>${w}</span>`).join("")}</div><input id="answer" type="hidden">`;
+  document.querySelectorAll(".word-bank span").forEach(span=>{
+    span.addEventListener("click",()=>{
+      if(checkedThisQuestion) return;
+      builtWords.push(span.textContent);
+      span.style.display="none";
+      document.getElementById("target").textContent=builtWords.join(" ");
+      document.getElementById("answer").value=builtWords.join(" ");
+    });
+  });
+}
+
+function attachChoiceHandlers(){
+  document.querySelectorAll(".choices button").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      if(checkedThisQuestion) return;
+      selected=btn.dataset.value;
+      document.querySelectorAll(".choices button").forEach(b=>b.classList.remove("selected"));
+      btn.classList.add("selected");
+    });
+  });
+}
+function escapeAttr(str){return String(str).replaceAll("&","&amp;").replaceAll('"',"&quot;")}
+function getUserAnswer(){
+  if(currentAnswerKind==="choice") return selected;
+  const el=document.getElementById("answer");
+  return el?el.value:"";
+}
+
+function explainWrong(){
+  if(actualLesson==="phrase"||actualLesson==="choice"||!generated.supported) return `Правильна фраза: <b>${currentPhrase.ca}</b>.`;
+  const data=sentenceData(currentPerson);
+  if(actualLesson==="present") return `Для <b>${currentPerson.label}</b> потрібна форма <b>${data.form}</b>.`;
+  if(actualLesson==="negative") return `Правильна конструкція: <b>${data.negative}</b>`;
+  if(actualLesson==="question") return `У питанні для <b>${currentPerson.label}</b> потрібна форма <b>${data.form}</b>.`;
+  if(actualLesson==="modal") return `Після <b>${currentPerson.modal}</b> потрібен інфінітив.`;
+  if(actualLesson==="past") return `Використай <b>${currentPerson.past} + інфінітив</b>.`;
+  if(actualLesson==="future") return `Для <b>${currentPerson.label}</b> потрібна форма <b>${data.future}</b>.`;
+  return "Порівняй відповідь із правильним варіантом.";
+}
+
+function disableExercise(){
+  document.querySelectorAll("#exercise button,#exercise input,#exercise .word-bank span").forEach(el=>{
+    if(el.tagName==="SPAN") el.style.pointerEvents="none";
+    else el.disabled=true;
+  });
+}
+
+function check(){
+  if(checkedThisQuestion){
+    setFeedback("bad","<b>Це завдання вже оцінено.</b><br>Натисни <b>Наступне завдання</b>.");
+    return;
+  }
+  const user=getUserAnswer();
+  const answerCorrect=normalize(user)===normalize(currentExpected);
+  const credited=answerCorrect&&!hintUsed;
+  const timeSec=Math.max(1,Math.round((Date.now()-questionStartTime)/1000));
+
+  records.push({
+    date:new Date().toLocaleString("uk-UA"),
+    questionId,
+    blockId:selectedBlockId,
+    blockTitle:currentBlockTitle(),
+    lesson:currentLesson,
+    actualLesson,
+    lessonLabel:LESSONS[actualLesson].label,
+    personId:(generated&&generated.supported&&actualLesson!=="phrase"&&actualLesson!=="choice")?currentPerson.id:null,
+    personLabel:(generated&&generated.supported&&actualLesson!=="phrase"&&actualLesson!=="choice")?currentPerson.label:null,
+    phraseCa:currentPhrase.ca,
+    phraseUk:currentPhrase.uk,
+    expected:currentExpected,
+    answer:user||"",
+    answerCorrect,
+    assisted:hintUsed,
+    correct:credited,
+    timeSec
+  });
+
+  caPhrase.textContent=currentPhrase.ca;
+  checkedThisQuestion=true;
+  disableExercise();
+
+  if(answerCorrect&&hintUsed){
+    setFeedback("assisted",`<b>Відповідь правильна, але не зарахована.</b><br>Причина: була відкрита підказка.<br>Правильно: <b>${currentExpected}</b>`);
+  }else if(credited){
+    setFeedback("ok",`<b>Правильно.</b><br>Відповідь: <b>${currentExpected}</b><br>Час: ${timeSec} c.`);
+  }else{
+    setFeedback("bad",`<b>Потрібно виправити.</b><br>Правильно: <b>${currentExpected}</b><br>${explainWrong()}<br>Час: ${timeSec} c.`);
+  }
+  saveRecords();
+}
+
+function percent(a,b){return b?Math.round(a/b*100):0}
+function qualityText(pct){
+  if(pct>=90)return{text:"Відмінно",cls:"ok"};
+  if(pct>=75)return{text:"Добре",cls:"ok"};
+  if(pct>=60)return{text:"Потрібна практика",cls:"warn"};
+  return{text:"Потрібно повторити",cls:"bad"};
+}
+
+function showReport(){
+  document.getElementById("practicePanel").classList.add("hidden");
+  document.getElementById("reportPanel").classList.remove("hidden");
+  const s=stats();
+  const acc=percent(s.correct,s.total);
+  document.getElementById("mAccuracy").textContent=acc+"%";
+  document.getElementById("mCorrect").textContent=s.correct;
+  document.getElementById("mHints").textContent=s.hints;
+  document.getElementById("mAttempts").textContent=s.total;
+  document.getElementById("mTime").textContent=s.avgTime+" c";
+
+  const q=qualityText(acc);
+  const level=document.getElementById("qualityLevel");
+  level.className="level "+q.cls;
+  let msg="Для надійної оцінки бажано виконати щонайменше 10 завдань.";
+  if(s.total>=10&&acc>=90)msg="Матеріал засвоєно дуже добре.";
+  else if(s.total>=10&&acc>=75)msg="Результат добрий, але окремі теми слід повторити.";
+  else if(s.total>=10&&acc>=60)msg="Матеріал засвоєно частково.";
+  else if(s.total>=10)msg="Потрібне повторення короткими серіями вправ.";
+  level.innerHTML=`<b>Оцінка:</b> ${q.text}. ${msg}`;
+
+  renderBlockTable();
+  renderLessonTable();
+  renderPersonTable();
+  renderRecommendations();
+  renderMistakes();
+}
+
+function renderAggregateTable(selector,items,getRecords,getLabel){
+  const tbody=document.querySelector(selector+" tbody");
+  tbody.innerHTML="";
+  items.forEach(item=>{
+    const arr=getRecords(item);
+    const total=arr.length;
+    const good=arr.filter(r=>r.correct).length;
+    const pct=percent(good,total);
+    tbody.innerHTML+=`<tr><td>${getLabel(item)}</td><td>${good}</td><td>${total}</td><td>${total?pct+"%":"—"}</td><td>${total?qualityText(pct).text:"Немає даних"}</td></tr>`;
+  });
+}
+function renderBlockTable(){renderAggregateTable("#blockTable",BLOCKS,b=>records.filter(r=>r.blockId===b.id),b=>b.title)}
+function renderLessonTable(){
+  const keys=Object.keys(LESSONS).filter(k=>k!=="mixed");
+  renderAggregateTable("#lessonTable",keys,k=>records.filter(r=>(r.actualLesson||r.lesson)===k),k=>LESSONS[k].label);
+}
+function renderPersonTable(){renderAggregateTable("#personTable",PERSONS,p=>records.filter(r=>r.personId===p.id),p=>p.label)}
+
+function renderRecommendations(){
+  const weakLessons=Object.keys(LESSONS).filter(k=>k!=="mixed").map(k=>{
+    const arr=records.filter(r=>(r.actualLesson||r.lesson)===k);
+    return {k,total:arr.length,pct:percent(arr.filter(r=>r.correct).length,arr.length)};
+  }).filter(x=>x.total>0&&x.pct<75);
+  const weakPersons=PERSONS.map(p=>{
+    const arr=records.filter(r=>r.personId===p.id);
+    return {p,total:arr.length,pct:percent(arr.filter(r=>r.correct).length,arr.length)};
+  }).filter(x=>x.total>0&&x.pct<75);
+
+  let html="";
+  if(weakLessons.length) html+=`<p><b>Повторити мініуроки:</b></p><ul>${weakLessons.map(x=>`<li>${LESSONS[x.k].label} — ${x.pct}%</li>`).join("")}</ul>`;
+  if(weakPersons.length) html+=`<p><b>Повторити особи:</b></p><ul>${weakPersons.map(x=>`<li>${x.p.label} — ${x.pct}%</li>`).join("")}</ul>`;
+  if(!html) html="<p><b>Слабких тем не виявлено.</b></p>";
+  document.getElementById("recommendations").innerHTML=html;
+}
+
+function renderMistakes(){
+  const items=records.filter(r=>!r.correct).slice(-15).reverse();
+  const container=document.getElementById("mistakes");
+  if(!items.length){container.innerHTML='<p class="muted">Незарахованих відповідей немає.</p>';return}
+  container.innerHTML=items.map(r=>`
+    <div class="mistake">
+      <b>${escapeHtml(r.blockTitle||"")}</b> / ${escapeHtml(r.lessonLabel||"")}
+      ${r.personLabel?` / ${escapeHtml(r.personLabel)}`:""}<br>
+      Українською: ${escapeHtml(r.phraseUk||"")}<br>
+      Відповідь: <code>${escapeHtml(r.answer||"—")}</code><br>
+      Правильно: <code>${escapeHtml(r.expected||"")}</code><br>
+      ${r.assisted?'<span class="hint-warning">Використано підказку — бал не нараховано.</span><br>':""}
+      <span class="muted">${escapeHtml(r.date||"")}, ${r.timeSec||0} c</span>
+    </div>`).join("");
+}
+function escapeHtml(str){return String(str).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")}
+
+function exportCsv(){
+  if(!records.length){alert("Немає даних для експорту.");return}
+  const headers=["date","block","lesson","person","phrase_uk","phrase_ca","expected","answer","answer_correct","hint_used","credited","time_sec"];
+  const rows=records.map(r=>[r.date,r.blockTitle,r.lessonLabel,r.personLabel||"",r.phraseUk,r.phraseCa,r.expected,r.answer,r.answerCorrect?"yes":"no",r.assisted?"yes":"no",r.correct?"yes":"no",r.timeSec]);
+  const csv=[headers,...rows].map(row=>row.map(cell=>`"${String(cell??"").replaceAll('"','""')}"`).join(",")).join("\n");
+  const blob=new Blob([csv],{type:"text/csv;charset=utf-8"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;a.download="catalan_grammar_report.csv";document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+}
+
+function initBlockSelect(){
+  blockSelect.innerHTML=BLOCKS.map(b=>`<option value="${b.id}">${b.title} (${b.phrases.length})</option>`).join("");
+  blockSelect.value=selectedBlockId;
+  blockDescription.textContent=currentBlock().description;
+}
+
+blockSelect.addEventListener("change",()=>{selectedBlockId=blockSelect.value;blockDescription.textContent=currentBlock().description;pickPhrase();render()});
+personSelect.addEventListener("change",()=>{selectedPersonId=personSelect.value;pickPhrase();render()});
+document.querySelectorAll(".lesson").forEach(btn=>btn.addEventListener("click",()=>{
+  document.querySelectorAll(".lesson").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");currentLesson=btn.dataset.lesson;pickPhrase();render();
+}));
+document.getElementById("next").addEventListener("click",()=>{pickPhrase();render()});
+document.getElementById("check").addEventListener("click",check);
+document.getElementById("reset").addEventListener("click",()=>{
+  if(!confirm("Очистити всі результати на цьому пристрої?"))return;
+  records=[];saveRecords();showReport();
+});
+document.getElementById("showReport").addEventListener("click",showReport);
+document.getElementById("backToPractice").addEventListener("click",()=>{
+  document.getElementById("reportPanel").classList.add("hidden");
+  document.getElementById("practicePanel").classList.remove("hidden");
+});
+document.getElementById("exportCsv").addEventListener("click",exportCsv);
+
+initBlockSelect();
+updateMiniScore();
+pickPhrase();
+render();
+</script>
+</body>
+</html>
