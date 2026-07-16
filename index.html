@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Каталонська граматика — тренажер</title>
+  <title>Каталонська — слова й граматика</title>
   <style>
     :root {
       --bg:#f5f5f0; --card:#fff; --ink:#1f1f1f; --muted:#666; --line:#d8d8d0;
@@ -50,7 +50,7 @@
     .hint-panel{margin-top:10px;padding:10px;border:1px solid var(--line);border-radius:12px;background:#fafafa}
     .hint-warning{font-size:14px;color:var(--warn);margin:6px 0}
     .metrics{display:grid;grid-template-columns:1fr;gap:10px;margin:12px 0}
-    @media(min-width:760px){.metrics{grid-template-columns:repeat(5,1fr)}}
+    @media(min-width:760px){.metrics{grid-template-columns:repeat(auto-fit,minmax(130px,1fr))}}
     .metric{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fafafa}
     .metric .value{font-size:24px;font-weight:bold}
     .level{padding:10px 12px;border-radius:12px;margin:10px 0;border:1px solid var(--line);background:#fafafa}
@@ -60,13 +60,29 @@
     .mistakes{max-height:300px;overflow:auto;border:1px solid var(--line);border-radius:12px;background:#fafafa;padding:8px}
     .mistake{border-bottom:1px solid var(--line);padding:8px 4px;font-size:14px}
     .mistake:last-child{border-bottom:none}
+    .mode-switch{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0}
+    button.mode{margin:0;background:#fff;color:var(--accent);border-color:var(--line)}
+    button.mode.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+    .study-card{border:1px solid var(--line);border-radius:16px;padding:22px;text-align:center;background:linear-gradient(180deg,#fff,#fafafa);margin:14px 0}
+    .study-ca{font-size:30px;font-weight:700;margin:8px 0}
+    .study-uk{font-size:22px;margin:12px 0;color:var(--ok)}
+    .study-actions{display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+    .study-actions button{margin:0}
+    .study-progress{padding:12px;border:1px solid var(--line);border-radius:12px;background:#fafafa;margin:12px 0}
+    .vocab-table td:first-child{font-weight:700}
+    .learned-row{background:#eef8f1}
+    .learned-badge{display:inline-block;padding:2px 7px;border-radius:999px;background:#e7f6ed;color:var(--ok);font-size:13px}
+    .spelling-note{margin-top:7px;padding:8px 10px;border-radius:10px;background:#eef3ff;color:#294267}
+    details{margin-top:14px}
+    summary{cursor:pointer;font-weight:700;padding:8px 0}
     .hidden{display:none}
     code{background:#eee;padding:2px 5px;border-radius:5px}
   </style>
 </head>
 <body>
 <header>
-  <h1>Каталонська граматика — тренажер</h1>
+  <h1>Каталонська — слова й граматика</h1>
+  <p>Спочатку вивчи 10 нових фраз, потім переходь до граматичної практики.</p>
 </header>
 
 <main>
@@ -77,28 +93,35 @@
     <select id="blockSelect"></select>
     <p class="muted" id="blockDescription"></p>
 
-    <label for="personSelect"><b>Граматична особа</b></label>
-    <select id="personSelect">
-      <option value="random">Випадково — всі особи</option>
-      <option value="jo">jo</option>
-      <option value="tu">tu</option>
-      <option value="ell">ell / ella</option>
-      <option value="nosaltres">nosaltres</option>
-      <option value="vosaltres">vosaltres</option>
-      <option value="ells">ells / elles</option>
-    </select>
+    <div class="mode-switch" aria-label="Режим роботи">
+      <button class="mode active" id="studyMode" type="button">1. Вивчити слова</button>
+      <button class="mode" id="practiceMode" type="button">2. Практика</button>
+    </div>
 
-    <h3>Мініуроки</h3>
-    <button class="lesson active" data-lesson="phrase">1. Переклад фрази</button>
-    <button class="lesson" data-lesson="choice">2. Обери фразу</button>
-    <button class="lesson" data-lesson="present">3. Теперішній час</button>
-    <button class="lesson" data-lesson="negative">4. Заперечення</button>
-    <button class="lesson" data-lesson="question">5. Питання</button>
-    <button class="lesson" data-lesson="modal">6. He de / Puc / Vull</button>
-    <button class="lesson" data-lesson="past">7. Минулий час</button>
-    <button class="lesson" data-lesson="future">8. Майбутній час</button>
-    <button class="lesson" data-lesson="build">9. Склади речення</button>
-    <button class="lesson" data-lesson="mixed">10. Змішана практика</button>
+    <div id="grammarControls" class="hidden">
+      <label for="personSelect"><b>Граматична особа</b></label>
+      <select id="personSelect">
+        <option value="random">Випадково — всі особи</option>
+        <option value="jo">jo</option>
+        <option value="tu">tu</option>
+        <option value="ell">ell / ella</option>
+        <option value="nosaltres">nosaltres</option>
+        <option value="vosaltres">vosaltres</option>
+        <option value="ells">ells / elles</option>
+      </select>
+
+      <h3>Мініуроки</h3>
+      <button class="lesson active" data-lesson="phrase">1. Переклад фрази</button>
+      <button class="lesson" data-lesson="choice">2. Обери фразу</button>
+      <button class="lesson" data-lesson="present">3. Теперішній час</button>
+      <button class="lesson" data-lesson="negative">4. Заперечення</button>
+      <button class="lesson" data-lesson="question">5. Питання</button>
+      <button class="lesson" data-lesson="modal">6. He de / Puc / Vull</button>
+      <button class="lesson" data-lesson="past">7. Минулий час</button>
+      <button class="lesson" data-lesson="future">8. Майбутній час</button>
+      <button class="lesson" data-lesson="build">9. Склади речення</button>
+      <button class="lesson" data-lesson="mixed">10. Змішана практика</button>
+    </div>
 
     <h3>Поточний результат</h3>
     <div class="progress"><div class="bar" id="bar"></div></div>
@@ -111,7 +134,37 @@
   </aside>
 
   <section class="card">
-    <div id="practicePanel">
+    <div id="studyPanel">
+      <h2>Вивчення нової лексики</h2>
+      <p class="muted">Переглянь усі 10 фраз у блоці. Відкрий переклад і познач фразу як вивчену.</p>
+
+      <div id="beginnerProgress" class="study-progress"></div>
+
+      <div class="study-card">
+        <div class="muted" id="studyCounter"></div>
+        <div class="study-ca" id="studyCa"></div>
+        <div class="study-uk hidden" id="studyUk"></div>
+      </div>
+
+      <div class="study-actions">
+        <button class="secondary" id="studyPrev" type="button">← Попередня</button>
+        <button id="revealTranslation" type="button">Показати переклад</button>
+        <button class="secondary" id="studyNext" type="button">Наступна →</button>
+        <button class="secondary" id="markLearned" type="button">Позначити як вивчене</button>
+      </div>
+
+      <details>
+        <summary>Показати всі фрази цього блоку</summary>
+        <table class="vocab-table" id="vocabTable">
+          <thead><tr><th>Каталонською</th><th>Українською</th><th>Статус</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </details>
+
+      <button id="goToPractice" type="button">Перейти до граматичної практики</button>
+    </div>
+
+    <div id="practicePanel" class="hidden">
       <h2 id="lessonTitle"></h2>
 
       <div class="phrase-box">
@@ -126,7 +179,7 @@
 
       <button id="check">Перевірити</button>
       <button class="secondary" id="next">Наступне завдання</button>
-      <p class="muted">Оцінюється тільки перша перевірка. Якщо відкрити підказку, відповідь можна перевірити, але бал за неї не нараховується.</p>
+      <p class="muted">Оцінюється тільки перша перевірка. Великі/малі літери та каталонські наголоси не знижують бал. Якщо відкрити підказку до перевірки, бал не нараховується.</p>
     </div>
 
     <div id="reportPanel" class="hidden">
@@ -141,6 +194,7 @@
         <div class="metric"><div class="value" id="mHints">0</div><div>Використано підказок</div></div>
         <div class="metric"><div class="value" id="mAttempts">0</div><div>Усього спроб</div></div>
         <div class="metric"><div class="value" id="mTime">0 c</div><div>Середній час</div></div>
+        <div class="metric"><div class="value" id="mSpelling">0</div><div>Підказки з написання</div></div>
       </div>
 
       <h3>Результат за блоками</h3>
@@ -166,9 +220,489 @@
 <script>
 const BLOCKS = [
   {
+    "id": "beginner1",
+    "level": "beginner",
+    "title": "Beginner 1 — базові дії",
+    "description": "10 найпростіших дій: їсти, пити, читати, писати та інші.",
+    "phrases": [
+      {
+        "ca": "menjar una poma",
+        "uk": "їсти яблуко"
+      },
+      {
+        "ca": "beure aigua",
+        "uk": "пити воду"
+      },
+      {
+        "ca": "llegir un llibre",
+        "uk": "читати книжку"
+      },
+      {
+        "ca": "escriure una paraula",
+        "uk": "писати слово"
+      },
+      {
+        "ca": "mirar un dibuix",
+        "uk": "дивитися на малюнок"
+      },
+      {
+        "ca": "escoltar música",
+        "uk": "слухати музику"
+      },
+      {
+        "ca": "parlar català",
+        "uk": "говорити каталонською"
+      },
+      {
+        "ca": "obrir la porta",
+        "uk": "відчиняти двері"
+      },
+      {
+        "ca": "tancar la finestra",
+        "uk": "зачиняти вікно"
+      },
+      {
+        "ca": "dormir bé",
+        "uk": "добре спати"
+      }
+    ]
+  },
+  {
+    "id": "beginner2",
+    "level": "beginner",
+    "title": "Beginner 2 — удома",
+    "description": "10 простих фраз про дім і щоденні домашні справи.",
+    "phrases": [
+      {
+        "ca": "viure en una casa",
+        "uk": "жити в будинку"
+      },
+      {
+        "ca": "entrar a l’habitació",
+        "uk": "заходити до кімнати"
+      },
+      {
+        "ca": "sortir de casa",
+        "uk": "виходити з дому"
+      },
+      {
+        "ca": "netejar la taula",
+        "uk": "прибирати стіл"
+      },
+      {
+        "ca": "rentar els plats",
+        "uk": "мити посуд"
+      },
+      {
+        "ca": "preparar l’esmorzar",
+        "uk": "готувати сніданок"
+      },
+      {
+        "ca": "ajudar a casa",
+        "uk": "допомагати вдома"
+      },
+      {
+        "ca": "buscar les claus",
+        "uk": "шукати ключі"
+      },
+      {
+        "ca": "trobar la motxilla",
+        "uk": "знаходити рюкзак"
+      },
+      {
+        "ca": "seure a la cadira",
+        "uk": "сідати на стілець"
+      }
+    ]
+  },
+  {
+    "id": "beginner3",
+    "level": "beginner",
+    "title": "Beginner 3 — школа",
+    "description": "10 базових фраз про уроки, завдання та клас.",
+    "phrases": [
+      {
+        "ca": "anar a l’escola",
+        "uk": "йти до школи"
+      },
+      {
+        "ca": "estudiar català",
+        "uk": "вивчати каталонську"
+      },
+      {
+        "ca": "fer els deures",
+        "uk": "робити домашнє завдання"
+      },
+      {
+        "ca": "preguntar a la mestra",
+        "uk": "запитувати вчительку"
+      },
+      {
+        "ca": "respondre una pregunta",
+        "uk": "відповідати на запитання"
+      },
+      {
+        "ca": "treballar en grup",
+        "uk": "працювати в групі"
+      },
+      {
+        "ca": "dibuixar un mapa",
+        "uk": "малювати карту"
+      },
+      {
+        "ca": "comptar fins a deu",
+        "uk": "рахувати до десяти"
+      },
+      {
+        "ca": "aprendre una paraula",
+        "uk": "вивчати слово"
+      },
+      {
+        "ca": "recordar la resposta",
+        "uk": "пам’ятати відповідь"
+      }
+    ]
+  },
+  {
+    "id": "beginner4",
+    "level": "beginner",
+    "title": "Beginner 4 — сім’я та друзі",
+    "description": "10 простих фраз про родину, друзів і спілкування.",
+    "phrases": [
+      {
+        "ca": "veure la família",
+        "uk": "бачити родину"
+      },
+      {
+        "ca": "visitar els avis",
+        "uk": "відвідувати бабусю й дідуся"
+      },
+      {
+        "ca": "jugar amb un amic",
+        "uk": "гратися з другом"
+      },
+      {
+        "ca": "parlar amb la mare",
+        "uk": "розмовляти з мамою"
+      },
+      {
+        "ca": "ajudar el pare",
+        "uk": "допомагати татові"
+      },
+      {
+        "ca": "estimar la família",
+        "uk": "любити родину"
+      },
+      {
+        "ca": "compartir una joguina",
+        "uk": "ділитися іграшкою"
+      },
+      {
+        "ca": "esperar una amiga",
+        "uk": "чекати на подругу"
+      },
+      {
+        "ca": "donar les gràcies",
+        "uk": "дякувати"
+      },
+      {
+        "ca": "saludar un company",
+        "uk": "вітатися з однокласником"
+      }
+    ]
+  },
+  {
+    "id": "beginner5",
+    "level": "beginner",
+    "title": "Beginner 5 — мій день",
+    "description": "10 фраз про ранкові справи, школу, їжу та сон.",
+    "phrases": [
+      {
+        "ca": "llevar-se al matí",
+        "uk": "вставати вранці"
+      },
+      {
+        "ca": "rentar-se la cara",
+        "uk": "мити обличчя"
+      },
+      {
+        "ca": "vestir-se ràpid",
+        "uk": "швидко одягатися"
+      },
+      {
+        "ca": "esmorzar a casa",
+        "uk": "снідати вдома"
+      },
+      {
+        "ca": "anar a l’escola",
+        "uk": "йти до школи"
+      },
+      {
+        "ca": "tornar a casa",
+        "uk": "повертатися додому"
+      },
+      {
+        "ca": "dinar amb la família",
+        "uk": "обідати з родиною"
+      },
+      {
+        "ca": "descansar una estona",
+        "uk": "трохи відпочивати"
+      },
+      {
+        "ca": "sopar a les vuit",
+        "uk": "вечеряти о восьмій"
+      },
+      {
+        "ca": "anar a dormir",
+        "uk": "йти спати"
+      }
+    ]
+  },
+  {
+    "id": "beginner6",
+    "level": "beginner",
+    "title": "Beginner 6 — їжа та напої",
+    "description": "10 базових фраз про продукти, приготування їжі та бажання.",
+    "phrases": [
+      {
+        "ca": "comprar pa",
+        "uk": "купувати хліб"
+      },
+      {
+        "ca": "menjar fruita",
+        "uk": "їсти фрукти"
+      },
+      {
+        "ca": "beure llet",
+        "uk": "пити молоко"
+      },
+      {
+        "ca": "cuinar arròs",
+        "uk": "готувати рис"
+      },
+      {
+        "ca": "tallar una poma",
+        "uk": "різати яблуко"
+      },
+      {
+        "ca": "preparar una amanida",
+        "uk": "готувати салат"
+      },
+      {
+        "ca": "posar la taula",
+        "uk": "накривати на стіл"
+      },
+      {
+        "ca": "tenir gana",
+        "uk": "бути голодним"
+      },
+      {
+        "ca": "tenir set",
+        "uk": "хотіти пити"
+      },
+      {
+        "ca": "voler un gelat",
+        "uk": "хотіти морозиво"
+      }
+    ]
+  },
+  {
+    "id": "beginner7",
+    "level": "beginner",
+    "title": "Beginner 7 — місця та напрямки",
+    "description": "10 простих фраз про дорогу, транспорт і рух.",
+    "phrases": [
+      {
+        "ca": "anar al parc",
+        "uk": "йти до парку"
+      },
+      {
+        "ca": "caminar pel carrer",
+        "uk": "йти вулицею"
+      },
+      {
+        "ca": "girar a la dreta",
+        "uk": "повертати праворуч"
+      },
+      {
+        "ca": "girar a l’esquerra",
+        "uk": "повертати ліворуч"
+      },
+      {
+        "ca": "entrar a la botiga",
+        "uk": "заходити до магазину"
+      },
+      {
+        "ca": "sortir de l’escola",
+        "uk": "виходити зі школи"
+      },
+      {
+        "ca": "esperar l’autobús",
+        "uk": "чекати на автобус"
+      },
+      {
+        "ca": "pujar les escales",
+        "uk": "підійматися сходами"
+      },
+      {
+        "ca": "baixar les escales",
+        "uk": "спускатися сходами"
+      },
+      {
+        "ca": "arribar a casa",
+        "uk": "приходити додому"
+      }
+    ]
+  },
+  {
+    "id": "beginner8",
+    "level": "beginner",
+    "title": "Beginner 8 — одяг і погода",
+    "description": "10 базових фраз про одяг, температуру та погоду.",
+    "phrases": [
+      {
+        "ca": "portar una jaqueta",
+        "uk": "носити куртку"
+      },
+      {
+        "ca": "posar-se un abric",
+        "uk": "одягати пальто"
+      },
+      {
+        "ca": "treure les sabates",
+        "uk": "знімати взуття"
+      },
+      {
+        "ca": "obrir el paraigua",
+        "uk": "розкривати парасолю"
+      },
+      {
+        "ca": "tenir fred",
+        "uk": "мерзнути"
+      },
+      {
+        "ca": "tenir calor",
+        "uk": "відчувати спеку"
+      },
+      {
+        "ca": "mirar la pluja",
+        "uk": "дивитися на дощ"
+      },
+      {
+        "ca": "jugar amb la neu",
+        "uk": "гратися зі снігом"
+      },
+      {
+        "ca": "veure el sol",
+        "uk": "бачити сонце"
+      },
+      {
+        "ca": "esperar bon temps",
+        "uk": "чекати гарної погоди"
+      }
+    ]
+  },
+  {
+    "id": "beginner9",
+    "level": "beginner",
+    "title": "Beginner 9 — почуття та потреби",
+    "description": "10 простих фраз про самопочуття, потреби та емоції.",
+    "phrases": [
+      {
+        "ca": "sentir-se bé",
+        "uk": "почуватися добре"
+      },
+      {
+        "ca": "sentir-se malament",
+        "uk": "почуватися погано"
+      },
+      {
+        "ca": "tenir por",
+        "uk": "боятися"
+      },
+      {
+        "ca": "tenir son",
+        "uk": "хотіти спати"
+      },
+      {
+        "ca": "necessitar ajuda",
+        "uk": "потребувати допомоги"
+      },
+      {
+        "ca": "voler descansar",
+        "uk": "хотіти відпочити"
+      },
+      {
+        "ca": "poder continuar",
+        "uk": "могти продовжувати"
+      },
+      {
+        "ca": "dir la veritat",
+        "uk": "казати правду"
+      },
+      {
+        "ca": "riure molt",
+        "uk": "багато сміятися"
+      },
+      {
+        "ca": "plorar una mica",
+        "uk": "трохи плакати"
+      }
+    ]
+  },
+  {
+    "id": "beginner10",
+    "level": "beginner",
+    "title": "Beginner 10 — просте спілкування",
+    "description": "Останні 10 фраз рівня Beginner: привітання, відповіді та прохання.",
+    "phrases": [
+      {
+        "ca": "dir bon dia",
+        "uk": "казати «добрий день»"
+      },
+      {
+        "ca": "dir bona nit",
+        "uk": "казати «добраніч»"
+      },
+      {
+        "ca": "demanar perdó",
+        "uk": "просити вибачення"
+      },
+      {
+        "ca": "donar les gràcies",
+        "uk": "дякувати"
+      },
+      {
+        "ca": "preguntar el nom",
+        "uk": "запитувати ім’я"
+      },
+      {
+        "ca": "respondre que sí",
+        "uk": "відповідати «так»"
+      },
+      {
+        "ca": "respondre que no",
+        "uk": "відповідати «ні»"
+      },
+      {
+        "ca": "parlar a poc a poc",
+        "uk": "говорити повільно"
+      },
+      {
+        "ca": "repetir una paraula",
+        "uk": "повторювати слово"
+      },
+      {
+        "ca": "entendre la pregunta",
+        "uk": "розуміти запитання"
+      }
+    ]
+  },
+  {
     "id": "school",
-    "title": "Шкільний блок",
-    "description": "Адаптована лексика для школи, навчання, друзів, емоцій і щоденних ситуацій.",
+    "title": "Наступний рівень — шкільна лексика",
+    "description": "Складніша шкільна лексика. Відкривайте після завершення Beginner 1–10.",
     "phrases": [
       {
         "ca": "explicar una idea",
@@ -270,7 +804,8 @@ const BLOCKS = [
         "ca": "estalviar aigua",
         "uk": "економити воду"
       }
-    ]
+    ],
+    "level": "next"
   },
   {
     "id": "block1",
@@ -377,7 +912,8 @@ const BLOCKS = [
         "ca": "valorar els avantatges i els inconvenients",
         "uk": "оцінити переваги та недоліки"
       }
-    ]
+    ],
+    "level": "next"
   },
   {
     "id": "block2",
@@ -484,7 +1020,8 @@ const BLOCKS = [
         "ca": "prendre consciència de",
         "uk": "усвідомити"
       }
-    ]
+    ],
+    "level": "next"
   },
   {
     "id": "block3",
@@ -591,7 +1128,8 @@ const BLOCKS = [
         "ca": "assumir la responsabilitat de",
         "uk": "нести відповідальність за"
       }
-    ]
+    ],
+    "level": "next"
   },
   {
     "id": "block4",
@@ -698,7 +1236,8 @@ const BLOCKS = [
         "ca": "fer un seguiment de",
         "uk": "стежити за / контролювати перебіг"
       }
-    ]
+    ],
+    "level": "next"
   },
   {
     "id": "block5",
@@ -805,7 +1344,8 @@ const BLOCKS = [
         "ca": "afrontar un repte",
         "uk": "прийняти виклик / впоратися з викликом"
       }
-    ]
+    ],
+    "level": "next"
   },
   {
     "id": "block6",
@@ -912,11 +1452,12 @@ const BLOCKS = [
         "ca": "assolir una meta",
         "uk": "досягти мети"
       }
-    ]
+    ],
+    "level": "next"
   }
 ];
-const PRESENT_FORMS = {"acceptar": ["accepto", "acceptes", "accepta", "acceptem", "accepteu", "accepten"], "aconseguir": ["aconsegueixo", "aconsegueixes", "aconsegueix", "aconseguim", "aconseguiu", "aconsegueixen"], "actuar": ["actuo", "actues", "actua", "actuem", "actueu", "actuen"], "adaptar": ["adapto", "adaptes", "adapta", "adaptem", "adapteu", "adapten"], "afrontar": ["afronto", "afrontes", "afronta", "afrontem", "afronteu", "afronten"], "ajudar": ["ajudo", "ajudes", "ajuda", "ajudem", "ajudeu", "ajuden"], "anar": ["vaig", "vas", "va", "anem", "aneu", "van"], "aprendre": ["aprenc", "aprens", "aprèn", "aprenem", "apreneu", "aprenen"], "aprofitar": ["aprofito", "aprofites", "aprofita", "aprofitem", "aprofiteu", "aprofiten"], "arribar": ["arribo", "arribes", "arriba", "arribem", "arribeu", "arriben"], "assolir": ["assoleixo", "assoleixes", "assoleix", "assolim", "assoliu", "assoleixen"], "assumir": ["assumeixo", "assumeixes", "assumeix", "assumim", "assumiu", "assumeixen"], "augmentar": ["augmento", "augmentes", "augmenta", "augmentem", "augmenteu", "augmenten"], "buscar": ["busco", "busques", "busca", "busquem", "busqueu", "busquen"], "canviar": ["canvio", "canvies", "canvia", "canviem", "canvieu", "canvien"], "causar": ["causo", "causes", "causa", "causem", "causeu", "causen"], "cometre": ["cometo", "comets", "comet", "cometem", "cometeu", "cometen"], "compartir": ["comparteixo", "comparteixes", "comparteix", "compartim", "compartiu", "comparteixen"], "complir": ["compleixo", "compleixes", "compleix", "complim", "compliu", "compleixen"], "comptar": ["compto", "comptes", "compta", "comptem", "compteu", "compten"], "confirmar": ["confirmo", "confirmes", "confirma", "confirmem", "confirmeu", "confirmen"], "corregir": ["corregeixo", "corregeixes", "corregeix", "corregim", "corregiu", "corregeixen"], "crear": ["creo", "crees", "crea", "creem", "creeu", "creen"], "defensar": ["defenso", "defenses", "defensa", "defensem", "defenseu", "defensen"], "demanar": ["demano", "demanes", "demana", "demanem", "demaneu", "demanen"], "dependre": ["depenc", "depens", "depèn", "depenem", "depeneu", "depenen"], "donar": ["dono", "dones", "dona", "donem", "doneu", "donen"], "dur": ["duc", "dus", "duu", "duem", "dueu", "duen"], "entendre": ["entenc", "entens", "entén", "entenem", "enteneu", "entenen"], "escoltar": ["escolto", "escoltes", "escolta", "escoltem", "escolteu", "escolten"], "escriure": ["escric", "escrius", "escriu", "escrivim", "escriviu", "escriuen"], "estalviar": ["estalvio", "estalvies", "estalvia", "estalviem", "estalvieu", "estalvien"], "estar": ["estic", "estàs", "està", "estem", "esteu", "estan"], "evitar": ["evito", "evites", "evita", "evitem", "eviteu", "eviten"], "explicar": ["explico", "expliques", "explica", "expliquem", "expliqueu", "expliquen"], "expressar": ["expresso", "expresses", "expressa", "expressem", "expresseu", "expressen"], "fer": ["faig", "fas", "fa", "fem", "feu", "fan"], "fomentar": ["fomento", "fomentes", "fomenta", "fomentem", "fomenteu", "fomenten"], "incomplir": ["incompleixo", "incompleixes", "incompleix", "incomplim", "incompliu", "incompleixen"], "limitar": ["limito", "limites", "limita", "limitem", "limiteu", "limiten"], "llegir": ["llegeixo", "llegeixes", "llegeix", "llegim", "llegiu", "llegeixen"], "mantenir": ["mantinc", "mantens", "manté", "mantenim", "manteniu", "mantenen"], "millorar": ["milloro", "millores", "millora", "millorem", "milloreu", "milloren"], "obtenir": ["obtinc", "obtens", "obté", "obtenim", "obteniu", "obtenen"], "parar": ["paro", "pares", "para", "parem", "pareu", "paren"], "participar": ["participo", "participes", "participa", "participem", "participeu", "participen"], "perdre": ["perdo", "perds", "perd", "perdem", "perdeu", "perden"], "posar": ["poso", "poses", "posa", "posem", "poseu", "posen"], "prendre": ["prenc", "prens", "pren", "prenem", "preneu", "prenen"], "preparar": ["preparo", "prepares", "prepara", "preparem", "prepareu", "preparen"], "promoure": ["promoc", "promous", "promou", "promovem", "promoveu", "promouen"], "protegir": ["protegeixo", "protegeixes", "protegeix", "protegim", "protegiu", "protegeixen"], "qüestionar": ["qüestiono", "qüestiones", "qüestiona", "qüestionem", "qüestioneu", "qüestionen"], "rebutjar": ["rebutjo", "rebutges", "rebutja", "rebutgem", "rebutgeu", "rebutgen"], "recollir": ["recullo", "reculls", "recull", "recollim", "recolliu", "recullen"], "reduir": ["redueixo", "redueixes", "redueix", "reduïm", "reduïu", "redueixen"], "resoldre": ["resolc", "resols", "resol", "resolem", "resoleu", "resolen"], "respectar": ["respecto", "respectes", "respecta", "respectem", "respecteu", "respecten"], "respondre": ["responc", "respons", "respon", "responem", "responeu", "responen"], "satisfer": ["satisfac", "satisfàs", "satisfà", "satisfem", "satisfeu", "satisfan"], "sentir": ["sento", "sents", "sent", "sentim", "sentiu", "senten"], "superar": ["supero", "superes", "supera", "superem", "supereu", "superen"], "tenir": ["tinc", "tens", "té", "tenim", "teniu", "tenen"], "tractar": ["tracto", "tractes", "tracta", "tractem", "tracteu", "tracten"], "treballar": ["treballo", "treballes", "treballa", "treballem", "treballeu", "treballen"], "trencar": ["trenco", "trenques", "trenca", "trenquem", "trenqueu", "trenquen"], "treure": ["trec", "treus", "treu", "traiem", "traieu", "treuen"], "trobar": ["trobo", "trobes", "troba", "trobem", "trobeu", "troben"], "valorar": ["valoro", "valores", "valora", "valorem", "valoreu", "valoren"]};
-const FUTURE_STEMS = {"acceptar": "acceptar", "aconseguir": "aconseguir", "actuar": "actuar", "adaptar": "adaptar", "afrontar": "afrontar", "ajudar": "ajudar", "anar": "anir", "aprendre": "aprendr", "aprofitar": "aprofitar", "arribar": "arribar", "assolir": "assolir", "assumir": "assumir", "augmentar": "augmentar", "buscar": "buscar", "canviar": "canviar", "causar": "causar", "cometre": "cometr", "compartir": "compartir", "complir": "complir", "comptar": "comptar", "confirmar": "confirmar", "corregir": "corregir", "crear": "crear", "defensar": "defensar", "demanar": "demanar", "dependre": "dependr", "donar": "donar", "dur": "dur", "entendre": "entendr", "escoltar": "escoltar", "escriure": "escriur", "estalviar": "estalviar", "estar": "estar", "evitar": "evitar", "explicar": "explicar", "expressar": "expressar", "fer": "far", "fomentar": "fomentar", "incomplir": "incomplir", "limitar": "limitar", "llegir": "llegir", "mantenir": "mantindr", "millorar": "millorar", "obtenir": "obtindr", "parar": "parar", "participar": "participar", "perdre": "perdr", "posar": "posar", "prendre": "prendr", "preparar": "preparar", "promoure": "promour", "protegir": "protegir", "qüestionar": "qüestionar", "rebutjar": "rebutjar", "recollir": "recollir", "reduir": "reduir", "resoldre": "resoldr", "respectar": "respectar", "respondre": "respondr", "satisfer": "satisfar", "sentir": "sentir", "superar": "superar", "tenir": "tindr", "tractar": "tractar", "treballar": "treballar", "trencar": "trencar", "treure": "traur", "trobar": "trobar", "valorar": "valorar"};
+const PRESENT_FORMS = {"acceptar":["accepto","acceptes","accepta","acceptem","accepteu","accepten"],"aconseguir":["aconsegueixo","aconsegueixes","aconsegueix","aconseguim","aconseguiu","aconsegueixen"],"actuar":["actuo","actues","actua","actuem","actueu","actuen"],"adaptar":["adapto","adaptes","adapta","adaptem","adapteu","adapten"],"afrontar":["afronto","afrontes","afronta","afrontem","afronteu","afronten"],"ajudar":["ajudo","ajudes","ajuda","ajudem","ajudeu","ajuden"],"anar":["vaig","vas","va","anem","aneu","van"],"aprendre":["aprenc","aprens","aprèn","aprenem","apreneu","aprenen"],"aprofitar":["aprofito","aprofites","aprofita","aprofitem","aprofiteu","aprofiten"],"arribar":["arribo","arribes","arriba","arribem","arribeu","arriben"],"assolir":["assoleixo","assoleixes","assoleix","assolim","assoliu","assoleixen"],"assumir":["assumeixo","assumeixes","assumeix","assumim","assumiu","assumeixen"],"augmentar":["augmento","augmentes","augmenta","augmentem","augmenteu","augmenten"],"buscar":["busco","busques","busca","busquem","busqueu","busquen"],"canviar":["canvio","canvies","canvia","canviem","canvieu","canvien"],"causar":["causo","causes","causa","causem","causeu","causen"],"cometre":["cometo","comets","comet","cometem","cometeu","cometen"],"compartir":["comparteixo","comparteixes","comparteix","compartim","compartiu","comparteixen"],"complir":["compleixo","compleixes","compleix","complim","compliu","compleixen"],"comptar":["compto","comptes","compta","comptem","compteu","compten"],"confirmar":["confirmo","confirmes","confirma","confirmem","confirmeu","confirmen"],"corregir":["corregeixo","corregeixes","corregeix","corregim","corregiu","corregeixen"],"crear":["creo","crees","crea","creem","creeu","creen"],"defensar":["defenso","defenses","defensa","defensem","defenseu","defensen"],"demanar":["demano","demanes","demana","demanem","demaneu","demanen"],"dependre":["depenc","depens","depèn","depenem","depeneu","depenen"],"donar":["dono","dones","dona","donem","doneu","donen"],"dur":["duc","dus","duu","duem","dueu","duen"],"entendre":["entenc","entens","entén","entenem","enteneu","entenen"],"escoltar":["escolto","escoltes","escolta","escoltem","escolteu","escolten"],"escriure":["escric","escrius","escriu","escrivim","escriviu","escriuen"],"estalviar":["estalvio","estalvies","estalvia","estalviem","estalvieu","estalvien"],"estar":["estic","estàs","està","estem","esteu","estan"],"evitar":["evito","evites","evita","evitem","eviteu","eviten"],"explicar":["explico","expliques","explica","expliquem","expliqueu","expliquen"],"expressar":["expresso","expresses","expressa","expressem","expresseu","expressen"],"fer":["faig","fas","fa","fem","feu","fan"],"fomentar":["fomento","fomentes","fomenta","fomentem","fomenteu","fomenten"],"incomplir":["incompleixo","incompleixes","incompleix","incomplim","incompliu","incompleixen"],"limitar":["limito","limites","limita","limitem","limiteu","limiten"],"llegir":["llegeixo","llegeixes","llegeix","llegim","llegiu","llegeixen"],"mantenir":["mantinc","mantens","manté","mantenim","manteniu","mantenen"],"millorar":["milloro","millores","millora","millorem","milloreu","milloren"],"obtenir":["obtinc","obtens","obté","obtenim","obteniu","obtenen"],"parar":["paro","pares","para","parem","pareu","paren"],"participar":["participo","participes","participa","participem","participeu","participen"],"perdre":["perdo","perds","perd","perdem","perdeu","perden"],"posar":["poso","poses","posa","posem","poseu","posen"],"prendre":["prenc","prens","pren","prenem","preneu","prenen"],"preparar":["preparo","prepares","prepara","preparem","prepareu","preparen"],"promoure":["promoc","promous","promou","promovem","promoveu","promouen"],"protegir":["protegeixo","protegeixes","protegeix","protegim","protegiu","protegeixen"],"qüestionar":["qüestiono","qüestiones","qüestiona","qüestionem","qüestioneu","qüestionen"],"rebutjar":["rebutjo","rebutges","rebutja","rebutgem","rebutgeu","rebutgen"],"recollir":["recullo","reculls","recull","recollim","recolliu","recullen"],"reduir":["redueixo","redueixes","redueix","reduïm","reduïu","redueixen"],"resoldre":["resolc","resols","resol","resolem","resoleu","resolen"],"respectar":["respecto","respectes","respecta","respectem","respecteu","respecten"],"respondre":["responc","respons","respon","responem","responeu","responen"],"satisfer":["satisfac","satisfàs","satisfà","satisfem","satisfeu","satisfan"],"sentir":["sento","sents","sent","sentim","sentiu","senten"],"superar":["supero","superes","supera","superem","supereu","superen"],"tenir":["tinc","tens","té","tenim","teniu","tenen"],"tractar":["tracto","tractes","tracta","tractem","tracteu","tracten"],"treballar":["treballo","treballes","treballa","treballem","treballeu","treballen"],"trencar":["trenco","trenques","trenca","trenquem","trenqueu","trenquen"],"treure":["trec","treus","treu","traiem","traieu","treuen"],"trobar":["trobo","trobes","troba","trobem","trobeu","troben"],"valorar":["valoro","valores","valora","valorem","valoreu","valoren"],"menjar":["menjo","menges","menja","mengem","mengeu","mengen"],"beure":["bec","beus","beu","bevem","beveu","beuen"],"mirar":["miro","mires","mira","mirem","mireu","miren"],"parlar":["parlo","parles","parla","parlem","parleu","parlen"],"obrir":["obro","obres","obre","obrim","obriu","obren"],"tancar":["tanco","tanques","tanca","tanquem","tanqueu","tanquen"],"dormir":["dormo","dorms","dorm","dormim","dormiu","dormen"],"viure":["visc","vius","viu","vivim","viviu","viuen"],"entrar":["entro","entres","entra","entrem","entreu","entren"],"sortir":["surto","surts","surt","sortim","sortiu","surten"],"netejar":["netejo","neteges","neteja","netegem","netegeu","netegen"],"rentar":["rento","rentes","renta","rentem","renteu","renten"],"seure":["sec","seus","seu","seiem","seieu","seuen"],"estudiar":["estudio","estudies","estudia","estudiem","estudieu","estudien"],"preguntar":["pregunto","preguntes","pregunta","preguntem","pregunteu","pregunten"],"dibuixar":["dibuixo","dibuixes","dibuixa","dibuixem","dibuixeu","dibuixen"],"recordar":["recordo","recordes","recorda","recordem","recordeu","recorden"],"veure":["veig","veus","veu","veiem","veieu","veuen"],"visitar":["visito","visites","visita","visitem","visiteu","visiten"],"jugar":["jugo","jugues","juga","juguem","jugueu","juguen"],"estimar":["estimo","estimes","estima","estimem","estimeu","estimen"],"esperar":["espero","esperes","espera","esperem","espereu","esperen"],"saludar":["saludo","saludes","saluda","saludem","saludeu","saluden"],"llevar":["llevo","lleves","lleva","llevem","lleveu","lleven"],"vestir":["vesteixo","vesteixes","vesteix","vestim","vestiu","vesteixen"],"esmorzar":["esmorzo","esmorzes","esmorza","esmorzem","esmorzeu","esmorzen"],"tornar":["torno","tornes","torna","tornem","torneu","tornen"],"dinar":["dino","dines","dina","dinem","dineu","dinen"],"descansar":["descanso","descanses","descansa","descansem","descanseu","descansen"],"sopar":["sopo","sopes","sopa","sopem","sopeu","sopen"],"comprar":["compro","compres","compra","comprem","compreu","compren"],"cuinar":["cuino","cuines","cuina","cuinem","cuineu","cuinen"],"tallar":["tallo","talles","talla","tallem","talleu","tallen"],"voler":["vull","vols","vol","volem","voleu","volen"],"caminar":["camino","camines","camina","caminem","camineu","caminen"],"girar":["giro","gires","gira","girem","gireu","giren"],"pujar":["pujo","puges","puja","pugem","pugeu","pugen"],"baixar":["baixo","baixes","baixa","baixem","baixeu","baixen"],"portar":["porto","portes","porta","portem","porteu","porten"],"necessitar":["necessito","necessites","necessita","necessitem","necessiteu","necessiten"],"poder":["puc","pots","pot","podem","podeu","poden"],"dir":["dic","dius","diu","diem","dieu","diuen"],"riure":["ric","rius","riu","riem","rieu","riuen"],"plorar":["ploro","plores","plora","plorem","ploreu","ploren"],"repetir":["repeteixo","repeteixes","repeteix","repetim","repetiu","repeteixen"]};
+const FUTURE_STEMS = {"acceptar":"acceptar","aconseguir":"aconseguir","actuar":"actuar","adaptar":"adaptar","afrontar":"afrontar","ajudar":"ajudar","anar":"anir","aprendre":"aprendr","aprofitar":"aprofitar","arribar":"arribar","assolir":"assolir","assumir":"assumir","augmentar":"augmentar","buscar":"buscar","canviar":"canviar","causar":"causar","cometre":"cometr","compartir":"compartir","complir":"complir","comptar":"comptar","confirmar":"confirmar","corregir":"corregir","crear":"crear","defensar":"defensar","demanar":"demanar","dependre":"dependr","donar":"donar","dur":"dur","entendre":"entendr","escoltar":"escoltar","escriure":"escriur","estalviar":"estalviar","estar":"estar","evitar":"evitar","explicar":"explicar","expressar":"expressar","fer":"far","fomentar":"fomentar","incomplir":"incomplir","limitar":"limitar","llegir":"llegir","mantenir":"mantindr","millorar":"millorar","obtenir":"obtindr","parar":"parar","participar":"participar","perdre":"perdr","posar":"posar","prendre":"prendr","preparar":"preparar","promoure":"promour","protegir":"protegir","qüestionar":"qüestionar","rebutjar":"rebutjar","recollir":"recollir","reduir":"reduir","resoldre":"resoldr","respectar":"respectar","respondre":"respondr","satisfer":"satisfar","sentir":"sentir","superar":"superar","tenir":"tindr","tractar":"tractar","treballar":"treballar","trencar":"trencar","treure":"traur","trobar":"trobar","valorar":"valorar","menjar":"menjar","beure":"beur","mirar":"mirar","parlar":"parlar","obrir":"obrir","tancar":"tancar","dormir":"dormir","viure":"viur","entrar":"entrar","sortir":"sortir","netejar":"netejar","rentar":"rentar","seure":"seur","estudiar":"estudiar","preguntar":"preguntar","dibuixar":"dibuixar","recordar":"recordar","veure":"veur","visitar":"visitar","jugar":"jugar","estimar":"estimar","esperar":"esperar","saludar":"saludar","llevar":"llevar","vestir":"vestir","esmorzar":"esmorzar","tornar":"tornar","dinar":"dinar","descansar":"descansar","sopar":"sopar","comprar":"comprar","cuinar":"cuinar","tallar":"tallar","voler":"voldr","caminar":"caminar","girar":"girar","pujar":"pujar","baixar":"baixar","portar":"portar","necessitar":"necessitar","poder":"podr","dir":"dir","riure":"riur","plorar":"plorar","repetir":"repetir"};
 const FUTURE_ENDINGS = ["é","às","à","em","eu","an"];
 
 const PERSONS = [
@@ -989,7 +1530,10 @@ function storageSet(key,value){
   catch(e){MEMORY_STORAGE[key]=value}
 }
 
-let selectedBlockId="school";
+let selectedBlockId="beginner1";
+let currentMode="study";
+let studyIndex=0;
+let studyRevealed=false;
 let selectedPersonId="random";
 let currentLesson="phrase";
 let actualLesson="phrase";
@@ -1007,6 +1551,9 @@ let hintUsed=false;
 
 const oldRecords=storageGet("catGrammarBlockRecordsV2") || storageGet("catGrammarBlockRecordsV1") || "[]";
 let records=JSON.parse(oldRecords);
+let learnedWords;
+try{learnedWords=new Set(JSON.parse(storageGet("catVocabularyLearnedV3")||"[]"))}
+catch(e){learnedWords=new Set()}
 
 const blockSelect=document.getElementById("blockSelect");
 const personSelect=document.getElementById("personSelect");
@@ -1021,9 +1568,37 @@ const feedback=document.getElementById("feedback");
 const correctEl=document.getElementById("correct");
 const totalEl=document.getElementById("total");
 const bar=document.getElementById("bar");
+const studyPanel=document.getElementById("studyPanel");
+const practicePanel=document.getElementById("practicePanel");
+const reportPanel=document.getElementById("reportPanel");
+const grammarControls=document.getElementById("grammarControls");
+const studyModeButton=document.getElementById("studyMode");
+const practiceModeButton=document.getElementById("practiceMode");
+const studyCounter=document.getElementById("studyCounter");
+const studyCa=document.getElementById("studyCa");
+const studyUk=document.getElementById("studyUk");
+const revealTranslation=document.getElementById("revealTranslation");
+const markLearned=document.getElementById("markLearned");
 
-function normalize(text){
-  return (text||"").toLowerCase().trim().replace(/[’]/g,"'").replace(/[.?!,;:]/g,"").replace(/\s+/g," ");
+function normalizeSurface(text){
+  return (text||"").trim().replace(/[’`´]/g,"'").replace(/[.?!,;:]/g,"").replace(/\s+/g," ");
+}
+function removeCatalanAccents(text){
+  return text
+    .replace(/[àáâä]/g,"a")
+    .replace(/[èéêë]/g,"e")
+    .replace(/[íïî]/g,"i")
+    .replace(/[òóôö]/g,"o")
+    .replace(/[úüû]/g,"u");
+}
+function normalizeForAnswer(text){
+  return removeCatalanAccents(normalizeSurface(text).toLocaleLowerCase("ca"));
+}
+function compareAnswer(user,expected){
+  const surfaceUser=normalizeSurface(user);
+  const surfaceExpected=normalizeSurface(expected);
+  const accepted=normalizeForAnswer(surfaceUser)===normalizeForAnswer(surfaceExpected);
+  return {accepted,spellingAdjusted:accepted&&surfaceUser!==surfaceExpected};
 }
 function capitalize(text){return text?text.charAt(0).toUpperCase()+text.slice(1):text}
 function shuffle(arr){return [...arr].sort(()=>Math.random()-.5)}
@@ -1114,8 +1689,13 @@ function stats(){
   const total=records.length;
   const correct=records.filter(r=>r.correct).length;
   const hints=records.filter(r=>r.assisted).length;
+  const spellingHints=records.filter(r=>r.spellingAdjusted).length;
   const avgTime=total?Math.round(records.reduce((s,r)=>s+(r.timeSec||0),0)/total):0;
-  return {total,correct,hints,avgTime};
+  return {total,correct,hints,spellingHints,avgTime};
+}
+function saveLearnedWords(){
+  storageSet("catVocabularyLearnedV3",JSON.stringify([...learnedWords]));
+  renderStudy();
 }
 function saveRecords(){
   storageSet("catGrammarBlockRecordsV2",JSON.stringify(records));
@@ -1136,6 +1716,67 @@ function startQuestion(){
   hintUsed=false;
   selected="";
   builtWords=[];
+}
+
+function phraseKey(blockId,phrase){return `${blockId}::${phrase.ca}`}
+function beginnerBlocks(){return BLOCKS.filter(b=>b.level==="beginner")}
+function beginnerWordKeys(){return beginnerBlocks().flatMap(b=>b.phrases.map(p=>phraseKey(b.id,p)))}
+function beginnerCompletion(){
+  const keys=beginnerWordKeys();
+  const learned=keys.filter(k=>learnedWords.has(k)).length;
+  const beginnerIds=new Set(beginnerBlocks().map(b=>b.id));
+  const practiceRecords=records.filter(r=>beginnerIds.has(r.blockId));
+  const accuracy=percent(practiceRecords.filter(r=>r.correct).length,practiceRecords.length);
+  const everyBlockPractised=beginnerBlocks().every(b=>practiceRecords.filter(r=>r.blockId===b.id).length>=10);
+  const complete=learned===keys.length&&everyBlockPractised&&accuracy>=80;
+  return {learned,total:keys.length,attempts:practiceRecords.length,accuracy,everyBlockPractised,complete};
+}
+function renderBeginnerProgress(){
+  const p=beginnerCompletion();
+  let status=`Вивчено <b>${p.learned} / ${p.total}</b> фраз. Граматична практика: <b>${p.attempts}</b> спроб, точність <b>${p.attempts?p.accuracy+"%":"—"}</b>.`;
+  if(p.complete) status+=`<br><b>Рівень Beginner завершено. Можна переходити до наступного рівня.</b>`;
+  else status+=`<br><span class="muted">Для завершення: вивчити всі 100 фраз, виконати щонайменше 10 вправ у кожному Beginner-блоці та отримати загальну точність не нижче 80%.</span>`;
+  document.getElementById("beginnerProgress").innerHTML=status;
+}
+function renderStudyTable(){
+  const block=currentBlock();
+  const tbody=document.querySelector("#vocabTable tbody");
+  tbody.innerHTML=block.phrases.map((p,i)=>{
+    const learned=learnedWords.has(phraseKey(block.id,p));
+    return `<tr class="${learned?"learned-row":""}"><td>${escapeHtml(p.ca)}</td><td>${escapeHtml(p.uk)}</td><td>${learned?'<span class="learned-badge">Вивчено</span>':`<button class="secondary learn-word" data-index="${i}" type="button">Позначити</button>`}</td></tr>`;
+  }).join("");
+  document.querySelectorAll(".learn-word").forEach(btn=>btn.addEventListener("click",()=>{
+    const p=block.phrases[Number(btn.dataset.index)];
+    learnedWords.add(phraseKey(block.id,p));
+    saveLearnedWords();
+  }));
+}
+function renderStudy(){
+  const block=currentBlock();
+  if(studyIndex>=block.phrases.length)studyIndex=0;
+  const phrase=block.phrases[studyIndex];
+  const learned=learnedWords.has(phraseKey(block.id,phrase));
+  studyCounter.textContent=`${block.title}: фраза ${studyIndex+1} з ${block.phrases.length}`;
+  studyCa.textContent=phrase.ca;
+  studyUk.textContent=phrase.uk;
+  studyUk.classList.toggle("hidden",!studyRevealed);
+  revealTranslation.textContent=studyRevealed?"Сховати переклад":"Показати переклад";
+  markLearned.textContent=learned?"✓ Вивчено":"Позначити як вивчене";
+  markLearned.disabled=learned;
+  renderBeginnerProgress();
+  renderStudyTable();
+}
+function switchMode(mode){
+  currentMode=mode;
+  reportPanel.classList.add("hidden");
+  const study=mode==="study";
+  studyPanel.classList.toggle("hidden",!study);
+  practicePanel.classList.toggle("hidden",study);
+  grammarControls.classList.toggle("hidden",study);
+  studyModeButton.classList.toggle("active",study);
+  practiceModeButton.classList.toggle("active",!study);
+  if(study)renderStudy();
+  else{pickPhrase();render()}
 }
 
 function render(){
@@ -1329,7 +1970,9 @@ function check(){
     return;
   }
   const user=getUserAnswer();
-  const answerCorrect=normalize(user)===normalize(currentExpected);
+  const comparison=compareAnswer(user,currentExpected);
+  const answerCorrect=comparison.accepted;
+  const spellingAdjusted=comparison.spellingAdjusted;
   const credited=answerCorrect&&!hintUsed;
   const timeSec=Math.max(1,Math.round((Date.now()-questionStartTime)/1000));
 
@@ -1348,6 +1991,7 @@ function check(){
     expected:currentExpected,
     answer:user||"",
     answerCorrect,
+    spellingAdjusted,
     assisted:hintUsed,
     correct:credited,
     timeSec
@@ -1357,8 +2001,11 @@ function check(){
   checkedThisQuestion=true;
   disableExercise();
 
+  const spellingMessage=spellingAdjusted?`<div class="spelling-note"><b>Підказка з написання:</b> ${currentExpected}</div>`:"";
   if(answerCorrect&&hintUsed){
-    setFeedback("assisted",`<b>Відповідь правильна, але не зарахована.</b><br>Причина: була відкрита підказка.<br>Правильно: <b>${currentExpected}</b>`);
+    setFeedback("assisted",`<b>Відповідь правильна, але не зарахована.</b><br>Причина: була відкрита підказка.${spellingMessage}<br>Правильно: <b>${currentExpected}</b>`);
+  }else if(credited&&spellingAdjusted){
+    setFeedback("ok",`<b>Зараховано правильно.</b><br>Помилки лише у великих/малих літерах або каталонських наголосах не знижують бал.${spellingMessage}<br>Час: ${timeSec} c.`);
   }else if(credited){
     setFeedback("ok",`<b>Правильно.</b><br>Відповідь: <b>${currentExpected}</b><br>Час: ${timeSec} c.`);
   }else{
@@ -1376,8 +2023,9 @@ function qualityText(pct){
 }
 
 function showReport(){
-  document.getElementById("practicePanel").classList.add("hidden");
-  document.getElementById("reportPanel").classList.remove("hidden");
+  studyPanel.classList.add("hidden");
+  practicePanel.classList.add("hidden");
+  reportPanel.classList.remove("hidden");
   const s=stats();
   const acc=percent(s.correct,s.total);
   document.getElementById("mAccuracy").textContent=acc+"%";
@@ -1385,6 +2033,7 @@ function showReport(){
   document.getElementById("mHints").textContent=s.hints;
   document.getElementById("mAttempts").textContent=s.total;
   document.getElementById("mTime").textContent=s.avgTime+" c";
+  document.getElementById("mSpelling").textContent=s.spellingHints;
 
   const q=qualityText(acc);
   const level=document.getElementById("qualityLevel");
@@ -1457,8 +2106,8 @@ function escapeHtml(str){return String(str).replaceAll("&","&amp;").replaceAll("
 
 function exportCsv(){
   if(!records.length){alert("Немає даних для експорту.");return}
-  const headers=["date","block","lesson","person","phrase_uk","phrase_ca","expected","answer","answer_correct","hint_used","credited","time_sec"];
-  const rows=records.map(r=>[r.date,r.blockTitle,r.lessonLabel,r.personLabel||"",r.phraseUk,r.phraseCa,r.expected,r.answer,r.answerCorrect?"yes":"no",r.assisted?"yes":"no",r.correct?"yes":"no",r.timeSec]);
+  const headers=["date","block","lesson","person","phrase_uk","phrase_ca","expected","answer","answer_correct","spelling_hint","hint_used","credited","time_sec"];
+  const rows=records.map(r=>[r.date,r.blockTitle,r.lessonLabel,r.personLabel||"",r.phraseUk,r.phraseCa,r.expected,r.answer,r.answerCorrect?"yes":"no",r.spellingAdjusted?"yes":"no",r.assisted?"yes":"no",r.correct?"yes":"no",r.timeSec]);
   const csv=[headers,...rows].map(row=>row.map(cell=>`"${String(cell??"").replaceAll('"','""')}"`).join(",")).join("\n");
   const blob=new Blob([csv],{type:"text/csv;charset=utf-8"});
   const url=URL.createObjectURL(blob);
@@ -1467,12 +2116,21 @@ function exportCsv(){
 }
 
 function initBlockSelect(){
-  blockSelect.innerHTML=BLOCKS.map(b=>`<option value="${b.id}">${b.title} (${b.phrases.length})</option>`).join("");
+  const beginner=BLOCKS.filter(b=>b.level==="beginner");
+  const next=BLOCKS.filter(b=>b.level!=="beginner");
+  const options=items=>items.map(b=>`<option value="${b.id}">${b.title} (${b.phrases.length})</option>`).join("");
+  blockSelect.innerHTML=`<optgroup label="Beginner — 10 блоків / 100 фраз">${options(beginner)}</optgroup><optgroup label="Наступний рівень">${options(next)}</optgroup>`;
   blockSelect.value=selectedBlockId;
   blockDescription.textContent=currentBlock().description;
 }
 
-blockSelect.addEventListener("change",()=>{selectedBlockId=blockSelect.value;blockDescription.textContent=currentBlock().description;pickPhrase();render()});
+blockSelect.addEventListener("change",()=>{
+  selectedBlockId=blockSelect.value;
+  blockDescription.textContent=currentBlock().description;
+  studyIndex=0;studyRevealed=false;
+  if(currentMode==="study")renderStudy();
+  else{pickPhrase();render()}
+});
 personSelect.addEventListener("change",()=>{selectedPersonId=personSelect.value;pickPhrase();render()});
 document.querySelectorAll(".lesson").forEach(btn=>btn.addEventListener("click",()=>{
   document.querySelectorAll(".lesson").forEach(b=>b.classList.remove("active"));
@@ -1481,13 +2139,25 @@ document.querySelectorAll(".lesson").forEach(btn=>btn.addEventListener("click",(
 document.getElementById("next").addEventListener("click",()=>{pickPhrase();render()});
 document.getElementById("check").addEventListener("click",check);
 document.getElementById("reset").addEventListener("click",()=>{
-  if(!confirm("Очистити всі результати на цьому пристрої?"))return;
-  records=[];saveRecords();showReport();
+  if(!confirm("Очистити результати вправ і позначки вивчених слів на цьому пристрої?"))return;
+  records=[];learnedWords=new Set();saveLearnedWords();saveRecords();showReport();
 });
 document.getElementById("showReport").addEventListener("click",showReport);
-document.getElementById("backToPractice").addEventListener("click",()=>{
-  document.getElementById("reportPanel").classList.add("hidden");
-  document.getElementById("practicePanel").classList.remove("hidden");
+document.getElementById("backToPractice").addEventListener("click",()=>switchMode(currentMode));
+document.getElementById("studyMode").addEventListener("click",()=>switchMode("study"));
+document.getElementById("practiceMode").addEventListener("click",()=>switchMode("practice"));
+document.getElementById("goToPractice").addEventListener("click",()=>switchMode("practice"));
+document.getElementById("studyPrev").addEventListener("click",()=>{
+  const n=currentBlock().phrases.length;studyIndex=(studyIndex-1+n)%n;studyRevealed=false;renderStudy();
+});
+document.getElementById("studyNext").addEventListener("click",()=>{
+  studyIndex=(studyIndex+1)%currentBlock().phrases.length;studyRevealed=false;renderStudy();
+});
+revealTranslation.addEventListener("click",()=>{studyRevealed=!studyRevealed;renderStudy()});
+markLearned.addEventListener("click",()=>{
+  const phrase=currentBlock().phrases[studyIndex];
+  learnedWords.add(phraseKey(currentBlock().id,phrase));
+  saveLearnedWords();
 });
 document.getElementById("exportCsv").addEventListener("click",exportCsv);
 
@@ -1495,6 +2165,7 @@ initBlockSelect();
 updateMiniScore();
 pickPhrase();
 render();
+switchMode("study");
 </script>
 </body>
 </html>
