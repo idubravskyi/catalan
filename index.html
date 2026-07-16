@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Каталонська — слова й граматика</title>
+  <title>Каталонська — слова, дієслова й граматика</title>
   <style>
     :root {
       --bg:#f5f5f0; --card:#fff; --ink:#1f1f1f; --muted:#666; --line:#d8d8d0;
@@ -66,6 +66,17 @@
     .study-card{border:1px solid var(--line);border-radius:16px;padding:22px;text-align:center;background:linear-gradient(180deg,#fff,#fafafa);margin:14px 0}
     .study-ca{font-size:30px;font-weight:700;margin:8px 0}
     .study-uk{font-size:22px;margin:12px 0;color:var(--ok)}
+    .study-conjugation{margin-top:18px;padding-top:16px;border-top:1px solid var(--line);text-align:left}
+    .study-conjugation h3{margin:0 0 4px;font-size:18px}
+    .study-conjugation .verb-label{font-size:15px;color:var(--muted);margin-bottom:8px}
+    .study-conjugation table{margin-top:8px;background:#fff}
+    .study-conjugation th{font-size:13px;color:var(--muted)}
+    .study-conjugation td:nth-child(2){font-weight:700}
+    .study-conjugation .example{color:#294267}
+    @media(max-width:620px){
+      .study-conjugation th:nth-child(3),
+      .study-conjugation td:nth-child(3){display:none}
+    }
     .study-actions{display:flex;flex-wrap:wrap;gap:7px;align-items:center}
     .study-actions button{margin:0}
     .study-progress{padding:12px;border:1px solid var(--line);border-radius:12px;background:#fafafa;margin:12px 0}
@@ -136,7 +147,7 @@
   <section class="card">
     <div id="studyPanel">
       <h2>Вивчення нової лексики</h2>
-      <p class="muted">Переглянь усі 10 фраз у блоці. Відкрий переклад і познач фразу як вивчену.</p>
+      <p class="muted">Переглянь усі 10 фраз у блоці. Відкрий переклад і познач фразу як вивчену. Для дієслів також вивчи відмінювання за всіма особами.</p>
 
       <div id="beginnerProgress" class="study-progress"></div>
 
@@ -144,6 +155,7 @@
         <div class="muted" id="studyCounter"></div>
         <div class="study-ca" id="studyCa"></div>
         <div class="study-uk hidden" id="studyUk"></div>
+        <div class="study-conjugation" id="studyConjugation"></div>
       </div>
 
       <div class="study-actions">
@@ -1577,6 +1589,7 @@ const practiceModeButton=document.getElementById("practiceMode");
 const studyCounter=document.getElementById("studyCounter");
 const studyCa=document.getElementById("studyCa");
 const studyUk=document.getElementById("studyUk");
+const studyConjugation=document.getElementById("studyConjugation");
 const revealTranslation=document.getElementById("revealTranslation");
 const markLearned=document.getElementById("markLearned");
 
@@ -1751,6 +1764,35 @@ function renderStudyTable(){
     saveLearnedWords();
   }));
 }
+function renderStudyConjugation(phrase){
+  const info=analyzePhrase(phrase);
+  if(!info.supported){
+    studyConjugation.innerHTML=`<p class="muted">Для цієї фрази таблиця відмінювання поки що недоступна.</p>`;
+    return;
+  }
+
+  const infinitive=info.pronominal?`${info.verb}-se`:info.verb;
+  const rows=PERSONS.map((person,i)=>{
+    const reflexive=info.pronominal?`${person.reflexive} `:"";
+    const form=`${reflexive}${info.forms[i]}`;
+    const rest=info.rest?` ${info.rest}`:"";
+    const example=`${person.subject} ${form}${rest}.`;
+    return `<tr>
+      <td>${escapeHtml(person.label)}</td>
+      <td>${escapeHtml(form)}</td>
+      <td class="example">${escapeHtml(example)}</td>
+    </tr>`;
+  }).join("");
+
+  studyConjugation.innerHTML=`
+    <h3>Відмінювання дієслова</h3>
+    <div class="verb-label">Інфінітив: <b>${escapeHtml(infinitive)}</b> · теперішній час</div>
+    <table>
+      <thead><tr><th>Особа</th><th>Форма</th><th>Приклад із фразою</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+}
+
 function renderStudy(){
   const block=currentBlock();
   if(studyIndex>=block.phrases.length)studyIndex=0;
@@ -1759,6 +1801,7 @@ function renderStudy(){
   studyCounter.textContent=`${block.title}: фраза ${studyIndex+1} з ${block.phrases.length}`;
   studyCa.textContent=phrase.ca;
   studyUk.textContent=phrase.uk;
+  renderStudyConjugation(phrase);
   studyUk.classList.toggle("hidden",!studyRevealed);
   revealTranslation.textContent=studyRevealed?"Сховати переклад":"Показати переклад";
   markLearned.textContent=learned?"✓ Вивчено":"Позначити як вивчене";
