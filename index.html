@@ -93,12 +93,19 @@
 <body>
 <header>
   <h1>Каталонська — слова й граматика</h1>
-  <p>Спочатку вивчи 10 нових фраз, потім переходь до граматичної практики.</p>
 </header>
 
 <main>
   <aside class="card">
     <h2>Налаштування</h2>
+
+    <label for="levelSelect"><b>Level</b></label>
+    <select id="levelSelect">
+      <option value="level1">Level 1</option>
+      <option value="level2">Level 2</option>
+      <option value="level3">Level 3</option>
+      <option value="level4">Level 4</option>
+    </select>
 
     <label for="blockSelect"><b>Блок лексики</b></label>
     <select id="blockSelect"></select>
@@ -137,7 +144,8 @@
     <h3>Поточний результат</h3>
     <div class="progress"><div class="bar" id="bar"></div></div>
     <p class="score"><span id="correct">0</span> / <span id="total">0</span></p>
-    <p class="muted">Зараховано правильно / усього спроб</p>
+    <p class="muted">Виконано правильно / максимум завдань для вибраних налаштувань</p>
+    <p class="muted" id="filterMaximum"></p>
 
     <button class="secondary" id="showReport">Показати звіт</button>
     <button class="secondary" id="exportCsv">Експорт CSV</button>
@@ -147,7 +155,7 @@
   <section class="card">
     <div id="studyPanel">
       <h2>Вивчення нової лексики</h2>
-      <p class="muted">Переглянь усі 10 фраз у блоці. Відкрий переклад і познач фразу як вивчену. Для дієслів також вивчи відмінювання за всіма особами.</p>
+      <p class="muted">Переглянь слова у блоці — не більше 10. Відкрий переклад і познач фразу як вивчену. Для дієслів також вивчи відмінювання за всіма особами.</p>
 
       <div id="beginnerProgress" class="study-progress"></div>
 
@@ -190,7 +198,7 @@
       <div id="feedback" class="feedback"></div>
 
       <button id="check">Перевірити</button>
-      <button class="secondary" id="next">Наступне завдання</button>
+      <button class="secondary" id="next" disabled>Наступне завдання</button>
       <p class="muted">Оцінюється тільки перша перевірка. Великі/малі літери та каталонські наголоси не знижують бал. Якщо відкрити підказку до перевірки, бал не нараховується.</p>
     </div>
 
@@ -201,7 +209,7 @@
       <div id="qualityLevel" class="level"></div>
 
       <div class="metrics">
-        <div class="metric"><div class="value" id="mAccuracy">0%</div><div>Точність</div></div>
+        <div class="metric"><div class="value" id="mAccuracy">0%</div><div>Виконання вибраного набору</div></div>
         <div class="metric"><div class="value" id="mCorrect">0</div><div>Правильно без підказки</div></div>
         <div class="metric"><div class="value" id="mHints">0</div><div>Використано підказок</div></div>
         <div class="metric"><div class="value" id="mAttempts">0</div><div>Усього спроб</div></div>
@@ -233,8 +241,8 @@
 const BLOCKS = [
   {
     "id": "beginner1",
-    "level": "beginner",
-    "title": "Beginner 1 — базові дії",
+    "level": "level1",
+    "title": "Блок 1 — базові дії",
     "description": "10 найпростіших дій: їсти, пити, читати, писати та інші.",
     "phrases": [
       {
@@ -281,8 +289,8 @@ const BLOCKS = [
   },
   {
     "id": "beginner2",
-    "level": "beginner",
-    "title": "Beginner 2 — удома",
+    "level": "level1",
+    "title": "Блок 2 — удома",
     "description": "10 простих фраз про дім і щоденні домашні справи.",
     "phrases": [
       {
@@ -329,8 +337,8 @@ const BLOCKS = [
   },
   {
     "id": "beginner3",
-    "level": "beginner",
-    "title": "Beginner 3 — школа",
+    "level": "level1",
+    "title": "Блок 3 — школа",
     "description": "10 базових фраз про уроки, завдання та клас.",
     "phrases": [
       {
@@ -377,8 +385,8 @@ const BLOCKS = [
   },
   {
     "id": "beginner4",
-    "level": "beginner",
-    "title": "Beginner 4 — сім’я та друзі",
+    "level": "level1",
+    "title": "Блок 4 — сім’я та друзі",
     "description": "10 простих фраз про родину, друзів і спілкування.",
     "phrases": [
       {
@@ -425,8 +433,8 @@ const BLOCKS = [
   },
   {
     "id": "beginner5",
-    "level": "beginner",
-    "title": "Beginner 5 — мій день",
+    "level": "level1",
+    "title": "Блок 5 — мій день",
     "description": "10 фраз про ранкові справи, школу, їжу та сон.",
     "phrases": [
       {
@@ -473,8 +481,8 @@ const BLOCKS = [
   },
   {
     "id": "beginner6",
-    "level": "beginner",
-    "title": "Beginner 6 — їжа та напої",
+    "level": "level1",
+    "title": "Блок 6 — їжа та напої",
     "description": "10 базових фраз про продукти, приготування їжі та бажання.",
     "phrases": [
       {
@@ -521,8 +529,8 @@ const BLOCKS = [
   },
   {
     "id": "beginner7",
-    "level": "beginner",
-    "title": "Beginner 7 — місця та напрямки",
+    "level": "level1",
+    "title": "Блок 7 — місця та напрямки",
     "description": "10 простих фраз про дорогу, транспорт і рух.",
     "phrases": [
       {
@@ -569,8 +577,8 @@ const BLOCKS = [
   },
   {
     "id": "beginner8",
-    "level": "beginner",
-    "title": "Beginner 8 — одяг і погода",
+    "level": "level1",
+    "title": "Блок 8 — одяг і погода",
     "description": "10 базових фраз про одяг, температуру та погоду.",
     "phrases": [
       {
@@ -617,8 +625,8 @@ const BLOCKS = [
   },
   {
     "id": "beginner9",
-    "level": "beginner",
-    "title": "Beginner 9 — почуття та потреби",
+    "level": "level1",
+    "title": "Блок 9 — почуття та потреби",
     "description": "10 простих фраз про самопочуття, потреби та емоції.",
     "phrases": [
       {
@@ -665,9 +673,9 @@ const BLOCKS = [
   },
   {
     "id": "beginner10",
-    "level": "beginner",
-    "title": "Beginner 10 — просте спілкування",
-    "description": "Останні 10 фраз рівня Beginner: привітання, відповіді та прохання.",
+    "level": "level1",
+    "title": "Блок 10 — просте спілкування",
+    "description": "Останні 10 фраз Level 1: привітання, відповіді та прохання.",
     "phrases": [
       {
         "ca": "dir bon dia",
@@ -712,117 +720,489 @@ const BLOCKS = [
     ]
   },
   {
-    "id": "school",
-    "title": "Наступний рівень — шкільна лексика",
-    "description": "Складніша шкільна лексика. Відкривайте після завершення Beginner 1–10.",
+    "id": "level2_1",
+    "level": "level2",
+    "title": "Блок 1 — у школі",
+    "description": "Шкільні дії, інструкції та просте спілкування на уроці.",
     "phrases": [
       {
-        "ca": "explicar una idea",
-        "uk": "пояснити ідею"
+        "ca": "portar el material escolar",
+        "uk": "приносити шкільне приладдя"
       },
       {
-        "ca": "donar la seva opinió",
-        "uk": "висловити свою думку"
+        "ca": "arribar a l’escola a temps",
+        "uk": "приходити до школи вчасно"
       },
       {
-        "ca": "escoltar els companys",
-        "uk": "слухати однокласників"
+        "ca": "escoltar la mestra",
+        "uk": "слухати вчительку"
       },
       {
-        "ca": "respectar els altres",
-        "uk": "поважати інших"
+        "ca": "treballar en parella",
+        "uk": "працювати в парі"
       },
       {
-        "ca": "ajudar un amic",
-        "uk": "допомогти другу"
-      },
-      {
-        "ca": "treballar en grup",
-        "uk": "працювати в групі"
-      },
-      {
-        "ca": "fer els deures",
-        "uk": "робити домашнє завдання"
-      },
-      {
-        "ca": "preparar un examen",
-        "uk": "готуватися до іспиту"
-      },
-      {
-        "ca": "entendre una pregunta",
-        "uk": "зрозуміти питання"
+        "ca": "fer una pregunta",
+        "uk": "ставити запитання"
       },
       {
         "ca": "demanar ajuda",
-        "uk": "попросити допомоги"
+        "uk": "просити допомоги"
       },
       {
-        "ca": "cometre un error",
-        "uk": "зробити помилку"
-      },
-      {
-        "ca": "corregir un error",
-        "uk": "виправити помилку"
-      },
-      {
-        "ca": "aprendre una paraula nova",
-        "uk": "вивчити нове слово"
+        "ca": "escriure una resposta completa",
+        "uk": "писати повну відповідь"
       },
       {
         "ca": "llegir en veu alta",
         "uk": "читати вголос"
       },
       {
-        "ca": "escriure una resposta",
-        "uk": "написати відповідь"
+        "ca": "corregir un error",
+        "uk": "виправляти помилку"
       },
       {
-        "ca": "tenir por de",
-        "uk": "боятися"
-      },
-      {
-        "ca": "estar orgullós de",
-        "uk": "пишатися"
-      },
-      {
-        "ca": "sentir-se segur",
-        "uk": "почуватися впевнено"
-      },
-      {
-        "ca": "tenir paciència",
-        "uk": "мати терпіння"
-      },
-      {
-        "ca": "fer una pregunta",
-        "uk": "поставити запитання"
-      },
-      {
-        "ca": "buscar informació",
-        "uk": "шукати інформацію"
-      },
-      {
-        "ca": "tenir cura del material",
-        "uk": "дбати про матеріали"
-      },
-      {
-        "ca": "recollir la classe",
-        "uk": "прибрати клас"
-      },
-      {
-        "ca": "protegir la natura",
-        "uk": "захищати природу"
-      },
-      {
-        "ca": "estalviar aigua",
-        "uk": "економити воду"
+        "ca": "preparar un examen",
+        "uk": "готуватися до іспиту"
       }
-    ],
-    "level": "next"
+    ]
   },
   {
-    "id": "block1",
-    "title": "Блок 1 — рішення, думки, відповідальність",
-    "description": "Перший блок попередньої лексики.",
+    "id": "level2_2",
+    "level": "level2",
+    "title": "Блок 2 — розпорядок дня",
+    "description": "Щоденні справи з точнішим описом часу та послідовності.",
+    "phrases": [
+      {
+        "ca": "llevar-se a les set",
+        "uk": "вставати о сьомій"
+      },
+      {
+        "ca": "rentar-se les dents",
+        "uk": "чистити зуби"
+      },
+      {
+        "ca": "vestir-se abans d’esmorzar",
+        "uk": "одягатися перед сніданком"
+      },
+      {
+        "ca": "preparar la motxilla",
+        "uk": "готувати рюкзак"
+      },
+      {
+        "ca": "sortir de casa d’hora",
+        "uk": "виходити з дому рано"
+      },
+      {
+        "ca": "caminar fins a l’escola",
+        "uk": "йти пішки до школи"
+      },
+      {
+        "ca": "tornar a casa a la tarda",
+        "uk": "повертатися додому після обіду"
+      },
+      {
+        "ca": "fer els deures després de dinar",
+        "uk": "робити домашнє завдання після обіду"
+      },
+      {
+        "ca": "descansar mitja hora",
+        "uk": "відпочивати пів години"
+      },
+      {
+        "ca": "anar a dormir d’hora",
+        "uk": "лягати спати рано"
+      }
+    ]
+  },
+  {
+    "id": "level2_3",
+    "level": "level2",
+    "title": "Блок 3 — домашні справи",
+    "description": "Прості обов’язки вдома та догляд за кімнатою.",
+    "phrases": [
+      {
+        "ca": "fer el llit",
+        "uk": "застеляти ліжко"
+      },
+      {
+        "ca": "netejar l’habitació",
+        "uk": "прибирати кімнату"
+      },
+      {
+        "ca": "rentar la roba",
+        "uk": "прати одяг"
+      },
+      {
+        "ca": "treure la brossa",
+        "uk": "виносити сміття"
+      },
+      {
+        "ca": "posar la taula",
+        "uk": "накривати на стіл"
+      },
+      {
+        "ca": "preparar el sopar",
+        "uk": "готувати вечерю"
+      },
+      {
+        "ca": "obrir les finestres",
+        "uk": "відчиняти вікна"
+      },
+      {
+        "ca": "tancar la porta amb clau",
+        "uk": "замикати двері на ключ"
+      },
+      {
+        "ca": "ajudar la família",
+        "uk": "допомагати родині"
+      },
+      {
+        "ca": "buscar una cosa perduda",
+        "uk": "шукати загублену річ"
+      }
+    ]
+  },
+  {
+    "id": "level2_4",
+    "level": "level2",
+    "title": "Блок 4 — їжа та покупки",
+    "description": "Покупки, просте замовлення їжі та приготування страв.",
+    "phrases": [
+      {
+        "ca": "comprar fruita i verdura",
+        "uk": "купувати фрукти й овочі"
+      },
+      {
+        "ca": "demanar un entrepà",
+        "uk": "замовляти бутерброд"
+      },
+      {
+        "ca": "triar una beguda",
+        "uk": "обирати напій"
+      },
+      {
+        "ca": "pagar el compte",
+        "uk": "оплачувати рахунок"
+      },
+      {
+        "ca": "preparar un berenar",
+        "uk": "готувати перекус"
+      },
+      {
+        "ca": "tallar el pa",
+        "uk": "різати хліб"
+      },
+      {
+        "ca": "cuinar pasta",
+        "uk": "готувати макарони"
+      },
+      {
+        "ca": "posar llet als cereals",
+        "uk": "додавати молоко до пластівців"
+      },
+      {
+        "ca": "beure suc de taronja",
+        "uk": "пити апельсиновий сік"
+      },
+      {
+        "ca": "voler unes postres",
+        "uk": "хотіти десерт"
+      }
+    ]
+  },
+  {
+    "id": "level2_5",
+    "level": "level2",
+    "title": "Блок 5 — місто і транспорт",
+    "description": "Пересування містом, автобусом і пошук потрібного місця.",
+    "phrases": [
+      {
+        "ca": "anar a la biblioteca",
+        "uk": "йти до бібліотеки"
+      },
+      {
+        "ca": "esperar l’autobús",
+        "uk": "чекати на автобус"
+      },
+      {
+        "ca": "pujar a l’autobús",
+        "uk": "сідати в автобус"
+      },
+      {
+        "ca": "baixar a la parada següent",
+        "uk": "виходити на наступній зупинці"
+      },
+      {
+        "ca": "caminar fins al parc",
+        "uk": "йти пішки до парку"
+      },
+      {
+        "ca": "girar després del semàfor",
+        "uk": "повертати після світлофора"
+      },
+      {
+        "ca": "entrar a la farmàcia",
+        "uk": "заходити до аптеки"
+      },
+      {
+        "ca": "sortir del supermercat",
+        "uk": "виходити із супермаркету"
+      },
+      {
+        "ca": "arribar a l’estació",
+        "uk": "прибувати на станцію"
+      },
+      {
+        "ca": "tornar a casa en autobús",
+        "uk": "повертатися додому автобусом"
+      }
+    ]
+  },
+  {
+    "id": "level2_6",
+    "level": "level2",
+    "title": "Блок 6 — здоров’я",
+    "description": "Прості фрази про самопочуття, відпочинок і здорові звички.",
+    "phrases": [
+      {
+        "ca": "tenir mal de cap",
+        "uk": "мати головний біль"
+      },
+      {
+        "ca": "tenir mal de panxa",
+        "uk": "мати біль у животі"
+      },
+      {
+        "ca": "necessitar descansar",
+        "uk": "потребувати відпочинку"
+      },
+      {
+        "ca": "beure molta aigua",
+        "uk": "пити багато води"
+      },
+      {
+        "ca": "menjar aliments saludables",
+        "uk": "їсти корисні продукти"
+      },
+      {
+        "ca": "prendre un medicament",
+        "uk": "приймати ліки"
+      },
+      {
+        "ca": "anar al metge",
+        "uk": "йти до лікаря"
+      },
+      {
+        "ca": "dormir vuit hores",
+        "uk": "спати вісім годин"
+      },
+      {
+        "ca": "caminar cada dia",
+        "uk": "ходити пішки щодня"
+      },
+      {
+        "ca": "sentir-se millor",
+        "uk": "почуватися краще"
+      }
+    ]
+  },
+  {
+    "id": "level2_7",
+    "level": "level2",
+    "title": "Блок 7 — вільний час",
+    "description": "Хобі, спорт, музика, читання та культурні заняття.",
+    "phrases": [
+      {
+        "ca": "fer esport després de classe",
+        "uk": "займатися спортом після уроків"
+      },
+      {
+        "ca": "jugar a futbol",
+        "uk": "грати у футбол"
+      },
+      {
+        "ca": "mirar una pel·lícula",
+        "uk": "дивитися фільм"
+      },
+      {
+        "ca": "llegir un còmic",
+        "uk": "читати комікс"
+      },
+      {
+        "ca": "escoltar una cançó nova",
+        "uk": "слухати нову пісню"
+      },
+      {
+        "ca": "dibuixar un personatge",
+        "uk": "малювати персонажа"
+      },
+      {
+        "ca": "fer una foto",
+        "uk": "робити фотографію"
+      },
+      {
+        "ca": "visitar un museu",
+        "uk": "відвідувати музей"
+      },
+      {
+        "ca": "aprendre una cançó",
+        "uk": "вивчати пісню"
+      },
+      {
+        "ca": "caminar amb els amics",
+        "uk": "гуляти з друзями"
+      }
+    ]
+  },
+  {
+    "id": "level2_8",
+    "level": "level2",
+    "title": "Блок 8 — друзі та родина",
+    "description": "Спілкування, допомога, спільні заняття та повага до інших.",
+    "phrases": [
+      {
+        "ca": "parlar amb els companys",
+        "uk": "розмовляти з однокласниками"
+      },
+      {
+        "ca": "ajudar una amiga",
+        "uk": "допомагати подрузі"
+      },
+      {
+        "ca": "compartir una idea",
+        "uk": "ділитися ідеєю"
+      },
+      {
+        "ca": "esperar un amic",
+        "uk": "чекати на друга"
+      },
+      {
+        "ca": "donar un regal",
+        "uk": "дарувати подарунок"
+      },
+      {
+        "ca": "explicar una història",
+        "uk": "розповідати історію"
+      },
+      {
+        "ca": "respectar una opinió",
+        "uk": "поважати думку"
+      },
+      {
+        "ca": "visitar els avis",
+        "uk": "відвідувати бабусю й дідуся"
+      },
+      {
+        "ca": "jugar amb els cosins",
+        "uk": "гратися з двоюрідними братами й сестрами"
+      },
+      {
+        "ca": "treballar amb una altra persona",
+        "uk": "працювати з іншою людиною"
+      }
+    ]
+  },
+  {
+    "id": "level2_9",
+    "level": "level2",
+    "title": "Блок 9 — погода та одяг",
+    "description": "Одяг за погодою та прості дії в дощовий або теплий день.",
+    "phrases": [
+      {
+        "ca": "portar sabates còmodes",
+        "uk": "носити зручне взуття"
+      },
+      {
+        "ca": "posar-se una gorra",
+        "uk": "одягати кепку"
+      },
+      {
+        "ca": "treure la jaqueta",
+        "uk": "знімати куртку"
+      },
+      {
+        "ca": "obrir el paraigua",
+        "uk": "розкривати парасолю"
+      },
+      {
+        "ca": "mirar la previsió del temps",
+        "uk": "дивитися прогноз погоди"
+      },
+      {
+        "ca": "tenir fred al matí",
+        "uk": "мерзнути вранці"
+      },
+      {
+        "ca": "tenir calor a la tarda",
+        "uk": "відчувати спеку після обіду"
+      },
+      {
+        "ca": "sortir amb paraigua",
+        "uk": "виходити з парасолею"
+      },
+      {
+        "ca": "caminar sota la pluja",
+        "uk": "йти під дощем"
+      },
+      {
+        "ca": "tornar a casa aviat",
+        "uk": "повертатися додому рано"
+      }
+    ]
+  },
+  {
+    "id": "level2_10",
+    "level": "level2",
+    "title": "Блок 10 — плани",
+    "description": "Прості наміри та плани на вихідні або невелику подорож.",
+    "phrases": [
+      {
+        "ca": "voler anar al cinema",
+        "uk": "хотіти піти до кінотеатру"
+      },
+      {
+        "ca": "poder sortir demà",
+        "uk": "могти вийти завтра"
+      },
+      {
+        "ca": "preparar una excursió",
+        "uk": "готувати екскурсію"
+      },
+      {
+        "ca": "parlar del cap de setmana",
+        "uk": "говорити про вихідні"
+      },
+      {
+        "ca": "visitar un lloc nou",
+        "uk": "відвідувати нове місце"
+      },
+      {
+        "ca": "portar menjar i aigua",
+        "uk": "брати їжу та воду"
+      },
+      {
+        "ca": "arribar a temps",
+        "uk": "приходити вчасно"
+      },
+      {
+        "ca": "recordar el camí",
+        "uk": "пам’ятати дорогу"
+      },
+      {
+        "ca": "tornar al vespre",
+        "uk": "повертатися ввечері"
+      },
+      {
+        "ca": "fer plans amb els amics",
+        "uk": "планувати щось із друзями"
+      }
+    ]
+  },
+  {
+    "id": "block1_part1",
+    "title": "Блок 1 — рішення та думки, частина 1",
+    "description": "Перший блок попередньої лексики. Частина 1 з 3; у блоці 10 слів.",
     "phrases": [
       {
         "ca": "fer un esforç",
@@ -863,7 +1243,15 @@ const BLOCKS = [
       {
         "ca": "arribar a una conclusió",
         "uk": "дійти висновку"
-      },
+      }
+    ],
+    "level": "level3"
+  },
+  {
+    "id": "block1_part2",
+    "title": "Блок 2 — рішення та думки, частина 2",
+    "description": "Перший блок попередньої лексики. Частина 2 з 3; у блоці 10 слів.",
+    "phrases": [
       {
         "ca": "canviar d’opinió",
         "uk": "змінити думку"
@@ -903,7 +1291,15 @@ const BLOCKS = [
       {
         "ca": "tenir experiència en",
         "uk": "мати досвід у"
-      },
+      }
+    ],
+    "level": "level3"
+  },
+  {
+    "id": "block1_part3",
+    "title": "Блок 3 — рішення та думки, частина 3",
+    "description": "Перший блок попередньої лексики. Частина 3 з 3; у блоці 5 слів.",
+    "phrases": [
       {
         "ca": "fer front a una situació",
         "uk": "дати раду ситуації"
@@ -925,12 +1321,12 @@ const BLOCKS = [
         "uk": "оцінити переваги та недоліки"
       }
     ],
-    "level": "next"
+    "level": "level3"
   },
   {
-    "id": "block2",
-    "title": "Блок 2 — правила, доступ, конфлікти",
-    "description": "Другий блок попередньої лексики.",
+    "id": "block2_part1",
+    "title": "Блок 4 — правила та співпраця, частина 1",
+    "description": "Другий блок попередньої лексики. Частина 1 з 3; у блоці 10 слів.",
     "phrases": [
       {
         "ca": "prendre mesures",
@@ -971,7 +1367,15 @@ const BLOCKS = [
       {
         "ca": "donar una explicació",
         "uk": "дати пояснення"
-      },
+      }
+    ],
+    "level": "level3"
+  },
+  {
+    "id": "block2_part2",
+    "title": "Блок 5 — правила та співпраця, частина 2",
+    "description": "Другий блок попередньої лексики. Частина 2 з 3; у блоці 10 слів.",
+    "phrases": [
       {
         "ca": "demanar aclariments",
         "uk": "попросити роз’яснення"
@@ -1011,7 +1415,15 @@ const BLOCKS = [
       {
         "ca": "incomplir les normes",
         "uk": "порушувати правила"
-      },
+      }
+    ],
+    "level": "level3"
+  },
+  {
+    "id": "block2_part3",
+    "title": "Блок 6 — правила та співпраця, частина 3",
+    "description": "Другий блок попередньої лексики. Частина 3 з 3; у блоці 5 слів.",
+    "phrases": [
       {
         "ca": "tenir una bona relació amb",
         "uk": "мати добрі стосунки з"
@@ -1033,12 +1445,12 @@ const BLOCKS = [
         "uk": "усвідомити"
       }
     ],
-    "level": "next"
+    "level": "level3"
   },
   {
-    "id": "block3",
-    "title": "Блок 3 — участь, аргументи, результат",
-    "description": "Третій блок попередньої лексики.",
+    "id": "block3_part1",
+    "title": "Блок 7 — участь та результати, частина 1",
+    "description": "Третій блок попередньої лексики. Частина 1 з 3; у блоці 10 слів.",
     "phrases": [
       {
         "ca": "tenir influència en",
@@ -1079,7 +1491,15 @@ const BLOCKS = [
       {
         "ca": "reduir el risc",
         "uk": "зменшити ризик"
-      },
+      }
+    ],
+    "level": "level3"
+  },
+  {
+    "id": "block3_part2",
+    "title": "Блок 8 — участь та результати, частина 2",
+    "description": "Третій блок попередньої лексики. Частина 2 з 3; у блоці 10 слів.",
+    "phrases": [
       {
         "ca": "obtenir un resultat",
         "uk": "досягти результату"
@@ -1119,7 +1539,15 @@ const BLOCKS = [
       {
         "ca": "tenir present",
         "uk": "брати до уваги"
-      },
+      }
+    ],
+    "level": "level3"
+  },
+  {
+    "id": "block3_part3",
+    "title": "Блок 9 — участь та результати, частина 3",
+    "description": "Третій блок попередньої лексики. Частина 3 з 3; у блоці 5 слів.",
+    "phrases": [
       {
         "ca": "causar dificultats",
         "uk": "викликати труднощі"
@@ -1141,12 +1569,12 @@ const BLOCKS = [
         "uk": "нести відповідальність за"
       }
     ],
-    "level": "next"
+    "level": "level3"
   },
   {
-    "id": "block4",
-    "title": "Блок 4 — права, обов’язки, потреби",
-    "description": "Четвертий блок попередньої лексики.",
+    "id": "block4_part1",
+    "title": "Блок 1 — права та обов’язки, частина 1",
+    "description": "Четвертий блок попередньої лексики. Частина 1 з 3; у блоці 10 слів.",
     "phrases": [
       {
         "ca": "prendre part en",
@@ -1187,7 +1615,15 @@ const BLOCKS = [
       {
         "ca": "assumir les conseqüències",
         "uk": "прийняти наслідки"
-      },
+      }
+    ],
+    "level": "level4"
+  },
+  {
+    "id": "block4_part2",
+    "title": "Блок 2 — права та обов’язки, частина 2",
+    "description": "Четвертий блок попередньої лексики. Частина 2 з 3; у блоці 10 слів.",
+    "phrases": [
       {
         "ca": "tenir una necessitat",
         "uk": "мати потребу"
@@ -1227,7 +1663,15 @@ const BLOCKS = [
       {
         "ca": "posar límits",
         "uk": "встановити межі"
-      },
+      }
+    ],
+    "level": "level4"
+  },
+  {
+    "id": "block4_part3",
+    "title": "Блок 3 — права та обов’язки, частина 3",
+    "description": "Четвертий блок попередньої лексики. Частина 3 з 3; у блоці 5 слів.",
+    "phrases": [
       {
         "ca": "respectar els límits",
         "uk": "поважати межі"
@@ -1249,12 +1693,12 @@ const BLOCKS = [
         "uk": "стежити за / контролювати перебіг"
       }
     ],
-    "level": "next"
+    "level": "level4"
   },
   {
-    "id": "block5",
-    "title": "Блок 5 — думка, досвід, співжиття",
-    "description": "П’ятий блок попередньої лексики.",
+    "id": "block5_part1",
+    "title": "Блок 4 — досвід і відповідальність, частина 1",
+    "description": "П’ятий блок попередньої лексики. Частина 1 з 3; у блоці 10 слів.",
     "phrases": [
       {
         "ca": "tenir en comú",
@@ -1295,7 +1739,15 @@ const BLOCKS = [
       {
         "ca": "fer-se càrrec de",
         "uk": "взяти на себе / подбати про"
-      },
+      }
+    ],
+    "level": "level4"
+  },
+  {
+    "id": "block5_part2",
+    "title": "Блок 5 — досвід і відповідальність, частина 2",
+    "description": "П’ятий блок попередньої лексики. Частина 2 з 3; у блоці 10 слів.",
+    "phrases": [
       {
         "ca": "anar més enllà de",
         "uk": "виходити за межі"
@@ -1335,7 +1787,15 @@ const BLOCKS = [
       {
         "ca": "actuar amb responsabilitat",
         "uk": "діяти відповідально"
-      },
+      }
+    ],
+    "level": "level4"
+  },
+  {
+    "id": "block5_part3",
+    "title": "Блок 6 — досвід і відповідальність, частина 3",
+    "description": "П’ятий блок попередньої лексики. Частина 3 з 3; у блоці 5 слів.",
+    "phrases": [
       {
         "ca": "respondre a una necessitat",
         "uk": "відповідати потребі"
@@ -1357,12 +1817,12 @@ const BLOCKS = [
         "uk": "прийняти виклик / впоратися з викликом"
       }
     ],
-    "level": "next"
+    "level": "level4"
   },
   {
-    "id": "block6",
-    "title": "Блок 6 — аналіз, гіпотези, зміни",
-    "description": "Шостий блок попередньої лексики.",
+    "id": "block6_part1",
+    "title": "Блок 7 — аналіз та аргументація, частина 1",
+    "description": "Шостий блок попередньої лексики. Частина 1 з 3; у блоці 10 слів.",
     "phrases": [
       {
         "ca": "tenir clar",
@@ -1403,7 +1863,15 @@ const BLOCKS = [
       {
         "ca": "rebutjar una hipòtesi",
         "uk": "відхилити гіпотезу"
-      },
+      }
+    ],
+    "level": "level4"
+  },
+  {
+    "id": "block6_part2",
+    "title": "Блок 8 — аналіз та аргументація, частина 2",
+    "description": "Шостий блок попередньої лексики. Частина 2 з 3; у блоці 10 слів.",
+    "phrases": [
       {
         "ca": "tenir un impacte en",
         "uk": "мати вплив на"
@@ -1443,7 +1911,15 @@ const BLOCKS = [
       {
         "ca": "qüestionar una idea",
         "uk": "ставити під сумнів ідею"
-      },
+      }
+    ],
+    "level": "level4"
+  },
+  {
+    "id": "block6_part3",
+    "title": "Блок 9 — аналіз та аргументація, частина 3",
+    "description": "Шостий блок попередньої лексики. Частина 3 з 3; у блоці 5 слів.",
+    "phrases": [
       {
         "ca": "fer una anàlisi",
         "uk": "зробити аналіз"
@@ -1465,11 +1941,11 @@ const BLOCKS = [
         "uk": "досягти мети"
       }
     ],
-    "level": "next"
+    "level": "level4"
   }
 ];
-const PRESENT_FORMS = {"acceptar":["accepto","acceptes","accepta","acceptem","accepteu","accepten"],"aconseguir":["aconsegueixo","aconsegueixes","aconsegueix","aconseguim","aconseguiu","aconsegueixen"],"actuar":["actuo","actues","actua","actuem","actueu","actuen"],"adaptar":["adapto","adaptes","adapta","adaptem","adapteu","adapten"],"afrontar":["afronto","afrontes","afronta","afrontem","afronteu","afronten"],"ajudar":["ajudo","ajudes","ajuda","ajudem","ajudeu","ajuden"],"anar":["vaig","vas","va","anem","aneu","van"],"aprendre":["aprenc","aprens","aprèn","aprenem","apreneu","aprenen"],"aprofitar":["aprofito","aprofites","aprofita","aprofitem","aprofiteu","aprofiten"],"arribar":["arribo","arribes","arriba","arribem","arribeu","arriben"],"assolir":["assoleixo","assoleixes","assoleix","assolim","assoliu","assoleixen"],"assumir":["assumeixo","assumeixes","assumeix","assumim","assumiu","assumeixen"],"augmentar":["augmento","augmentes","augmenta","augmentem","augmenteu","augmenten"],"buscar":["busco","busques","busca","busquem","busqueu","busquen"],"canviar":["canvio","canvies","canvia","canviem","canvieu","canvien"],"causar":["causo","causes","causa","causem","causeu","causen"],"cometre":["cometo","comets","comet","cometem","cometeu","cometen"],"compartir":["comparteixo","comparteixes","comparteix","compartim","compartiu","comparteixen"],"complir":["compleixo","compleixes","compleix","complim","compliu","compleixen"],"comptar":["compto","comptes","compta","comptem","compteu","compten"],"confirmar":["confirmo","confirmes","confirma","confirmem","confirmeu","confirmen"],"corregir":["corregeixo","corregeixes","corregeix","corregim","corregiu","corregeixen"],"crear":["creo","crees","crea","creem","creeu","creen"],"defensar":["defenso","defenses","defensa","defensem","defenseu","defensen"],"demanar":["demano","demanes","demana","demanem","demaneu","demanen"],"dependre":["depenc","depens","depèn","depenem","depeneu","depenen"],"donar":["dono","dones","dona","donem","doneu","donen"],"dur":["duc","dus","duu","duem","dueu","duen"],"entendre":["entenc","entens","entén","entenem","enteneu","entenen"],"escoltar":["escolto","escoltes","escolta","escoltem","escolteu","escolten"],"escriure":["escric","escrius","escriu","escrivim","escriviu","escriuen"],"estalviar":["estalvio","estalvies","estalvia","estalviem","estalvieu","estalvien"],"estar":["estic","estàs","està","estem","esteu","estan"],"evitar":["evito","evites","evita","evitem","eviteu","eviten"],"explicar":["explico","expliques","explica","expliquem","expliqueu","expliquen"],"expressar":["expresso","expresses","expressa","expressem","expresseu","expressen"],"fer":["faig","fas","fa","fem","feu","fan"],"fomentar":["fomento","fomentes","fomenta","fomentem","fomenteu","fomenten"],"incomplir":["incompleixo","incompleixes","incompleix","incomplim","incompliu","incompleixen"],"limitar":["limito","limites","limita","limitem","limiteu","limiten"],"llegir":["llegeixo","llegeixes","llegeix","llegim","llegiu","llegeixen"],"mantenir":["mantinc","mantens","manté","mantenim","manteniu","mantenen"],"millorar":["milloro","millores","millora","millorem","milloreu","milloren"],"obtenir":["obtinc","obtens","obté","obtenim","obteniu","obtenen"],"parar":["paro","pares","para","parem","pareu","paren"],"participar":["participo","participes","participa","participem","participeu","participen"],"perdre":["perdo","perds","perd","perdem","perdeu","perden"],"posar":["poso","poses","posa","posem","poseu","posen"],"prendre":["prenc","prens","pren","prenem","preneu","prenen"],"preparar":["preparo","prepares","prepara","preparem","prepareu","preparen"],"promoure":["promoc","promous","promou","promovem","promoveu","promouen"],"protegir":["protegeixo","protegeixes","protegeix","protegim","protegiu","protegeixen"],"qüestionar":["qüestiono","qüestiones","qüestiona","qüestionem","qüestioneu","qüestionen"],"rebutjar":["rebutjo","rebutges","rebutja","rebutgem","rebutgeu","rebutgen"],"recollir":["recullo","reculls","recull","recollim","recolliu","recullen"],"reduir":["redueixo","redueixes","redueix","reduïm","reduïu","redueixen"],"resoldre":["resolc","resols","resol","resolem","resoleu","resolen"],"respectar":["respecto","respectes","respecta","respectem","respecteu","respecten"],"respondre":["responc","respons","respon","responem","responeu","responen"],"satisfer":["satisfac","satisfàs","satisfà","satisfem","satisfeu","satisfan"],"sentir":["sento","sents","sent","sentim","sentiu","senten"],"superar":["supero","superes","supera","superem","supereu","superen"],"tenir":["tinc","tens","té","tenim","teniu","tenen"],"tractar":["tracto","tractes","tracta","tractem","tracteu","tracten"],"treballar":["treballo","treballes","treballa","treballem","treballeu","treballen"],"trencar":["trenco","trenques","trenca","trenquem","trenqueu","trenquen"],"treure":["trec","treus","treu","traiem","traieu","treuen"],"trobar":["trobo","trobes","troba","trobem","trobeu","troben"],"valorar":["valoro","valores","valora","valorem","valoreu","valoren"],"menjar":["menjo","menges","menja","mengem","mengeu","mengen"],"beure":["bec","beus","beu","bevem","beveu","beuen"],"mirar":["miro","mires","mira","mirem","mireu","miren"],"parlar":["parlo","parles","parla","parlem","parleu","parlen"],"obrir":["obro","obres","obre","obrim","obriu","obren"],"tancar":["tanco","tanques","tanca","tanquem","tanqueu","tanquen"],"dormir":["dormo","dorms","dorm","dormim","dormiu","dormen"],"viure":["visc","vius","viu","vivim","viviu","viuen"],"entrar":["entro","entres","entra","entrem","entreu","entren"],"sortir":["surto","surts","surt","sortim","sortiu","surten"],"netejar":["netejo","neteges","neteja","netegem","netegeu","netegen"],"rentar":["rento","rentes","renta","rentem","renteu","renten"],"seure":["sec","seus","seu","seiem","seieu","seuen"],"estudiar":["estudio","estudies","estudia","estudiem","estudieu","estudien"],"preguntar":["pregunto","preguntes","pregunta","preguntem","pregunteu","pregunten"],"dibuixar":["dibuixo","dibuixes","dibuixa","dibuixem","dibuixeu","dibuixen"],"recordar":["recordo","recordes","recorda","recordem","recordeu","recorden"],"veure":["veig","veus","veu","veiem","veieu","veuen"],"visitar":["visito","visites","visita","visitem","visiteu","visiten"],"jugar":["jugo","jugues","juga","juguem","jugueu","juguen"],"estimar":["estimo","estimes","estima","estimem","estimeu","estimen"],"esperar":["espero","esperes","espera","esperem","espereu","esperen"],"saludar":["saludo","saludes","saluda","saludem","saludeu","saluden"],"llevar":["llevo","lleves","lleva","llevem","lleveu","lleven"],"vestir":["vesteixo","vesteixes","vesteix","vestim","vestiu","vesteixen"],"esmorzar":["esmorzo","esmorzes","esmorza","esmorzem","esmorzeu","esmorzen"],"tornar":["torno","tornes","torna","tornem","torneu","tornen"],"dinar":["dino","dines","dina","dinem","dineu","dinen"],"descansar":["descanso","descanses","descansa","descansem","descanseu","descansen"],"sopar":["sopo","sopes","sopa","sopem","sopeu","sopen"],"comprar":["compro","compres","compra","comprem","compreu","compren"],"cuinar":["cuino","cuines","cuina","cuinem","cuineu","cuinen"],"tallar":["tallo","talles","talla","tallem","talleu","tallen"],"voler":["vull","vols","vol","volem","voleu","volen"],"caminar":["camino","camines","camina","caminem","camineu","caminen"],"girar":["giro","gires","gira","girem","gireu","giren"],"pujar":["pujo","puges","puja","pugem","pugeu","pugen"],"baixar":["baixo","baixes","baixa","baixem","baixeu","baixen"],"portar":["porto","portes","porta","portem","porteu","porten"],"necessitar":["necessito","necessites","necessita","necessitem","necessiteu","necessiten"],"poder":["puc","pots","pot","podem","podeu","poden"],"dir":["dic","dius","diu","diem","dieu","diuen"],"riure":["ric","rius","riu","riem","rieu","riuen"],"plorar":["ploro","plores","plora","plorem","ploreu","ploren"],"repetir":["repeteixo","repeteixes","repeteix","repetim","repetiu","repeteixen"]};
-const FUTURE_STEMS = {"acceptar":"acceptar","aconseguir":"aconseguir","actuar":"actuar","adaptar":"adaptar","afrontar":"afrontar","ajudar":"ajudar","anar":"anir","aprendre":"aprendr","aprofitar":"aprofitar","arribar":"arribar","assolir":"assolir","assumir":"assumir","augmentar":"augmentar","buscar":"buscar","canviar":"canviar","causar":"causar","cometre":"cometr","compartir":"compartir","complir":"complir","comptar":"comptar","confirmar":"confirmar","corregir":"corregir","crear":"crear","defensar":"defensar","demanar":"demanar","dependre":"dependr","donar":"donar","dur":"dur","entendre":"entendr","escoltar":"escoltar","escriure":"escriur","estalviar":"estalviar","estar":"estar","evitar":"evitar","explicar":"explicar","expressar":"expressar","fer":"far","fomentar":"fomentar","incomplir":"incomplir","limitar":"limitar","llegir":"llegir","mantenir":"mantindr","millorar":"millorar","obtenir":"obtindr","parar":"parar","participar":"participar","perdre":"perdr","posar":"posar","prendre":"prendr","preparar":"preparar","promoure":"promour","protegir":"protegir","qüestionar":"qüestionar","rebutjar":"rebutjar","recollir":"recollir","reduir":"reduir","resoldre":"resoldr","respectar":"respectar","respondre":"respondr","satisfer":"satisfar","sentir":"sentir","superar":"superar","tenir":"tindr","tractar":"tractar","treballar":"treballar","trencar":"trencar","treure":"traur","trobar":"trobar","valorar":"valorar","menjar":"menjar","beure":"beur","mirar":"mirar","parlar":"parlar","obrir":"obrir","tancar":"tancar","dormir":"dormir","viure":"viur","entrar":"entrar","sortir":"sortir","netejar":"netejar","rentar":"rentar","seure":"seur","estudiar":"estudiar","preguntar":"preguntar","dibuixar":"dibuixar","recordar":"recordar","veure":"veur","visitar":"visitar","jugar":"jugar","estimar":"estimar","esperar":"esperar","saludar":"saludar","llevar":"llevar","vestir":"vestir","esmorzar":"esmorzar","tornar":"tornar","dinar":"dinar","descansar":"descansar","sopar":"sopar","comprar":"comprar","cuinar":"cuinar","tallar":"tallar","voler":"voldr","caminar":"caminar","girar":"girar","pujar":"pujar","baixar":"baixar","portar":"portar","necessitar":"necessitar","poder":"podr","dir":"dir","riure":"riur","plorar":"plorar","repetir":"repetir"};
+const PRESENT_FORMS = {"acceptar":["accepto","acceptes","accepta","acceptem","accepteu","accepten"],"aconseguir":["aconsegueixo","aconsegueixes","aconsegueix","aconseguim","aconseguiu","aconsegueixen"],"actuar":["actuo","actues","actua","actuem","actueu","actuen"],"adaptar":["adapto","adaptes","adapta","adaptem","adapteu","adapten"],"afrontar":["afronto","afrontes","afronta","afrontem","afronteu","afronten"],"ajudar":["ajudo","ajudes","ajuda","ajudem","ajudeu","ajuden"],"anar":["vaig","vas","va","anem","aneu","van"],"aprendre":["aprenc","aprens","aprèn","aprenem","apreneu","aprenen"],"aprofitar":["aprofito","aprofites","aprofita","aprofitem","aprofiteu","aprofiten"],"arribar":["arribo","arribes","arriba","arribem","arribeu","arriben"],"assolir":["assoleixo","assoleixes","assoleix","assolim","assoliu","assoleixen"],"assumir":["assumeixo","assumeixes","assumeix","assumim","assumiu","assumeixen"],"augmentar":["augmento","augmentes","augmenta","augmentem","augmenteu","augmenten"],"buscar":["busco","busques","busca","busquem","busqueu","busquen"],"canviar":["canvio","canvies","canvia","canviem","canvieu","canvien"],"causar":["causo","causes","causa","causem","causeu","causen"],"cometre":["cometo","comets","comet","cometem","cometeu","cometen"],"compartir":["comparteixo","comparteixes","comparteix","compartim","compartiu","comparteixen"],"complir":["compleixo","compleixes","compleix","complim","compliu","compleixen"],"comptar":["compto","comptes","compta","comptem","compteu","compten"],"confirmar":["confirmo","confirmes","confirma","confirmem","confirmeu","confirmen"],"corregir":["corregeixo","corregeixes","corregeix","corregim","corregiu","corregeixen"],"crear":["creo","crees","crea","creem","creeu","creen"],"defensar":["defenso","defenses","defensa","defensem","defenseu","defensen"],"demanar":["demano","demanes","demana","demanem","demaneu","demanen"],"dependre":["depenc","depens","depèn","depenem","depeneu","depenen"],"donar":["dono","dones","dona","donem","doneu","donen"],"dur":["duc","dus","duu","duem","dueu","duen"],"entendre":["entenc","entens","entén","entenem","enteneu","entenen"],"escoltar":["escolto","escoltes","escolta","escoltem","escolteu","escolten"],"escriure":["escric","escrius","escriu","escrivim","escriviu","escriuen"],"estalviar":["estalvio","estalvies","estalvia","estalviem","estalvieu","estalvien"],"estar":["estic","estàs","està","estem","esteu","estan"],"evitar":["evito","evites","evita","evitem","eviteu","eviten"],"explicar":["explico","expliques","explica","expliquem","expliqueu","expliquen"],"expressar":["expresso","expresses","expressa","expressem","expresseu","expressen"],"fer":["faig","fas","fa","fem","feu","fan"],"fomentar":["fomento","fomentes","fomenta","fomentem","fomenteu","fomenten"],"incomplir":["incompleixo","incompleixes","incompleix","incomplim","incompliu","incompleixen"],"limitar":["limito","limites","limita","limitem","limiteu","limiten"],"llegir":["llegeixo","llegeixes","llegeix","llegim","llegiu","llegeixen"],"mantenir":["mantinc","mantens","manté","mantenim","manteniu","mantenen"],"millorar":["milloro","millores","millora","millorem","milloreu","milloren"],"obtenir":["obtinc","obtens","obté","obtenim","obteniu","obtenen"],"parar":["paro","pares","para","parem","pareu","paren"],"participar":["participo","participes","participa","participem","participeu","participen"],"perdre":["perdo","perds","perd","perdem","perdeu","perden"],"posar":["poso","poses","posa","posem","poseu","posen"],"prendre":["prenc","prens","pren","prenem","preneu","prenen"],"preparar":["preparo","prepares","prepara","preparem","prepareu","preparen"],"promoure":["promoc","promous","promou","promovem","promoveu","promouen"],"protegir":["protegeixo","protegeixes","protegeix","protegim","protegiu","protegeixen"],"qüestionar":["qüestiono","qüestiones","qüestiona","qüestionem","qüestioneu","qüestionen"],"rebutjar":["rebutjo","rebutges","rebutja","rebutgem","rebutgeu","rebutgen"],"recollir":["recullo","reculls","recull","recollim","recolliu","recullen"],"reduir":["redueixo","redueixes","redueix","reduïm","reduïu","redueixen"],"resoldre":["resolc","resols","resol","resolem","resoleu","resolen"],"respectar":["respecto","respectes","respecta","respectem","respecteu","respecten"],"respondre":["responc","respons","respon","responem","responeu","responen"],"satisfer":["satisfac","satisfàs","satisfà","satisfem","satisfeu","satisfan"],"sentir":["sento","sents","sent","sentim","sentiu","senten"],"superar":["supero","superes","supera","superem","supereu","superen"],"tenir":["tinc","tens","té","tenim","teniu","tenen"],"tractar":["tracto","tractes","tracta","tractem","tracteu","tracten"],"treballar":["treballo","treballes","treballa","treballem","treballeu","treballen"],"trencar":["trenco","trenques","trenca","trenquem","trenqueu","trenquen"],"treure":["trec","treus","treu","traiem","traieu","treuen"],"trobar":["trobo","trobes","troba","trobem","trobeu","troben"],"valorar":["valoro","valores","valora","valorem","valoreu","valoren"],"menjar":["menjo","menges","menja","mengem","mengeu","mengen"],"beure":["bec","beus","beu","bevem","beveu","beuen"],"mirar":["miro","mires","mira","mirem","mireu","miren"],"parlar":["parlo","parles","parla","parlem","parleu","parlen"],"obrir":["obro","obres","obre","obrim","obriu","obren"],"tancar":["tanco","tanques","tanca","tanquem","tanqueu","tanquen"],"dormir":["dormo","dorms","dorm","dormim","dormiu","dormen"],"viure":["visc","vius","viu","vivim","viviu","viuen"],"entrar":["entro","entres","entra","entrem","entreu","entren"],"sortir":["surto","surts","surt","sortim","sortiu","surten"],"netejar":["netejo","neteges","neteja","netegem","netegeu","netegen"],"rentar":["rento","rentes","renta","rentem","renteu","renten"],"seure":["sec","seus","seu","seiem","seieu","seuen"],"estudiar":["estudio","estudies","estudia","estudiem","estudieu","estudien"],"preguntar":["pregunto","preguntes","pregunta","preguntem","pregunteu","pregunten"],"dibuixar":["dibuixo","dibuixes","dibuixa","dibuixem","dibuixeu","dibuixen"],"recordar":["recordo","recordes","recorda","recordem","recordeu","recorden"],"veure":["veig","veus","veu","veiem","veieu","veuen"],"visitar":["visito","visites","visita","visitem","visiteu","visiten"],"jugar":["jugo","jugues","juga","juguem","jugueu","juguen"],"estimar":["estimo","estimes","estima","estimem","estimeu","estimen"],"esperar":["espero","esperes","espera","esperem","espereu","esperen"],"saludar":["saludo","saludes","saluda","saludem","saludeu","saluden"],"llevar":["llevo","lleves","lleva","llevem","lleveu","lleven"],"vestir":["vesteixo","vesteixes","vesteix","vestim","vestiu","vesteixen"],"esmorzar":["esmorzo","esmorzes","esmorza","esmorzem","esmorzeu","esmorzen"],"tornar":["torno","tornes","torna","tornem","torneu","tornen"],"dinar":["dino","dines","dina","dinem","dineu","dinen"],"descansar":["descanso","descanses","descansa","descansem","descanseu","descansen"],"sopar":["sopo","sopes","sopa","sopem","sopeu","sopen"],"comprar":["compro","compres","compra","comprem","compreu","compren"],"cuinar":["cuino","cuines","cuina","cuinem","cuineu","cuinen"],"tallar":["tallo","talles","talla","tallem","talleu","tallen"],"voler":["vull","vols","vol","volem","voleu","volen"],"caminar":["camino","camines","camina","caminem","camineu","caminen"],"girar":["giro","gires","gira","girem","gireu","giren"],"pujar":["pujo","puges","puja","pugem","pugeu","pugen"],"baixar":["baixo","baixes","baixa","baixem","baixeu","baixen"],"portar":["porto","portes","porta","portem","porteu","porten"],"necessitar":["necessito","necessites","necessita","necessitem","necessiteu","necessiten"],"poder":["puc","pots","pot","podem","podeu","poden"],"dir":["dic","dius","diu","diem","dieu","diuen"],"riure":["ric","rius","riu","riem","rieu","riuen"],"plorar":["ploro","plores","plora","plorem","ploreu","ploren"],"repetir":["repeteixo","repeteixes","repeteix","repetim","repetiu","repeteixen"],"pagar":["pago","pagues","paga","paguem","pagueu","paguen"],"triar":["trio","tries","tria","triem","trieu","trien"]};
+const FUTURE_STEMS = {"acceptar":"acceptar","aconseguir":"aconseguir","actuar":"actuar","adaptar":"adaptar","afrontar":"afrontar","ajudar":"ajudar","anar":"anir","aprendre":"aprendr","aprofitar":"aprofitar","arribar":"arribar","assolir":"assolir","assumir":"assumir","augmentar":"augmentar","buscar":"buscar","canviar":"canviar","causar":"causar","cometre":"cometr","compartir":"compartir","complir":"complir","comptar":"comptar","confirmar":"confirmar","corregir":"corregir","crear":"crear","defensar":"defensar","demanar":"demanar","dependre":"dependr","donar":"donar","dur":"dur","entendre":"entendr","escoltar":"escoltar","escriure":"escriur","estalviar":"estalviar","estar":"estar","evitar":"evitar","explicar":"explicar","expressar":"expressar","fer":"far","fomentar":"fomentar","incomplir":"incomplir","limitar":"limitar","llegir":"llegir","mantenir":"mantindr","millorar":"millorar","obtenir":"obtindr","parar":"parar","participar":"participar","perdre":"perdr","posar":"posar","prendre":"prendr","preparar":"preparar","promoure":"promour","protegir":"protegir","qüestionar":"qüestionar","rebutjar":"rebutjar","recollir":"recollir","reduir":"reduir","resoldre":"resoldr","respectar":"respectar","respondre":"respondr","satisfer":"satisfar","sentir":"sentir","superar":"superar","tenir":"tindr","tractar":"tractar","treballar":"treballar","trencar":"trencar","treure":"traur","trobar":"trobar","valorar":"valorar","menjar":"menjar","beure":"beur","mirar":"mirar","parlar":"parlar","obrir":"obrir","tancar":"tancar","dormir":"dormir","viure":"viur","entrar":"entrar","sortir":"sortir","netejar":"netejar","rentar":"rentar","seure":"seur","estudiar":"estudiar","preguntar":"preguntar","dibuixar":"dibuixar","recordar":"recordar","veure":"veur","visitar":"visitar","jugar":"jugar","estimar":"estimar","esperar":"esperar","saludar":"saludar","llevar":"llevar","vestir":"vestir","esmorzar":"esmorzar","tornar":"tornar","dinar":"dinar","descansar":"descansar","sopar":"sopar","comprar":"comprar","cuinar":"cuinar","tallar":"tallar","voler":"voldr","caminar":"caminar","girar":"girar","pujar":"pujar","baixar":"baixar","portar":"portar","necessitar":"necessitar","poder":"podr","dir":"dir","riure":"riur","plorar":"plorar","repetir":"repetir","pagar":"pagar","triar":"triar"};
 const FUTURE_ENDINGS = ["é","às","à","em","eu","an"];
 
 const PERSONS = [
@@ -1567,6 +2043,7 @@ let learnedWords;
 try{learnedWords=new Set(JSON.parse(storageGet("catVocabularyLearnedV3")||"[]"))}
 catch(e){learnedWords=new Set()}
 
+const levelSelect=document.getElementById("levelSelect");
 const blockSelect=document.getElementById("blockSelect");
 const personSelect=document.getElementById("personSelect");
 const blockDescription=document.getElementById("blockDescription");
@@ -1580,6 +2057,9 @@ const feedback=document.getElementById("feedback");
 const correctEl=document.getElementById("correct");
 const totalEl=document.getElementById("total");
 const bar=document.getElementById("bar");
+const filterMaximum=document.getElementById("filterMaximum");
+const checkButton=document.getElementById("check");
+const nextButton=document.getElementById("next");
 const studyPanel=document.getElementById("studyPanel");
 const practicePanel=document.getElementById("practicePanel");
 const reportPanel=document.getElementById("reportPanel");
@@ -1687,15 +2167,125 @@ function sentenceData(person){
   return {form,future,present,negative,question,modal,past,futureSentence};
 }
 
+const PRACTICE_LESSONS=["phrase","choice","present","negative","question","modal","past","future","build"];
+
+function taskKeyForParts(blockId,lesson,phraseCa,personId){
+  return `${blockId}::${lesson}::${phraseCa}::${personId||"none"}`;
+}
+
+function recordTaskKey(record){
+  return record.taskKey||taskKeyForParts(
+    record.blockId,
+    record.actualLesson||record.lesson,
+    record.phraseCa,
+    record.personId||null
+  );
+}
+
+function taskUniverse(){
+  const lessons=currentLesson==="mixed"?PRACTICE_LESSONS:[currentLesson];
+  const tasks=[];
+
+  getPhrases().forEach(phrase=>{
+    const info=analyzePhrase(phrase);
+
+    lessons.forEach(lesson=>{
+      if(lesson==="phrase"||lesson==="choice"||!info.supported){
+        tasks.push({
+          key:taskKeyForParts(selectedBlockId,lesson,phrase.ca,null),
+          phrase,
+          lesson,
+          person:null
+        });
+        return;
+      }
+
+      let persons=allowedPersonsForPhrase(phrase.ca);
+      if(selectedPersonId!=="random"){
+        persons=persons.filter(person=>person.id===selectedPersonId);
+      }
+
+      persons.forEach(person=>{
+        tasks.push({
+          key:taskKeyForParts(selectedBlockId,lesson,phrase.ca,person.id),
+          phrase,
+          lesson,
+          person
+        });
+      });
+    });
+  });
+
+  return tasks;
+}
+
+function recordsForCurrentFilters(){
+  const allowedKeys=new Set(taskUniverse().map(task=>task.key));
+  return records.filter(record=>allowedKeys.has(recordTaskKey(record)));
+}
+
+function currentFilterProgress(){
+  const universe=taskUniverse();
+  const allowedKeys=new Set(universe.map(task=>task.key));
+  const relevant=records.filter(record=>allowedKeys.has(recordTaskKey(record)));
+  const completedKeys=new Set(
+    relevant
+      .filter(record=>record.correct)
+      .map(recordTaskKey)
+  );
+  const correct=universe.filter(task=>completedKeys.has(task.key)).length;
+  const maximum=universe.length;
+  const attempts=relevant.length;
+  const hints=relevant.filter(record=>record.assisted).length;
+  const spellingHints=relevant.filter(record=>record.spellingAdjusted).length;
+  const avgTime=attempts
+    ?Math.round(relevant.reduce((sum,record)=>sum+(record.timeSec||0),0)/attempts)
+    :0;
+
+  return {
+    correct,
+    maximum,
+    attempts,
+    hints,
+    spellingHints,
+    avgTime,
+    percent:maximum?Math.round(correct/maximum*100):0,
+    completedKeys,
+    universe
+  };
+}
+
+function selectedPersonLabel(){
+  return personSelect.options[personSelect.selectedIndex]?.text||"";
+}
+
+function selectedLevelLabel(){
+  return levelSelect.options[levelSelect.selectedIndex]?.text||"";
+}
+
+function currentFilterDescription(maximum){
+  const lessonLabel=LESSONS[currentLesson]?.label||"";
+  return `${selectedLevelLabel()} · ${currentBlockTitle()} · ${selectedPersonLabel()} · ${lessonLabel}: максимум ${maximum} завдань = 100%.`;
+}
+
 function pickPhrase(){
-  let list=getPhrases();
-  if(selectedPersonId!=="random"){
-    const compatible=list.filter(item=>allowedPersonsForPhrase(item.ca).some(p=>p.id===selectedPersonId));
-    if(compatible.length) list=compatible;
+  const progress=currentFilterProgress();
+  const pending=progress.universe.filter(task=>!progress.completedKeys.has(task.key));
+  const pool=pending.length?pending:progress.universe;
+
+  if(!pool.length){
+    currentPhrase=getPhrases()[0];
+    generated=analyzePhrase(currentPhrase);
+    actualLesson=currentLesson==="mixed"?"phrase":currentLesson;
+    currentPerson=null;
+    return;
   }
-  currentPhrase=list[Math.floor(Math.random()*list.length)];
+
+  const task=pool[Math.floor(Math.random()*pool.length)];
+  currentPhrase=task.phrase;
+  actualLesson=task.lesson;
+  currentPerson=task.person;
   generated=analyzePhrase(currentPhrase);
-  currentPerson=choosePerson(currentPhrase.ca);
 }
 
 function stats(){
@@ -1715,10 +2305,11 @@ function saveRecords(){
   updateMiniScore();
 }
 function updateMiniScore(){
-  const s=stats();
-  correctEl.textContent=s.correct;
-  totalEl.textContent=s.total;
-  bar.style.width=(s.total?Math.round(s.correct/s.total*100):0)+"%";
+  const progress=currentFilterProgress();
+  correctEl.textContent=progress.correct;
+  totalEl.textContent=progress.maximum;
+  bar.style.width=progress.percent+"%";
+  filterMaximum.textContent=currentFilterDescription(progress.maximum);
 }
 function setFeedback(kind,html){feedback.className="feedback "+kind;feedback.innerHTML=html}
 function clearFeedback(){feedback.className="feedback";feedback.innerHTML=""}
@@ -1729,10 +2320,12 @@ function startQuestion(){
   hintUsed=false;
   selected="";
   builtWords=[];
+  checkButton.disabled=false;
+  nextButton.disabled=true;
 }
 
 function phraseKey(blockId,phrase){return `${blockId}::${phrase.ca}`}
-function beginnerBlocks(){return BLOCKS.filter(b=>b.level==="beginner")}
+function beginnerBlocks(){return BLOCKS.filter(b=>b.level==="level1")}
 function beginnerWordKeys(){return beginnerBlocks().flatMap(b=>b.phrases.map(p=>phraseKey(b.id,p)))}
 function beginnerCompletion(){
   const keys=beginnerWordKeys();
@@ -1746,9 +2339,9 @@ function beginnerCompletion(){
 }
 function renderBeginnerProgress(){
   const p=beginnerCompletion();
-  let status=`Вивчено <b>${p.learned} / ${p.total}</b> фраз. Граматична практика: <b>${p.attempts}</b> спроб, точність <b>${p.attempts?p.accuracy+"%":"—"}</b>.`;
-  if(p.complete) status+=`<br><b>Рівень Beginner завершено. Можна переходити до наступного рівня.</b>`;
-  else status+=`<br><span class="muted">Для завершення: вивчити всі 100 фраз, виконати щонайменше 10 вправ у кожному Beginner-блоці та отримати загальну точність не нижче 80%.</span>`;
+  let status=`Вивчено <b>${p.learned} / ${p.total}</b> слів. Граматична практика: <b>${p.attempts}</b> спроб, точність <b>${p.attempts?p.accuracy+"%":"—"}</b>.`;
+  if(p.complete) status+=`<br><b>Level 1 завершено. Можна переходити до Level 2 — повсякденна лексика A1–A2.</b>`;
+  else status+=`<br><span class="muted">Для завершення: вивчити всі 100 слів, виконати щонайменше 10 вправ у кожному блоці Level 1 та отримати загальну точність не нижче 80%.</span>`;
   document.getElementById("beginnerProgress").innerHTML=status;
 }
 function renderStudyTable(){
@@ -1798,7 +2391,7 @@ function renderStudy(){
   if(studyIndex>=block.phrases.length)studyIndex=0;
   const phrase=block.phrases[studyIndex];
   const learned=learnedWords.has(phraseKey(block.id,phrase));
-  studyCounter.textContent=`${block.title}: фраза ${studyIndex+1} з ${block.phrases.length}`;
+  studyCounter.textContent=`${block.title}: слово ${studyIndex+1} з ${block.phrases.length}`;
   studyCa.textContent=phrase.ca;
   studyUk.textContent=phrase.uk;
   renderStudyConjugation(phrase);
@@ -1825,7 +2418,6 @@ function switchMode(mode){
 function render(){
   clearFeedback();
   startQuestion();
-  actualLesson=currentLesson==="mixed"?shuffle(["phrase","choice","present","negative","question","modal","past","future","build"])[0]:currentLesson;
   lessonTitle.textContent=LESSONS[currentLesson].title;
   grammarNote.innerHTML=LESSONS[currentLesson].note;
   ukPhrase.textContent=currentPhrase.uk;
@@ -1836,7 +2428,6 @@ function render(){
   if(actualLesson==="choice") return renderChoice();
   if(!generated.supported) return renderUnsupported();
 
-  currentPerson=choosePerson(currentPhrase.ca);
   if(actualLesson==="present") return renderPresent();
   if(actualLesson==="negative") return renderNegative();
   if(actualLesson==="question") return renderQuestion();
@@ -2022,6 +2613,12 @@ function check(){
   records.push({
     date:new Date().toLocaleString("uk-UA"),
     questionId,
+    taskKey:taskKeyForParts(
+      selectedBlockId,
+      actualLesson,
+      currentPhrase.ca,
+      (actualLesson==="phrase"||actualLesson==="choice"||!generated.supported)?null:currentPerson.id
+    ),
     blockId:selectedBlockId,
     blockTitle:currentBlockTitle(),
     lesson:currentLesson,
@@ -2043,6 +2640,8 @@ function check(){
   caPhrase.textContent=currentPhrase.ca;
   checkedThisQuestion=true;
   disableExercise();
+  checkButton.disabled=true;
+  nextButton.disabled=false;
 
   const spellingMessage=spellingAdjusted?`<div class="spelling-note"><b>Підказка з написання:</b> ${currentExpected}</div>`:"";
   if(answerCorrect&&hintUsed){
@@ -2069,24 +2668,24 @@ function showReport(){
   studyPanel.classList.add("hidden");
   practicePanel.classList.add("hidden");
   reportPanel.classList.remove("hidden");
-  const s=stats();
-  const acc=percent(s.correct,s.total);
+  const progress=currentFilterProgress();
+  const acc=progress.percent;
   document.getElementById("mAccuracy").textContent=acc+"%";
-  document.getElementById("mCorrect").textContent=s.correct;
-  document.getElementById("mHints").textContent=s.hints;
-  document.getElementById("mAttempts").textContent=s.total;
-  document.getElementById("mTime").textContent=s.avgTime+" c";
-  document.getElementById("mSpelling").textContent=s.spellingHints;
+  document.getElementById("mCorrect").textContent=`${progress.correct} / ${progress.maximum}`;
+  document.getElementById("mHints").textContent=progress.hints;
+  document.getElementById("mAttempts").textContent=progress.attempts;
+  document.getElementById("mTime").textContent=progress.avgTime+" c";
+  document.getElementById("mSpelling").textContent=progress.spellingHints;
 
   const q=qualityText(acc);
   const level=document.getElementById("qualityLevel");
   level.className="level "+q.cls;
-  let msg="Для надійної оцінки бажано виконати щонайменше 10 завдань.";
-  if(s.total>=10&&acc>=90)msg="Матеріал засвоєно дуже добре.";
-  else if(s.total>=10&&acc>=75)msg="Результат добрий, але окремі теми слід повторити.";
-  else if(s.total>=10&&acc>=60)msg="Матеріал засвоєно частково.";
-  else if(s.total>=10)msg="Потрібне повторення короткими серіями вправ.";
-  level.innerHTML=`<b>Оцінка:</b> ${q.text}. ${msg}`;
+  let msg=`${currentFilterDescription(progress.maximum)} Виконано ${progress.correct} унікальних завдань.`;
+  if(acc===100)msg+=" Увесь вибраний набір завершено.";
+  else if(acc>=75)msg+=" Залишилося виконати невелику частину набору.";
+  else if(acc>=40)msg+=" Виконано частину вибраного набору.";
+  else msg+=" Потрібно продовжити практику.";
+  level.innerHTML=`<b>Результат:</b> ${q.text}. ${msg}`;
 
   renderBlockTable();
   renderLessonTable();
@@ -2158,29 +2757,46 @@ function exportCsv(){
   a.href=url;a.download="catalan_grammar_report.csv";document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
 }
 
-function initBlockSelect(){
-  const beginner=BLOCKS.filter(b=>b.level==="beginner");
-  const next=BLOCKS.filter(b=>b.level!=="beginner");
-  const options=items=>items.map(b=>`<option value="${b.id}">${b.title} (${b.phrases.length})</option>`).join("");
-  blockSelect.innerHTML=`<optgroup label="Beginner — 10 блоків / 100 фраз">${options(beginner)}</optgroup><optgroup label="Наступний рівень">${options(next)}</optgroup>`;
+function selectedLevel(){
+  return levelSelect.value||"level1";
+}
+
+function initBlockSelect(preferredBlockId=selectedBlockId){
+  const levelBlocks=BLOCKS.filter(b=>b.level===selectedLevel());
+  blockSelect.innerHTML=levelBlocks
+    .map(b=>`<option value="${b.id}">${b.title} (${b.phrases.length})</option>`)
+    .join("");
+
+  const preferredExists=levelBlocks.some(b=>b.id===preferredBlockId);
+  selectedBlockId=preferredExists?preferredBlockId:levelBlocks[0].id;
   blockSelect.value=selectedBlockId;
   blockDescription.textContent=currentBlock().description;
 }
 
+levelSelect.addEventListener("change",()=>{
+  initBlockSelect();
+  updateMiniScore();
+  studyIndex=0;
+  studyRevealed=false;
+  if(currentMode==="study")renderStudy();
+  else{pickPhrase();render()}
+});
+
 blockSelect.addEventListener("change",()=>{
   selectedBlockId=blockSelect.value;
   blockDescription.textContent=currentBlock().description;
+  updateMiniScore();
   studyIndex=0;studyRevealed=false;
   if(currentMode==="study")renderStudy();
   else{pickPhrase();render()}
 });
-personSelect.addEventListener("change",()=>{selectedPersonId=personSelect.value;pickPhrase();render()});
+personSelect.addEventListener("change",()=>{selectedPersonId=personSelect.value;updateMiniScore();pickPhrase();render()});
 document.querySelectorAll(".lesson").forEach(btn=>btn.addEventListener("click",()=>{
   document.querySelectorAll(".lesson").forEach(b=>b.classList.remove("active"));
-  btn.classList.add("active");currentLesson=btn.dataset.lesson;pickPhrase();render();
+  btn.classList.add("active");currentLesson=btn.dataset.lesson;updateMiniScore();pickPhrase();render();
 }));
-document.getElementById("next").addEventListener("click",()=>{pickPhrase();render()});
-document.getElementById("check").addEventListener("click",check);
+nextButton.addEventListener("click",()=>{if(!checkedThisQuestion)return;pickPhrase();render()});
+checkButton.addEventListener("click",check);
 document.getElementById("reset").addEventListener("click",()=>{
   if(!confirm("Очистити результати вправ і позначки вивчених слів на цьому пристрої?"))return;
   records=[];learnedWords=new Set();saveLearnedWords();saveRecords();showReport();
@@ -2204,6 +2820,7 @@ markLearned.addEventListener("click",()=>{
 });
 document.getElementById("exportCsv").addEventListener("click",exportCsv);
 
+levelSelect.value=currentBlock().level||"level1";
 initBlockSelect();
 updateMiniScore();
 pickPhrase();
