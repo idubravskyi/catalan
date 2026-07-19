@@ -28,6 +28,11 @@
     button:disabled{opacity:.55;cursor:not-allowed}
     button.lesson{display:block;width:100%;text-align:left;background:#fff;color:var(--accent);border-color:var(--line);margin:7px 0;padding:9px 11px}
     button.lesson.active{background:var(--accent);color:#fff}
+    .lesson-group{border:1px solid var(--line);border-radius:14px;padding:10px;margin:0 0 14px;background:#fafafa}
+    .lesson-group:last-child{margin-bottom:0}
+    .lesson-group-title{font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin:0 0 8px}
+    .lesson-group button.lesson:first-of-type{margin-top:0}
+    .lesson-group button.lesson:last-child{margin-bottom:0}
     .muted{color:var(--muted)}
     .phrase-box{background:var(--soft);border-radius:14px;padding:14px;margin:12px 0}
     .phrase-main{font-size:23px;font-weight:bold;margin-bottom:6px}
@@ -45,6 +50,8 @@
     .choices button.selected{border-color:var(--accent);background:#f0f0f0}
     .word-bank span{display:inline-block;padding:8px 10px;margin:4px;border:1px solid var(--line);border-radius:10px;background:#fff;cursor:pointer}
     .target{min-height:46px;border:1px dashed #999;border-radius:12px;background:#fafafa;padding:9px;margin:8px 0 12px}
+    .build-actions{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+    .build-actions button{margin:0}
     table{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px}
     td,th{border-top:1px solid var(--line);padding:7px 4px;text-align:left;vertical-align:top}
     .hint-panel{margin-top:10px;padding:10px;border:1px solid var(--line);border-radius:12px;background:#fafafa}
@@ -73,6 +80,8 @@
     .study-conjugation th{font-size:13px;color:var(--muted)}
     .study-conjugation td:nth-child(2){font-weight:700}
     .study-conjugation .example{color:#294267}
+    .study-conjugation .uk-example{margin-top:3px;color:var(--ok);font-size:13px;font-weight:400}
+    .phrase-translation{margin-top:6px;padding-top:6px;border-top:1px solid rgba(0,0,0,.12)}
     @media(max-width:620px){
       .study-conjugation th:nth-child(3),
       .study-conjugation td:nth-child(3){display:none}
@@ -129,16 +138,39 @@
       </select>
 
       <h3>Мініуроки</h3>
-      <button class="lesson active" data-lesson="phrase">1. Переклад фрази</button>
-      <button class="lesson" data-lesson="choice">2. Обери фразу</button>
-      <button class="lesson" data-lesson="present">3. Теперішній час</button>
-      <button class="lesson" data-lesson="negative">4. Заперечення</button>
-      <button class="lesson" data-lesson="question">5. Питання</button>
-      <button class="lesson" data-lesson="modal">6. He de / Puc / Vull</button>
-      <button class="lesson" data-lesson="past">7. Минулий час</button>
-      <button class="lesson" data-lesson="future">8. Майбутній час</button>
-      <button class="lesson" data-lesson="build">9. Склади речення</button>
-      <button class="lesson" data-lesson="mixed">10. Змішана практика</button>
+      <div class="lesson-group">
+        <div class="lesson-group-title">Фрази</div>
+        <button class="lesson active" data-lesson="phrase">1. Переклад фрази</button>
+        <button class="lesson" data-lesson="choice">2. Обери фразу</button>
+      </div>
+
+      <div class="lesson-group">
+        <div class="lesson-group-title">Модальні конструкції</div>
+        <button class="lesson" data-lesson="modal">3. He de / Puc / Vull</button>
+      </div>
+
+      <div class="lesson-group">
+        <div class="lesson-group-title">Склади речення</div>
+        <button class="lesson" data-lesson="present_build">4. Теперішній час</button>
+        <button class="lesson" data-lesson="negative_build">5. Заперечення</button>
+        <button class="lesson" data-lesson="question_build">6. Питання</button>
+        <button class="lesson" data-lesson="past_build">7. Минулий час</button>
+        <button class="lesson" data-lesson="future_build">8. Майбутній час</button>
+      </div>
+
+      <div class="lesson-group">
+        <div class="lesson-group-title">Заповни</div>
+        <button class="lesson" data-lesson="present_fill">9. Теперішній час</button>
+        <button class="lesson" data-lesson="negative_fill">10. Заперечення</button>
+        <button class="lesson" data-lesson="question_fill">11. Питання</button>
+        <button class="lesson" data-lesson="past_fill">12. Минулий час</button>
+        <button class="lesson" data-lesson="future_fill">13. Майбутній час</button>
+      </div>
+
+      <div class="lesson-group">
+        <div class="lesson-group-title">Повторення</div>
+        <button class="lesson" data-lesson="mixed">14. Змішана практика</button>
+      </div>
     </div>
 
     <h3>Поточний результат</h3>
@@ -155,20 +187,19 @@
   <section class="card">
     <div id="studyPanel">
       <h2>Вивчення нової лексики</h2>
-      <p class="muted">Переглянь слова у блоці — не більше 5. Відкрий переклад і познач фразу як вивчену. Для дієслів також вивчи відмінювання за всіма особами.</p>
+      <p class="muted">Переглянь слова у блоці — не більше 5. Прочитай переклад і познач фразу як вивчену. Для дієслів також вивчи відмінювання за всіма особами.</p>
 
       <div id="beginnerProgress" class="study-progress"></div>
 
       <div class="study-card">
         <div class="muted" id="studyCounter"></div>
         <div class="study-ca" id="studyCa"></div>
-        <div class="study-uk hidden" id="studyUk"></div>
+        <div class="study-uk" id="studyUk"></div>
         <div class="study-conjugation" id="studyConjugation"></div>
       </div>
 
       <div class="study-actions">
         <button class="secondary" id="studyPrev" type="button">← Попередня</button>
-        <button id="revealTranslation" type="button">Показати переклад</button>
         <button class="secondary" id="studyNext" type="button">Наступна →</button>
         <button class="secondary" id="markLearned" type="button">Позначити як вивчене</button>
       </div>
@@ -2252,16 +2283,90 @@ const SINGULAR_ONLY = new Set(["estar orgullós de","estar relacionat amb","sent
 const THIRD_PERSON_ONLY = new Set(["tenir lloc"]);
 
 const LESSONS = {
-  phrase:{title:"Переклад фрази",label:"Переклад фрази",note:"<b>Завдання:</b> переклади українську фразу каталонською.",recommendation:"Повторити написання каталонських фраз."},
-  choice:{title:"Обери фразу",label:"Обери фразу",note:"<b>Завдання:</b> обери правильну каталонську фразу.",recommendation:"Повторити значення фраз, які плутаються."},
-  present:{title:"Теперішній час",label:"Теперішній час",note:"<b>Правило:</b> форма дієслова залежить від особи: jo, tu, ell/ella, nosaltres, vosaltres, ells/elles.",recommendation:"Повторити відмінювання дієслів у теперішньому часі."},
-  negative:{title:"Заперечення",label:"Заперечення",note:"<b>Правило:</b> заперечення: <b>no + дієслово</b>.",recommendation:"Повторити конструкцію no + дієслово."},
-  question:{title:"Питання",label:"Питання",note:"<b>Правило:</b> у питанні треба використати правильну форму дієслова для заданої особи.",recommendation:"Повторити форми дієслова для всіх осіб у питальних реченнях."},
-  modal:{title:"He de / Puc / Vull",label:"Модальні конструкції",note:"<b>Правило:</b> після he de / has de / ha de / hem de / heu de / han de ставимо інфінітив.",recommendation:"Повторити модальні конструкції для всіх осіб."},
-  past:{title:"Минулий час",label:"Минулий час",note:"<b>Правило:</b> vaig / vas / va / vam / vau / van + інфінітив.",recommendation:"Повторити перифрастичний минулий час для всіх осіб."},
-  future:{title:"Майбутній час",label:"Майбутній час",note:"<b>Правило:</b> форма майбутнього часу змінюється за особами.",recommendation:"Повторити форми майбутнього часу для всіх осіб."},
-  build:{title:"Склади речення",label:"Склади речення",note:"<b>Завдання:</b> склади речення з перемішаних слів.",recommendation:"Повторити порядок слів."},
-  mixed:{title:"Змішана практика",label:"Змішана практика",note:"<b>Завдання:</b> система сама вибирає тип вправи.",recommendation:"Повторити теми з найбільшою кількістю помилок."}
+  phrase:{
+    title:"Переклад фрази",
+    label:"Переклад фрази",
+    note:"<b>Завдання:</b> переклади українську фразу каталонською.",
+    recommendation:"Повторити написання каталонських фраз."
+  },
+  choice:{
+    title:"Обери фразу",
+    label:"Обери фразу",
+    note:"<b>Завдання:</b> обери правильну каталонську фразу.",
+    recommendation:"Повторити значення фраз, які плутаються."
+  },
+  present_build:{
+    title:"Теперішній час (Склади речення)",
+    label:"Теперішній час — склади речення",
+    note:"<b>Завдання:</b> склади повне речення у теперішньому часі. Форма дієслова залежить від особи.",
+    recommendation:"Повторити порядок слів і відмінювання у теперішньому часі."
+  },
+  negative_build:{
+    title:"Заперечення (Склади речення)",
+    label:"Заперечення — склади речення",
+    note:"<b>Правило:</b> у заперечному реченні використовуємо <b>no + дієслово</b>.",
+    recommendation:"Повторити порядок слів у заперечних реченнях."
+  },
+  question_build:{
+    title:"Питання (Склади речення)",
+    label:"Питання — склади речення",
+    note:"<b>Завдання:</b> склади повне питальне речення з правильною формою дієслова.",
+    recommendation:"Повторити порядок слів і дієслівні форми у питаннях."
+  },
+  past_build:{
+    title:"Минулий час (Склади речення)",
+    label:"Минулий час — склади речення",
+    note:"<b>Правило:</b> перифрастичний минулий час: <b>vaig / vas / va / vam / vau / van + інфінітив</b>.",
+    recommendation:"Повторити порядок слів у минулому часі."
+  },
+  future_build:{
+    title:"Майбутній час (Склади речення)",
+    label:"Майбутній час — склади речення",
+    note:"<b>Завдання:</b> склади повне речення у майбутньому часі.",
+    recommendation:"Повторити порядок слів і майбутні форми дієслів."
+  },
+  modal:{
+    title:"He de / Puc / Vull",
+    label:"He de / Puc / Vull",
+    note:"<b>Правило:</b> після <b>he de / puc / vull</b> та відповідних форм для інших осіб ставимо інфінітив.",
+    recommendation:"Повторити конструкції he de, puc, vull та інфінітив."
+  },
+  present_fill:{
+    title:"Теперішній час (Заповни)",
+    label:"Теперішній час — заповни",
+    note:"<b>Завдання:</b> впиши правильну форму дієслова у теперішньому часі.",
+    recommendation:"Повторити відмінювання дієслів у теперішньому часі."
+  },
+  negative_fill:{
+    title:"Заперечення (Заповни)",
+    label:"Заперечення — заповни",
+    note:"<b>Завдання:</b> заповни пропуск конструкцією <b>no + правильна форма дієслова</b>.",
+    recommendation:"Повторити конструкцію no + дієслово."
+  },
+  question_fill:{
+    title:"Питання (Заповни)",
+    label:"Питання — заповни",
+    note:"<b>Завдання:</b> впиши правильну форму дієслова у питальному реченні.",
+    recommendation:"Повторити форми дієслова для всіх осіб у питаннях."
+  },
+  past_fill:{
+    title:"Минулий час (Заповни)",
+    label:"Минулий час — заповни",
+    note:"<b>Завдання:</b> заповни пропуск правильною конструкцією минулого часу.",
+    recommendation:"Повторити vaig / vas / va / vam / vau / van + інфінітив."
+  },
+  future_fill:{
+    title:"Майбутній час (Заповни)",
+    label:"Майбутній час — заповни",
+    note:"<b>Завдання:</b> впиши правильну форму дієслова у майбутньому часі.",
+    recommendation:"Повторити форми майбутнього часу для всіх осіб."
+  },
+  mixed:{
+    title:"Змішана практика",
+    label:"Змішана практика",
+    note:"<b>Завдання:</b> система використовує всі 13 типів вправ.",
+    recommendation:"Повторити теми з найбільшою кількістю помилок."
+  }
 };
 
 const MEMORY_STORAGE = {};
@@ -2277,7 +2382,6 @@ function storageSet(key,value){
 let selectedBlockId="beginner1";
 let currentMode="study";
 let studyIndex=0;
-let studyRevealed=false;
 let selectedPersonId="random";
 let currentLesson="phrase";
 let actualLesson="phrase";
@@ -2326,7 +2430,6 @@ const studyCounter=document.getElementById("studyCounter");
 const studyCa=document.getElementById("studyCa");
 const studyUk=document.getElementById("studyUk");
 const studyConjugation=document.getElementById("studyConjugation");
-const revealTranslation=document.getElementById("revealTranslation");
 const markLearned=document.getElementById("markLearned");
 
 function normalizeSurface(text){
@@ -2408,6 +2511,132 @@ function pronominalInfinitive(person){
   return `${generated.verb}-${person.suffix}${rest}`;
 }
 
+const UK_PRESENT_FORMS = {"бачити":["бачу","бачиш","бачить","бачимо","бачите","бачать"],"боятися":["боюся","боїшся","боїться","боїмося","боїтеся","бояться"],"брати":["беру","береш","бере","беремо","берете","беруть"],"вечеряти":["вечеряю","вечеряєш","вечеряє","вечеряємо","вечеряєте","вечеряють"],"вивчати":["вивчаю","вивчаєш","вивчає","вивчаємо","вивчаєте","вивчають"],"виносити":["виношу","виносиш","виносить","виносимо","виносите","виносять"],"виправляти":["виправляю","виправляєш","виправляє","виправляємо","виправляєте","виправляють"],"виходити":["виходжу","виходиш","виходить","виходимо","виходите","виходять"],"вставати":["встаю","встаєш","встає","встаємо","встаєте","встають"],"відвідувати":["відвідую","відвідуєш","відвідує","відвідуємо","відвідуєте","відвідують"],"відповідати":["відповідаю","відповідаєш","відповідає","відповідаємо","відповідаєте","відповідають"],"відпочивати":["відпочиваю","відпочиваєш","відпочиває","відпочиваємо","відпочиваєте","відпочивають"],"відчиняти":["відчиняю","відчиняєш","відчиняє","відчиняємо","відчиняєте","відчиняють"],"відчувати":["відчуваю","відчуваєш","відчуває","відчуваємо","відчуваєте","відчувають"],"вітатися":["вітаюся","вітаєшся","вітається","вітаємося","вітаєтеся","вітаються"],"говорити":["говорю","говориш","говорить","говоримо","говорите","говорять"],"готувати":["готую","готуєш","готує","готуємо","готуєте","готують"],"готуватися":["готуюся","готуєшся","готується","готуємося","готуєтеся","готуються"],"грати":["граю","граєш","грає","граємо","граєте","грають"],"гратися":["граюся","граєшся","грається","граємося","граєтеся","граються"],"гуляти":["гуляю","гуляєш","гуляє","гуляємо","гуляєте","гуляють"],"дарувати":["дарую","даруєш","дарує","даруємо","даруєте","дарують"],"дивитися":["дивлюся","дивишся","дивиться","дивимося","дивитеся","дивляться"],"додавати":["додаю","додаєш","додає","додаємо","додаєте","додають"],"допомагати":["допомагаю","допомагаєш","допомагає","допомагаємо","допомагаєте","допомагають"],"дякувати":["дякую","дякуєш","дякує","дякуємо","дякуєте","дякують"],"ділитися":["ділюся","ділишся","ділиться","ділимося","ділитеся","діляться"],"жити":["живу","живеш","живе","живемо","живете","живуть"],"займатися":["займаюся","займаєшся","займається","займаємося","займаєтеся","займаються"],"замикати":["замикаю","замикаєш","замикає","замикаємо","замикаєте","замикають"],"замовляти":["замовляю","замовляєш","замовляє","замовляємо","замовляєте","замовляють"],"запитувати":["запитую","запитуєш","запитує","запитуємо","запитуєте","запитують"],"застеляти":["застеляю","застеляєш","застеляє","застеляємо","застеляєте","застеляють"],"заходити":["заходжу","заходиш","заходить","заходимо","заходите","заходять"],"зачиняти":["зачиняю","зачиняєш","зачиняє","зачиняємо","зачиняєте","зачиняють"],"знаходити":["знаходжу","знаходиш","знаходить","знаходимо","знаходите","знаходять"],"знімати":["знімаю","знімаєш","знімає","знімаємо","знімаєте","знімають"],"йти":["йду","йдеш","йде","йдемо","йдете","йдуть"],"казати":["кажу","кажеш","каже","кажемо","кажете","кажуть"],"купувати":["купую","купуєш","купує","купуємо","купуєте","купують"],"любити":["люблю","любиш","любить","любимо","любите","люблять"],"лягати":["лягаю","лягаєш","лягає","лягаємо","лягаєте","лягають"],"малювати":["малюю","малюєш","малює","малюємо","малюєте","малюють"],"мати":["маю","маєш","має","маємо","маєте","мають"],"мерзнути":["мерзну","мерзнеш","мерзне","мерзнемо","мерзнете","мерзнуть"],"мити":["мию","миєш","миє","миємо","миєте","миють"],"могти":["можу","можеш","може","можемо","можете","можуть"],"накривати":["накриваю","накриваєш","накриває","накриваємо","накриваєте","накривають"],"носити":["ношу","носиш","носить","носимо","носите","носять"],"обирати":["обираю","обираєш","обирає","обираємо","обираєте","обирають"],"обідати":["обідаю","обідаєш","обідає","обідаємо","обідаєте","обідають"],"одягати":["одягаю","одягаєш","одягає","одягаємо","одягаєте","одягають"],"одягатися":["одягаюся","одягаєшся","одягається","одягаємося","одягаєтеся","одягаються"],"оплачувати":["оплачую","оплачуєш","оплачує","оплачуємо","оплачуєте","оплачують"],"пам’ятати":["пам’ятаю","пам’ятаєш","пам’ятає","пам’ятаємо","пам’ятаєте","пам’ятають"],"писати":["пишу","пишеш","пише","пишемо","пишете","пишуть"],"пити":["п’ю","п’єш","п’є","п’ємо","п’єте","п’ють"],"плакати":["плачу","плачеш","плаче","плачемо","плачете","плачуть"],"планувати":["планую","плануєш","планує","плануємо","плануєте","планують"],"поважати":["поважаю","поважаєш","поважає","поважаємо","поважаєте","поважають"],"повертати":["повертаю","повертаєш","повертає","повертаємо","повертаєте","повертають"],"повертатися":["повертаюся","повертаєшся","повертається","повертаємося","повертаєтеся","повертаються"],"повторювати":["повторюю","повторюєш","повторює","повторюємо","повторюєте","повторюють"],"потребувати":["потребую","потребуєш","потребує","потребуємо","потребуєте","потребують"],"почуватися":["почуваюся","почуваєшся","почувається","почуваємося","почуваєтеся","почуваються"],"прати":["перу","переш","пере","перемо","перете","перуть"],"працювати":["працюю","працюєш","працює","працюємо","працюєте","працюють"],"прибирати":["прибираю","прибираєш","прибирає","прибираємо","прибираєте","прибирають"],"прибувати":["прибуваю","прибуваєш","прибуває","прибуваємо","прибуваєте","прибувають"],"приймати":["приймаю","приймаєш","приймає","приймаємо","приймаєте","приймають"],"приносити":["приношу","приносиш","приносить","приносимо","приносите","приносять"],"приходити":["приходжу","приходиш","приходить","приходимо","приходите","приходять"],"просити":["прошу","просиш","просить","просимо","просите","просять"],"підійматися":["підіймаюся","підіймаєшся","підіймається","підіймаємося","підіймаєтеся","підіймаються"],"рахувати":["рахую","рахуєш","рахує","рахуємо","рахуєте","рахують"],"робити":["роблю","робиш","робить","робимо","робите","роблять"],"розкривати":["розкриваю","розкриваєш","розкриває","розкриваємо","розкриваєте","розкривають"],"розмовляти":["розмовляю","розмовляєш","розмовляє","розмовляємо","розмовляєте","розмовляють"],"розповідати":["розповідаю","розповідаєш","розповідає","розповідаємо","розповідаєте","розповідають"],"розуміти":["розумію","розумієш","розуміє","розуміємо","розумієте","розуміють"],"різати":["ріжу","ріжеш","ріже","ріжемо","ріжете","ріжуть"],"слухати":["слухаю","слухаєш","слухає","слухаємо","слухаєте","слухають"],"сміятися":["сміюся","смієшся","сміється","сміємося","смієтеся","сміються"],"снідати":["снідаю","снідаєш","снідає","снідаємо","снідаєте","снідають"],"спати":["сплю","спиш","спить","спимо","спите","сплять"],"спускатися":["спускаюся","спускаєшся","спускається","спускаємося","спускаєтеся","спускаються"],"ставити":["ставлю","ставиш","ставить","ставимо","ставите","ставлять"],"сідати":["сідаю","сідаєш","сідає","сідаємо","сідаєте","сідають"],"ходити":["ходжу","ходиш","ходить","ходимо","ходите","ходять"],"хотіти":["хочу","хочеш","хоче","хочемо","хочете","хочуть"],"чекати":["чекаю","чекаєш","чекає","чекаємо","чекаєте","чекають"],"чистити":["чищу","чистиш","чистить","чистимо","чистите","чистять"],"читати":["читаю","читаєш","читає","читаємо","читаєте","читають"],"шукати":["шукаю","шукаєш","шукає","шукаємо","шукаєте","шукають"],"їсти":["їм","їси","їсть","їмо","їсте","їдять"]};
+const UK_SUBJECTS=["Я","Ти","Він / вона","Ми","Ви","Вони"];
+const UK_SUBJECTS_LOWER=["я","ти","він / вона","ми","ви","вони"];
+const UK_FUTURE_AUX=["буду","будеш","буде","будемо","будете","будуть"];
+const UK_MODAL_AUX=["маю","маєш","має","маємо","маєте","мають"];
+const UK_LEADING_ADVERBS=new Set(["багато","добре","трохи","швидко"]);
+
+function parseUkrainianPhrase(text){
+  const words=text.trim().split(/\s+/);
+  let adverb="";
+  if(UK_LEADING_ADVERBS.has(words[0]))adverb=words.shift();
+  return {adverb,verb:words.shift()||"",rest:words.join(" ")};
+}
+
+function joinUkrainian(parts,punctuation="."){
+  return parts.filter(Boolean).join(" ").replace(/\s+/g," ").trim()+punctuation;
+}
+
+function ukrainianPastForms(verb){
+  const irregular={
+    "йти":["йшов","йшла","йшли"],
+    "їсти":["їв","їла","їли"],
+    "пити":["пив","пила","пили"],
+    "бути":["був","була","були"],
+    "могти":["міг","могла","могли"],
+    "спати":["спав","спала","спали"],
+    "брати":["брав","брала","брали"],
+    "мити":["мив","мила","мили"],
+    "жити":["жив","жила","жили"],
+    "мерзнути":["мерз","мерзла","мерзли"],
+    "прати":["прав","прала","прали"]
+  };
+  if(irregular[verb])return irregular[verb];
+  if(verb.endsWith("ся")){
+    const stem=verb.slice(0,-4);
+    return [`${stem}вся`,`${stem}лася`,`${stem}лися`];
+  }
+  const stem=verb.endsWith("ти")?verb.slice(0,-2):verb;
+  return [`${stem}в`,`${stem}ла`,`${stem}ли`];
+}
+
+function ukrainianPastForPerson(verb,index){
+  const [masculine,feminine,plural]=ukrainianPastForms(verb);
+  return index>=3?plural:`${masculine} / ${feminine}`;
+}
+
+function ukrainianHungerTranslation(index,lesson){
+  const subject=UK_SUBJECTS[index];
+  const lower=UK_SUBJECTS_LOWER[index];
+  const present=index>=3?"голодні":"голодний / голодна";
+  const instrumental=index>=3?"голодними":"голодним / голодною";
+
+  if(lesson==="negative_build"||lesson==="negative_fill")return joinUkrainian([subject,"не",present]);
+  if(lesson==="question_build"||lesson==="question_fill")return joinUkrainian([subject,present],"?");
+  if(lesson==="past_build"||lesson==="past_fill"){
+    const past=index>=3?"були":"був / була";
+    return joinUkrainian(["Учора",lower,past,instrumental]);
+  }
+  if(lesson==="future_build"||lesson==="future_fill")return joinUkrainian(["Завтра",lower,UK_FUTURE_AUX[index],instrumental]);
+  if(lesson==="modal")return joinUkrainian([subject,UK_MODAL_AUX[index],"бути",instrumental]);
+  return joinUkrainian([subject,present]);
+}
+
+function ukrainianSentenceTranslation(phrase,person,lesson){
+  if(!person||lesson==="phrase"||lesson==="choice"){
+    return {text:phrase.uk,generated:false};
+  }
+
+  const index=PERSONS.findIndex(item=>item.id===person.id);
+  if(index<0)return {text:phrase.uk,generated:false};
+
+  const parsed=parseUkrainianPhrase(phrase.uk);
+  if(parsed.verb==="бути"&&parsed.rest==="голодним"){
+    return {text:ukrainianHungerTranslation(index,lesson),generated:true};
+  }
+
+  const forms=UK_PRESENT_FORMS[parsed.verb];
+  if(!forms)return {text:phrase.uk,generated:false};
+
+  const subject=UK_SUBJECTS[index];
+  const lower=UK_SUBJECTS_LOWER[index];
+  const form=forms[index];
+  const afterVerb=[parsed.rest,parsed.adverb].filter(Boolean).join(" ");
+
+  if(lesson==="present_build"||lesson==="present_fill"){
+    return {text:joinUkrainian([subject,form,afterVerb]),generated:true};
+  }
+  if(lesson==="negative_build"||lesson==="negative_fill"){
+    return {text:joinUkrainian([subject,"не",form,afterVerb]),generated:true};
+  }
+  if(lesson==="question_build"||lesson==="question_fill"){
+    return {text:joinUkrainian([subject,form,afterVerb],"?"),generated:true};
+  }
+  if(lesson==="past_build"||lesson==="past_fill"){
+    return {
+      text:joinUkrainian(["Учора",lower,ukrainianPastForPerson(parsed.verb,index),afterVerb]),
+      generated:true
+    };
+  }
+  if(lesson==="future_build"||lesson==="future_fill"){
+    return {
+      text:joinUkrainian(["Завтра",lower,UK_FUTURE_AUX[index],parsed.verb,afterVerb]),
+      generated:true
+    };
+  }
+  if(lesson==="modal"){
+    return {
+      text:joinUkrainian([subject,UK_MODAL_AUX[index],parsed.verb,afterVerb]),
+      generated:true
+    };
+  }
+
+  return {text:phrase.uk,generated:false};
+}
+
+function checkedTranslationHtml(){
+  const translation=ukrainianSentenceTranslation(currentPhrase,currentPerson,actualLesson);
+  if(actualLesson==="phrase"||actualLesson==="choice"){
+    return `<br><b>Українською:</b> ${escapeHtml(currentPhrase.uk)}`;
+  }
+
+  const sentenceLabel=translation.generated?"Переклад речення":"Базове значення";
+  return `<br><b>${sentenceLabel}:</b> ${escapeHtml(translation.text)}
+    <div class="phrase-translation"><b>Фраза:</b> ${escapeHtml(currentPhrase.ca)} — ${escapeHtml(currentPhrase.uk)}</div>`;
+}
+
 function sentenceData(person){
   const i=PERSONS.findIndex(p=>p.id===person.id);
   const form=generated.forms[i];
@@ -2423,7 +2652,21 @@ function sentenceData(person){
   return {form,future,present,negative,question,modal,past,futureSentence};
 }
 
-const PRACTICE_LESSONS=["phrase","choice","present","negative","question","modal","past","future","build"];
+const PRACTICE_LESSONS=[
+  "phrase",
+  "choice",
+  "modal",
+  "present_build",
+  "negative_build",
+  "question_build",
+  "past_build",
+  "future_build",
+  "present_fill",
+  "negative_fill",
+  "question_fill",
+  "past_fill",
+  "future_fill"
+];
 
 function taskKeyForParts(blockId,lesson,phraseCa,personId){
   return `${blockId}::${lesson}::${phraseCa}::${personId||"none"}`;
@@ -2626,10 +2869,14 @@ function renderStudyConjugation(phrase){
     const form=`${reflexive}${info.forms[i]}`;
     const rest=info.rest?` ${info.rest}`:"";
     const example=`${person.subject} ${form}${rest}.`;
+    const ukExample=ukrainianSentenceTranslation(phrase,person,"present_build");
     return `<tr>
       <td>${escapeHtml(person.label)}</td>
       <td>${escapeHtml(form)}</td>
-      <td class="example">${escapeHtml(example)}</td>
+      <td class="example">
+        ${escapeHtml(example)}
+        <div class="uk-example">${escapeHtml(ukExample.text)}</div>
+      </td>
     </tr>`;
   }).join("");
 
@@ -2651,8 +2898,6 @@ function renderStudy(){
   studyCa.textContent=phrase.ca;
   studyUk.textContent=phrase.uk;
   renderStudyConjugation(phrase);
-  studyUk.classList.toggle("hidden",!studyRevealed);
-  revealTranslation.textContent=studyRevealed?"Сховати переклад":"Показати переклад";
   markLearned.textContent=learned?"✓ Вивчено":"Позначити як вивчене";
   markLearned.disabled=learned;
   renderBeginnerProgress();
@@ -2674,8 +2919,12 @@ function switchMode(mode){
 function render(){
   clearFeedback();
   startQuestion();
-  lessonTitle.textContent=LESSONS[currentLesson].title;
-  grammarNote.innerHTML=LESSONS[currentLesson].note;
+
+  const displayedLesson=currentLesson==="mixed"?actualLesson:currentLesson;
+  lessonTitle.textContent=currentLesson==="mixed"
+    ?`Змішана практика — ${LESSONS[actualLesson].title}`
+    :LESSONS[currentLesson].title;
+  grammarNote.innerHTML=LESSONS[displayedLesson].note;
   ukPhrase.textContent=currentPhrase.uk;
   caPhrase.textContent="—";
   activeBlockTitle.textContent=currentBlockTitle();
@@ -2684,13 +2933,29 @@ function render(){
   if(actualLesson==="choice") return renderChoice();
   if(!generated.supported) return renderUnsupported();
 
-  if(actualLesson==="present") return renderPresent();
-  if(actualLesson==="negative") return renderNegative();
-  if(actualLesson==="question") return renderQuestion();
+  const data=sentenceData(currentPerson);
+
+  if(actualLesson==="present_build"){
+    return renderBuildSentence(data.present,`Склади речення у теперішньому часі для ${currentPerson.label}`);
+  }
+  if(actualLesson==="negative_build"){
+    return renderBuildSentence(data.negative,`Склади заперечне речення для ${currentPerson.label}`);
+  }
+  if(actualLesson==="question_build"){
+    return renderBuildSentence(data.question,`Склади питальне речення для ${currentPerson.label}`);
+  }
+  if(actualLesson==="past_build"){
+    return renderBuildSentence(data.past,`Склади речення у минулому часі для ${currentPerson.label}`);
+  }
+  if(actualLesson==="future_build"){
+    return renderBuildSentence(data.futureSentence,`Склади речення у майбутньому часі для ${currentPerson.label}`);
+  }
   if(actualLesson==="modal") return renderModalChoice();
-  if(actualLesson==="past") return renderBuildSentence(sentenceData(currentPerson).past,`Склади речення в минулому часі для ${currentPerson.label}`);
-  if(actualLesson==="future") return renderFuture();
-  if(actualLesson==="build") return renderBuildSentence(sentenceData(currentPerson).modal,`Склади речення для ${currentPerson.label}`);
+  if(actualLesson==="present_fill") return renderPresentFill();
+  if(actualLesson==="negative_fill") return renderNegativeFill();
+  if(actualLesson==="question_fill") return renderQuestionFill();
+  if(actualLesson==="past_fill") return renderPastFill();
+  if(actualLesson==="future_fill") return renderFutureFill();
 }
 
 function renderPhrase(){
@@ -2738,7 +3003,7 @@ function attachHintHandler(){
   });
 }
 
-function renderPresent(){
+function renderPresentFill(){
   const data=sentenceData(currentPerson);
   const i=PERSONS.findIndex(p=>p.id===currentPerson.id);
   currentAnswerKind="input";
@@ -2752,17 +3017,18 @@ function renderPresent(){
   attachHintHandler();
 }
 
-function renderNegative(){
+function renderNegativeFill(){
   const data=sentenceData(currentPerson);
+  const reflexive=generated.pronominal?`${currentPerson.reflexive} `:"";
   currentAnswerKind="input";
-  currentExpected=data.negative;
+  currentExpected=`no ${reflexive}${data.form}`.trim();
   exercise.innerHTML=`
-    <div class="step-title">Зроби заперечне речення для <b>${currentPerson.label}</b></div>
-    <div class="task">Було: <b>${data.present}</b></div>
-    <input id="answer" placeholder="Напиши повне заперечне речення каталонською">`;
+    <div class="step-title">Заповни пропуск у заперечному реченні для <b>${currentPerson.label}</b></div>
+    <div class="task">${currentPerson.subject} ____${generated.rest?" "+generated.rest:""}.</div>
+    <input id="answer" placeholder="Наприклад: no parlo або no em llevo">`;
 }
 
-function renderQuestion(){
+function renderQuestionFill(){
   const data=sentenceData(currentPerson);
   const i=PERSONS.findIndex(p=>p.id===currentPerson.id);
   currentAnswerKind="input";
@@ -2788,7 +3054,17 @@ function renderModalChoice(){
   attachChoiceHandlers();
 }
 
-function renderFuture(){
+function renderPastFill(){
+  const reflexive=generated.pronominal?`${currentPerson.reflexive} `:"";
+  currentAnswerKind="input";
+  currentExpected=`${reflexive}${currentPerson.past} ${generated.verb}`.trim();
+  exercise.innerHTML=`
+    <div class="step-title">Заповни пропуск у минулому часі для <b>${currentPerson.label}</b></div>
+    <div class="task">Ahir ${currentPerson.subject.toLowerCase()} ____${generated.rest?" "+generated.rest:""}.</div>
+    <input id="answer" placeholder="Наприклад: vaig parlar або em vaig llevar">`;
+}
+
+function renderFutureFill(){
   const data=sentenceData(currentPerson);
   const i=PERSONS.findIndex(p=>p.id===currentPerson.id);
   currentAnswerKind="input";
@@ -2806,15 +3082,53 @@ function renderBuildSentence(sentence,title){
   currentAnswerKind="build";
   currentExpected=sentence.replace(/[.?!]/g,"");
   const words=shuffle(currentExpected.split(" "));
-  exercise.innerHTML=`<div class="step-title">${title}</div><div class="target" id="target"></div><div class="word-bank">${words.map(w=>`<span>${w}</span>`).join("")}</div><input id="answer" type="hidden">`;
+  const selectedSpans=[];
+
+  exercise.innerHTML=`
+    <div class="step-title">${title}</div>
+    <div class="target" id="target"></div>
+    <div class="word-bank">${words.map((w,i)=>`<span data-word-index="${i}">${w}</span>`).join("")}</div>
+    <div class="build-actions">
+      <button type="button" class="secondary" id="undoBuild" disabled>Скасувати останнє слово</button>
+      <button type="button" class="secondary" id="resetBuild" disabled>Очистити речення</button>
+    </div>
+    <input id="answer" type="hidden">`;
+
+  const target=document.getElementById("target");
+  const answer=document.getElementById("answer");
+  const undoButton=document.getElementById("undoBuild");
+  const resetButton=document.getElementById("resetBuild");
+
+  function updateBuiltSentence(){
+    target.textContent=builtWords.join(" ");
+    answer.value=builtWords.join(" ");
+    undoButton.disabled=builtWords.length===0;
+    resetButton.disabled=builtWords.length===0;
+  }
+
   document.querySelectorAll(".word-bank span").forEach(span=>{
     span.addEventListener("click",()=>{
       if(checkedThisQuestion) return;
       builtWords.push(span.textContent);
+      selectedSpans.push(span);
       span.style.display="none";
-      document.getElementById("target").textContent=builtWords.join(" ");
-      document.getElementById("answer").value=builtWords.join(" ");
+      updateBuiltSentence();
     });
+  });
+
+  undoButton.addEventListener("click",()=>{
+    if(checkedThisQuestion||builtWords.length===0) return;
+    builtWords.pop();
+    const span=selectedSpans.pop();
+    if(span) span.style.display="";
+    updateBuiltSentence();
+  });
+
+  resetButton.addEventListener("click",()=>{
+    if(checkedThisQuestion||builtWords.length===0) return;
+    builtWords=[];
+    selectedSpans.splice(0).forEach(span=>span.style.display="");
+    updateBuiltSentence();
   });
 }
 
@@ -2836,14 +3150,44 @@ function getUserAnswer(){
 }
 
 function explainWrong(){
-  if(actualLesson==="phrase"||actualLesson==="choice"||!generated.supported) return `Правильна фраза: <b>${currentPhrase.ca}</b>.`;
+  if(actualLesson==="phrase"||actualLesson==="choice"||!generated.supported){
+    return `Правильна фраза: <b>${currentPhrase.ca}</b>.`;
+  }
+
   const data=sentenceData(currentPerson);
-  if(actualLesson==="present") return `Для <b>${currentPerson.label}</b> потрібна форма <b>${data.form}</b>.`;
-  if(actualLesson==="negative") return `Правильна конструкція: <b>${data.negative}</b>`;
-  if(actualLesson==="question") return `У питанні для <b>${currentPerson.label}</b> потрібна форма <b>${data.form}</b>.`;
-  if(actualLesson==="modal") return `Після <b>${currentPerson.modal}</b> потрібен інфінітив.`;
-  if(actualLesson==="past") return `Використай <b>${currentPerson.past} + інфінітив</b>.`;
-  if(actualLesson==="future") return `Для <b>${currentPerson.label}</b> потрібна форма <b>${data.future}</b>.`;
+
+  if(actualLesson==="present_build"||actualLesson==="present_fill"){
+    return `Для <b>${currentPerson.label}</b> потрібна форма <b>${data.form}</b>.`;
+  }
+  if(actualLesson==="negative_build"){
+    return `Правильне заперечне речення: <b>${data.negative}</b>`;
+  }
+  if(actualLesson==="negative_fill"){
+    const reflexive=generated.pronominal?`${currentPerson.reflexive} `:"";
+    return `У пропуску потрібна конструкція <b>no ${reflexive}${data.form}</b>.`;
+  }
+  if(actualLesson==="question_build"){
+    return `Правильне питання: <b>${data.question}</b>`;
+  }
+  if(actualLesson==="question_fill"){
+    return `У питанні для <b>${currentPerson.label}</b> потрібна форма <b>${data.form}</b>.`;
+  }
+  if(actualLesson==="modal"){
+    return `Після <b>${currentPerson.modal}</b> потрібен інфінітив.`;
+  }
+  if(actualLesson==="past_build"){
+    return `Правильне речення: <b>${data.past}</b>`;
+  }
+  if(actualLesson==="past_fill"){
+    return `Використай <b>${currentPerson.past} + інфінітив</b>.`;
+  }
+  if(actualLesson==="future_build"){
+    return `Правильне речення: <b>${data.futureSentence}</b>`;
+  }
+  if(actualLesson==="future_fill"){
+    return `Для <b>${currentPerson.label}</b> потрібна форма <b>${data.future}</b>.`;
+  }
+
   return "Порівняй відповідь із правильним варіантом.";
 }
 
@@ -2900,14 +3244,15 @@ function check(){
   nextButton.disabled=false;
 
   const spellingMessage=spellingAdjusted?`<div class="spelling-note"><b>Підказка з написання:</b> ${currentExpected}</div>`:"";
+  const translationMessage=checkedTranslationHtml();
   if(answerCorrect&&hintUsed){
-    setFeedback("assisted",`<b>Відповідь правильна, але не зарахована.</b><br>Причина: була відкрита підказка.${spellingMessage}<br>Правильно: <b>${currentExpected}</b>`);
+    setFeedback("assisted",`<b>Відповідь правильна, але не зарахована.</b><br>Причина: була відкрита підказка.${spellingMessage}<br>Правильно: <b>${currentExpected}</b>${translationMessage}`);
   }else if(credited&&spellingAdjusted){
-    setFeedback("ok",`<b>Зараховано правильно.</b><br>Помилки лише у великих/малих літерах або каталонських наголосах не знижують бал.${spellingMessage}<br>Час: ${timeSec} c.`);
+    setFeedback("ok",`<b>Зараховано правильно.</b><br>Помилки лише у великих/малих літерах або каталонських наголосах не знижують бал.${spellingMessage}${translationMessage}<br>Час: ${timeSec} c.`);
   }else if(credited){
-    setFeedback("ok",`<b>Правильно.</b><br>Відповідь: <b>${currentExpected}</b><br>Час: ${timeSec} c.`);
+    setFeedback("ok",`<b>Правильно.</b><br>Відповідь: <b>${currentExpected}</b>${translationMessage}<br>Час: ${timeSec} c.`);
   }else{
-    setFeedback("bad",`<b>Потрібно виправити.</b><br>Правильно: <b>${currentExpected}</b><br>${explainWrong()}<br>Час: ${timeSec} c.`);
+    setFeedback("bad",`<b>Потрібно виправити.</b><br>Правильно: <b>${currentExpected}</b>${translationMessage}<br>${explainWrong()}<br>Час: ${timeSec} c.`);
   }
   saveRecords();
 }
@@ -3033,7 +3378,6 @@ levelSelect.addEventListener("change",()=>{
   initBlockSelect();
   updateMiniScore();
   studyIndex=0;
-  studyRevealed=false;
   if(currentMode==="study")renderStudy();
   else{pickPhrase();render()}
 });
@@ -3042,7 +3386,7 @@ blockSelect.addEventListener("change",()=>{
   selectedBlockId=blockSelect.value;
   blockDescription.textContent=currentBlock().description;
   updateMiniScore();
-  studyIndex=0;studyRevealed=false;
+  studyIndex=0;
   if(currentMode==="study")renderStudy();
   else{pickPhrase();render()}
 });
@@ -3063,12 +3407,11 @@ document.getElementById("studyMode").addEventListener("click",()=>switchMode("st
 document.getElementById("practiceMode").addEventListener("click",()=>switchMode("practice"));
 document.getElementById("goToPractice").addEventListener("click",()=>switchMode("practice"));
 document.getElementById("studyPrev").addEventListener("click",()=>{
-  const n=currentBlock().phrases.length;studyIndex=(studyIndex-1+n)%n;studyRevealed=false;renderStudy();
+  const n=currentBlock().phrases.length;studyIndex=(studyIndex-1+n)%n;renderStudy();
 });
 document.getElementById("studyNext").addEventListener("click",()=>{
-  studyIndex=(studyIndex+1)%currentBlock().phrases.length;studyRevealed=false;renderStudy();
+  studyIndex=(studyIndex+1)%currentBlock().phrases.length;renderStudy();
 });
-revealTranslation.addEventListener("click",()=>{studyRevealed=!studyRevealed;renderStudy()});
 markLearned.addEventListener("click",()=>{
   const phrase=currentBlock().phrases[studyIndex];
   learnedWords.add(phraseKey(currentBlock().id,phrase));
