@@ -248,6 +248,18 @@
         <div class="metric"><div class="value" id="mSpelling">0</div><div>Підказки з написання</div></div>
       </div>
 
+      <h3>Час роботи сьогодні — поточний блок</h3>
+      <div class="time-summary" id="todayTimeSummary">
+        <div class="metrics">
+          <div class="metric"><div class="value" id="tElapsed">—</div><div>Від початку до завершення</div></div>
+          <div class="metric"><div class="value" id="tActive">—</div><div>Активний час</div></div>
+          <div class="metric"><div class="value" id="tIdle">—</div><div>Неактивний час</div></div>
+          <div class="metric"><div class="value" id="tWindow">—</div><div>Початок → остання активність</div></div>
+        </div>
+        <div id="tLessons" class="grammar-note"></div>
+        <p class="muted">Неактивність визначається за паузами між діями. Якщо немає кліків, вводу з клавіатури або прокручування понад 2 хвилини, час після перших 2 хвилин паузи рахується як неактивний. Час до першої та після останньої активності не враховується.</p>
+      </div>
+
       <h3>Результат за блоками</h3>
       <table id="blockTable"><thead><tr><th>Блок</th><th>Правильно</th><th>Усього</th><th>Точність</th><th>Оцінка</th></tr></thead><tbody></tbody></table>
 
@@ -2397,6 +2409,15 @@ let questionStartTime=Date.now();
 let checkedThisQuestion=false;
 let hintUsed=false;
 
+const ACTIVITY_STORAGE_KEY="catStudyActivityV1";
+const ACTIVITY_SAMPLE_MS=5000;
+const IDLE_THRESHOLD_MS=2*60*1000;
+let activityLog=[];
+let lastActivitySample=0;
+
+try{activityLog=JSON.parse(storageGet(ACTIVITY_STORAGE_KEY)||"[]")}
+catch(e){activityLog=[]}
+
 const oldRecords=storageGet("catGrammarBlockRecordsV2") || storageGet("catGrammarBlockRecordsV1") || "[]";
 let records=JSON.parse(oldRecords);
 let learnedWords;
@@ -2795,6 +2816,142 @@ function stats(){
   const avgTime=total?Math.round(records.reduce((s,r)=>s+(r.timeSec||0),0)/total):0;
   return {total,correct,hints,spellingHints,avgTime};
 }
+function localDateKey(ts=Date.now()){
+  const d=new Date(ts);
+  const y=d.getFullYear();
+  const m=String(d.getMonth()+1).padStart(2,"0");
+  const day=String(d.getDate()).padStart(2,"0");
+  return `${y}-${m}-${day}`;
+}
+
+function pruneActivityLog(){
+  const cutoff=Date.now()-35*24*60*60*1000;
+  activityLog=activityLog.filter(item=>item&&item.ts>=cutoff);
+  if(activityLog.length>25000)activityLog=activityLog.slice(-25000);
+}
+
+function saveActivityLog(){
+  pruneActivityLog();
+  storageSet(ACTIVITY_STORAGE_KEY,JSON.stringify(activityLog));
+}
+
+function trackActivity(force=false){
+  if(!reportPanel.classList.contains("hidden"))return;
+
+  const now=Date.now();
+  if(!force&&now-lastActivitySample<ACTIVITY_SAMPLE_MS)return;
+  lastActivitySample=now;
+
+  activityLog.push({
+    ts:now,
+    day:localDateKey(now),
+    blockId:selectedBlockId,
+    level:selectedLevel(),
+    mode:currentMode,
+    lessonId:currentMode==="practice"?(currentLesson==="mixed"?actualLesson:currentLesson):"study"
+  });
+  saveActivityLog();
+}
+
+function formatDuration(ms){
+  ms=Math.max(0,Math.round(ms/1000)*1000);
+  const totalSec=Math.floor(ms/1000);
+  const h=Math.floor(totalSec/3600);
+  const min=Math.floor((totalSec%3600)/60);
+  const sec=totalSec%60;
+  if(h)return `${h} год ${min} хв`;
+  if(min)return `${min} хв ${sec} с`;
+  return `${sec} с`;
+}
+
+function formatClock(ts){
+  if(!ts)return "—";
+  return new Date(ts).toLocaleTimeString("uk-UA",{hour:"2-digit",minute:"2-digit"});
+}
+
+function lessonNumberAndLabel(id){
+  const ordered=[
+    "phrase","choice","modal",
+    "present_build","negative_build","question_build","past_build","future_build",
+    "present_fill","negative_fill","question_fill","past_fill","future_fill","mixed"
+  ];
+  if(id==="study")return "Вивчення слів";
+  const index=ordered.indexOf(id);
+  const label=LESSONS[id]?.title||id;
+  return index>=0?`${index+1}. ${label}`:label;
+}
+
+function todayBlockTiming(blockId=selectedBlockId){
+  const today=localDateKey();
+  const points=activityLog
+    .filter(item=>item.day===today&&item.blockId===blockId)
+    .sort((a,b)=>a.ts-b.ts);
+
+  if(!points.length){
+    return {
+      hasData:false,
+      elapsedMs:0,
+      activeMs:0,
+      idleMs:0,
+      firstTs:null,
+      lastTs:null,
+      lessons:[]
+    };
+  }
+
+  let activeMs=0;
+  let idleMs=0;
+
+  for(let i=1;i<points.length;i++){
+    const gap=Math.max(0,points[i].ts-points[i-1].ts);
+    activeMs+=Math.min(gap,IDLE_THRESHOLD_MS);
+    idleMs+=Math.max(0,gap-IDLE_THRESHOLD_MS);
+  }
+
+  const lessons=[...new Set(points.map(item=>item.lessonId).filter(Boolean))];
+  const order=[
+    "study","phrase","choice","modal",
+    "present_build","negative_build","question_build","past_build","future_build",
+    "present_fill","negative_fill","question_fill","past_fill","future_fill","mixed"
+  ];
+  lessons.sort((a,b)=>order.indexOf(a)-order.indexOf(b));
+
+  return {
+    hasData:true,
+    elapsedMs:Math.max(0,points[points.length-1].ts-points[0].ts),
+    activeMs,
+    idleMs,
+    firstTs:points[0].ts,
+    lastTs:points[points.length-1].ts,
+    lessons
+  };
+}
+
+function renderTodayTiming(){
+  const timing=todayBlockTiming(selectedBlockId);
+  document.getElementById("tElapsed").textContent=timing.hasData?formatDuration(timing.elapsedMs):"—";
+  document.getElementById("tActive").textContent=timing.hasData?formatDuration(timing.activeMs):"—";
+  document.getElementById("tIdle").textContent=timing.hasData?formatDuration(timing.idleMs):"—";
+  document.getElementById("tWindow").textContent=timing.hasData
+    ?`${formatClock(timing.firstTs)} → ${formatClock(timing.lastTs)}`
+    :"—";
+
+  const lessonsEl=document.getElementById("tLessons");
+  if(!timing.hasData){
+    lessonsEl.innerHTML="<b>Сьогодні для цього блока ще немає даних про активність.</b>";
+    return;
+  }
+
+  const lessons=timing.lessons.length
+    ?timing.lessons.map(lessonNumberAndLabel).join("<br>")
+    :"—";
+
+  lessonsEl.innerHTML=`
+    <b>${escapeHtml(currentBlockTitle())}</b><br>
+    <b>Сьогодні була активність у:</b><br>${lessons}
+  `;
+}
+
 function saveLearnedWords(){
   storageSet("catVocabularyLearnedV3",JSON.stringify([...learnedWords]));
   renderStudy();
@@ -2813,6 +2970,7 @@ function updateMiniScore(){
 function setFeedback(kind,html){feedback.className="feedback "+kind;feedback.innerHTML=html}
 function clearFeedback(){feedback.className="feedback";feedback.innerHTML=""}
 function startQuestion(){
+  trackActivity(true);
   questionId=Date.now()+"-"+Math.random().toString(16).slice(2);
   questionStartTime=Date.now();
   checkedThisQuestion=false;
@@ -3199,6 +3357,7 @@ function disableExercise(){
 }
 
 function check(){
+  trackActivity(true);
   if(checkedThisQuestion){
     setFeedback("bad","<b>Це завдання вже оцінено.</b><br>Натисни <b>Наступне завдання</b>.");
     return;
@@ -3212,6 +3371,7 @@ function check(){
 
   records.push({
     date:new Date().toLocaleString("uk-UA"),
+    timestamp:Date.now(),
     questionId,
     taskKey:taskKeyForParts(
       selectedBlockId,
@@ -3277,6 +3437,7 @@ function showReport(){
   document.getElementById("mAttempts").textContent=progress.attempts;
   document.getElementById("mTime").textContent=progress.avgTime+" c";
   document.getElementById("mSpelling").textContent=progress.spellingHints;
+  renderTodayTiming();
 
   const q=qualityText(acc);
   const level=document.getElementById("qualityLevel");
@@ -3376,6 +3537,7 @@ function initBlockSelect(preferredBlockId=selectedBlockId){
 
 levelSelect.addEventListener("change",()=>{
   initBlockSelect();
+  trackActivity(true);
   updateMiniScore();
   studyIndex=0;
   if(currentMode==="study")renderStudy();
@@ -3385,21 +3547,22 @@ levelSelect.addEventListener("change",()=>{
 blockSelect.addEventListener("change",()=>{
   selectedBlockId=blockSelect.value;
   blockDescription.textContent=currentBlock().description;
+  trackActivity(true);
   updateMiniScore();
   studyIndex=0;
   if(currentMode==="study")renderStudy();
   else{pickPhrase();render()}
 });
-personSelect.addEventListener("change",()=>{selectedPersonId=personSelect.value;updateMiniScore();pickPhrase();render()});
+personSelect.addEventListener("change",()=>{selectedPersonId=personSelect.value;trackActivity(true);updateMiniScore();pickPhrase();render()});
 document.querySelectorAll(".lesson").forEach(btn=>btn.addEventListener("click",()=>{
   document.querySelectorAll(".lesson").forEach(b=>b.classList.remove("active"));
-  btn.classList.add("active");currentLesson=btn.dataset.lesson;updateMiniScore();pickPhrase();render();
+  btn.classList.add("active");currentLesson=btn.dataset.lesson;trackActivity(true);updateMiniScore();pickPhrase();render();
 }));
 nextButton.addEventListener("click",()=>{if(!checkedThisQuestion)return;pickPhrase();render()});
 checkButton.addEventListener("click",check);
 document.getElementById("reset").addEventListener("click",()=>{
   if(!confirm("Очистити результати вправ і позначки вивчених слів на цьому пристрої?"))return;
-  records=[];learnedWords=new Set();saveLearnedWords();saveRecords();showReport();
+  records=[];learnedWords=new Set();activityLog=[];saveActivityLog();saveLearnedWords();saveRecords();showReport();
 });
 document.getElementById("showReport").addEventListener("click",showReport);
 document.getElementById("backToPractice").addEventListener("click",()=>switchMode(currentMode));
@@ -3412,6 +3575,14 @@ document.getElementById("studyPrev").addEventListener("click",()=>{
 document.getElementById("studyNext").addEventListener("click",()=>{
   studyIndex=(studyIndex+1)%currentBlock().phrases.length;renderStudy();
 });
+["pointerdown","keydown","input","scroll"].forEach(eventName=>{
+  document.addEventListener(eventName,()=>trackActivity(false),{passive:true,capture:true});
+});
+document.addEventListener("visibilitychange",()=>{
+  if(document.visibilityState==="hidden")saveActivityLog();
+});
+window.addEventListener("beforeunload",saveActivityLog);
+
 markLearned.addEventListener("click",()=>{
   const phrase=currentBlock().phrases[studyIndex];
   learnedWords.add(phraseKey(currentBlock().id,phrase));
