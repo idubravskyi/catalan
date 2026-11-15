@@ -98,7 +98,36 @@
     summary{cursor:pointer;font-weight:700;padding:8px 0}
     .hidden{display:none}
     code{background:#eee;padding:2px 5px;border-radius:5px}
-  </style>
+  /* Tablet-first touch controls; keep browser zoom and portrait layouts available. */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+button,select,input,summary,a.action{touch-action:manipulation}
+button,select,input:not([type=checkbox]):not([type=radio]),summary{min-height:44px;box-sizing:border-box}
+button,a,input,select,summary{-webkit-tap-highlight-color:rgba(29,99,196,.15)}
+input,select,textarea{font-size:16px;max-width:100%}
+img,svg{max-width:100%}
+@media(hover:none){button:hover:not(:disabled){transform:none}}
+
+main,main>.card{min-width:0}button{white-space:normal}table{overflow-wrap:anywhere}
+.word-bank span{display:inline-flex;align-items:center;min-height:44px;box-sizing:border-box}
+@media(min-width:960px) and (orientation:landscape){
+ body{font-size:17px}header{padding:16px max(20px,env(safe-area-inset-left))}header h1{font-size:25px}
+ main{max-width:1366px;padding:20px;grid-template-columns:280px minmax(0,1fr);gap:20px;align-items:start}
+ main>aside{position:sticky;top:16px;max-height:calc(100svh - 32px);overflow-y:auto;overscroll-behavior-y:contain;-webkit-overflow-scrolling:touch;padding:18px}
+ main>section.card{padding:24px}.card{min-width:0}.mode-switch{grid-template-columns:1fr}
+ button,input,select{font-size:17px;min-height:48px}button.lesson{padding:12px}
+ .study-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.study-actions #markLearned{grid-column:1/-1}
+ .study-card{padding:24px}.study-ca{font-size:32px}.study-uk{font-size:23px}
+ table{font-size:16px;table-layout:fixed}th,td{padding:10px 8px}
+ .study-conjugation th,.study-conjugation .uk-example{font-size:15px}
+ .choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.choices button{margin:0;min-height:64px}
+ .word-bank{display:flex;gap:10px;flex-wrap:wrap}.word-bank span{margin:0;padding:12px}
+ .task{font-size:21px}.phrase-main{font-size:25px}.hint-warning,.mistake{font-size:16px}
+ .metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .mistakes{max-height:none;overflow:visible}
+}
+
+
+</style>
 </head>
 <body>
 <header>
