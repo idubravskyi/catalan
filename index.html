@@ -1,11 +1,85 @@
-<!doctype html><html lang="uk"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>Catalan · Граматика та домашні завдання</title><style>
-:root{--bg:#f5f7fb;--ink:#172b33;--muted:#62747c;--teal:#0b6d70;--line:#dfe8e9}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 system-ui,-apple-system,Segoe UI,sans-serif}header{background:#133b46;color:white;padding:28px max(22px,calc((100% - 1060px)/2))}header small{color:#c5eee5;letter-spacing:.08em}header h1{font-size:clamp(2rem,5vw,3.2rem);line-height:1.1;margin:.35rem 0}header p{margin:.5rem 0 0;color:#dcebec}main{max-width:1060px;margin:26px auto;padding:0 18px}.section-nav{display:flex;gap:10px;flex-wrap:wrap}.section-nav a{padding:11px 22px;border:1px solid var(--line);background:white;border-radius:10px;text-decoration:none;font-weight:650;color:var(--ink);min-height:48px}.section-nav a[aria-current=page]{background:var(--teal);color:white}.card{background:white;border:1px solid var(--line);border-radius:16px;padding:22px;margin:14px 0;box-shadow:0 5px 20px #18284808}h2{margin:.1rem 0 .8rem;font-size:1.45rem}h3{margin:.2rem 0 .5rem}p{margin:.45rem 0}.muted{color:var(--muted)}.rule{border:1px solid var(--line);border-radius:12px;padding:15px;background:#fbfcfd}.pill{display:inline-block;background:#e7f4f0;color:#185c4e;border-radius:99px;padding:3px 9px;font-size:.82rem}.action{display:inline-block;padding:11px 16px;background:var(--teal);color:white;text-decoration:none;border-radius:10px;min-height:44px}.action:focus-visible,.section-nav a:focus-visible{outline:3px solid #d58b00;outline-offset:4px}[hidden]{display:none!important}footer{text-align:center;color:var(--muted);padding:28px} @media(min-width:960px) and (orientation:landscape){main{max-width:1180px}.card{padding:26px}.section-nav a{padding:14px 26px}}
-</style></head><body><header><small>CATALAN · УКРАЇНСЬКА ПІДТРИМКА</small><h1>Catalan</h1><p>Граматика та домашні завдання · Вивчай, тренуйся і перевіряй себе</p></header><main>
-<nav class="section-nav" aria-label="Основні розділи"><a href="#grammar" id="grammar-tab">Граматика</a><a href="#homework" id="homework-tab">Домашні завдання</a></nav>
-<section id="grammar"><div class="card"><h2>Граматика</h2><p class="muted">Наявний тренажер каталонської мови: слова, дієслова, речення, граматичні вправи, практика та звіти.</p><article class="rule"><span class="pill">Наявні навчальні матеріали</span><h3>Слова, дієслова та граматика</h3><p>Усі попередні блоки та функції збережено без змін.</p><p><a class="action" href="grammar.html">Відкрити тренажер →</a></p></article></div></section>
-<section id="homework" hidden><div class="card"><h2>Домашні завдання</h2><p class="muted">Окремі уроки за шкільними сторінками, з українським перекладом і тренуванням.</p><article class="rule"><span class="pill">Каталонська · Сторінки 24–25</span><h3 lang="ca">L’accent diacrític</h3><p>15 пар слів із наголосами, інтерактивна перевірка, 15 речень, диктант та письмові завдання 3–5.</p><p><a class="action" href="homework/accent-diacritic.html">Відкрити домашнє завдання →</a></p></article></div></section>
-</main><footer>Catalan · Каталонська з українською підтримкою</footer><script>
-function route(){const section=location.hash==='#homework'?'homework':'grammar';for(const id of ['grammar','homework']){document.getElementById(id).hidden=id!==section;const link=document.getElementById(id+'-tab');if(id===section)link.setAttribute('aria-current','page');else link.removeAttribute('aria-current')}}
-window.addEventListener('hashchange',route);route();
-</script></body></html>
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Catalan · Навчання</title>
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">CA</span><span>Catalan</span></a>
+    <h1 class="header-title">Вивчай каталонську через слова</h1>
+    <p class="header-sub">Спочатку розширюй словниковий запас, потім закріплюй його короткими вправами. Прогрес зберігається на цьому пристрої.</p>
+    <nav class="topnav" aria-label="Навігація">
+      <a class="active" href="index.html">Головна</a>
+      <a href="vocabulary.html">Вивчення слів</a>
+      <a href="practice.html">Практика</a>
+      <a href="progress.html">Прогрес</a>
+      <a href="index.html#homework">Домашні завдання</a>
+    </nav>
+  </div>
+</header>
+
+<main class="page">
+  <section class="section-title">
+    <div>
+      <span class="chip">Основний маршрут</span>
+      <h1>Що будемо робити?</h1>
+      <p class="muted">Обери режим. Рекомендований порядок: слова → практика → перегляд прогресу.</p>
+    </div>
+  </section>
+
+  <section class="choice-grid">
+    <a class="card choice-card vocab" href="vocabulary.html">
+      <div class="choice-icon">Aa</div>
+      <h2>Вивчення слів</h2>
+      <p>Картки: каталонське слово або фраза на одному боці, український переклад — на іншому. Позначай те, що вже вивчено.</p>
+      <span class="go">Почати з карток →</span>
+    </a>
+
+    <a class="card choice-card practice" href="practice.html">
+      <div class="choice-icon">✓</div>
+      <h2>Практика</h2>
+      <p>Короткі вправи на розпізнавання, переклад і складання фраз. Менше граматичних режимів, більше повторення вокабуляру.</p>
+      <span class="go">Перейти до вправ →</span>
+    </a>
+
+    <a class="card choice-card progress-card" href="progress.html">
+      <div class="choice-icon">%</div>
+      <h2>Прогрес</h2>
+      <p>Подивись, скільки слів уже вивчено, які блоки пройдено та як проходить практика.</p>
+      <span class="go">Відкрити прогрес →</span>
+    </a>
+  </section>
+
+  <section id="homework" class="card" style="margin-top:20px">
+    <div class="section-title">
+      <div>
+        <span class="chip">Шкільні матеріали</span>
+        <h2>Домашні завдання</h2>
+        <p class="muted">Окремі сторінки зі шкільними вправами, перекладом і тренуванням.</p>
+      </div>
+    </div>
+    <div class="choice-grid">
+      <a class="card choice-card homework-card" href="homework/accent-diacritic.html">
+        <div class="choice-icon">À</div>
+        <h2>L’accent diacrític</h2>
+        <p>Сторінки 24–25: пари слів, інтерактивна перевірка, речення, диктант і письмові вправи.</p>
+        <span class="go">Відкрити завдання →</span>
+      </a>
+      <a class="card choice-card" href="grammar.html">
+        <div class="choice-icon" style="background:var(--blue-soft);color:var(--blue)">G</div>
+        <h2>Розширена граматика</h2>
+        <p>Попередня велика сторінка з усіма граматичними вправами та звітами. Залишається доступною як додатковий режим.</p>
+        <span class="go">Відкрити старий тренажер →</span>
+      </a>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">Catalan · словниковий тренажер з українською підтримкою</footer>
+</body>
+</html>
