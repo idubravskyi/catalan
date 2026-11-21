@@ -2825,8 +2825,12 @@ function selectedLevelLabel(){
 }
 
 function currentFilterDescription(maximum){
-  const lessonLabel=LESSONS[currentLesson]?.label||"";
-  return `${selectedLevelLabel()} · ${currentBlockTitle()} · ${selectedPersonLabel()} · ${lessonLabel}: максимум ${maximum} завдань = 100%.`;
+  const lessonCa=LESSONS[currentLesson]?.label||"";
+  const lessonUk=LESSONS[currentLesson]?.labelUk||lessonCa;
+  return bi(
+    `${selectedLevelLabel()} · ${currentBlockTitle()} · ${selectedPersonLabel()} · ${lessonCa}: màxim ${maximum} tasques = 100%.`,
+    `${selectedLevelLabel()} · ${currentBlockTitle()} · ${selectedPersonLabel()} · ${lessonUk}: максимум ${maximum} завдань = 100%.`
+  );
 }
 
 function pickPhrase(){
@@ -2900,9 +2904,9 @@ function formatDuration(ms){
   const h=Math.floor(totalSec/3600);
   const min=Math.floor((totalSec%3600)/60);
   const sec=totalSec%60;
-  if(h)return `${h} год ${min} хв`;
-  if(min)return `${min} хв ${sec} с`;
-  return `${sec} с`;
+  if(h)return `${h} h ${min} min`;
+  if(min)return `${min} min ${sec} s`;
+  return `${sec} s`;
 }
 
 function formatClock(ts){
@@ -2916,10 +2920,11 @@ function lessonNumberAndLabel(id){
     "present_build","negative_build","question_build","past_build","future_build",
     "present_fill","negative_fill","question_fill","past_fill","future_fill","mixed"
   ];
-  if(id==="study")return "Вивчення слів";
+  if(id==="study")return bi("Aprenentatge de paraules","Вивчення слів");
   const index=ordered.indexOf(id);
-  const label=LESSONS[id]?.title||id;
-  return index>=0?`${index+1}. ${label}`:label;
+  const ca=LESSONS[id]?.title||id;
+  const uk=LESSONS[id]?.titleUk||ca;
+  return bi(index>=0?`${index+1}. ${ca}`:ca,index>=0?`${index+1}. ${uk}`:uk);
 }
 
 function todayBlockTiming(blockId=selectedBlockId){
@@ -3006,7 +3011,7 @@ function updateMiniScore(){
   correctEl.textContent=progress.correct;
   totalEl.textContent=progress.maximum;
   bar.style.width=progress.percent+"%";
-  filterMaximum.textContent=currentFilterDescription(progress.maximum);
+  filterMaximum.innerHTML=currentFilterDescription(progress.maximum);
 }
 function setFeedback(kind,html){feedback.className="feedback "+kind;feedback.innerHTML=html}
 function clearFeedback(){feedback.className="feedback";feedback.innerHTML=""}
@@ -3515,10 +3520,10 @@ function check(){
 
 function percent(a,b){return b?Math.round(a/b*100):0}
 function qualityText(pct){
-  if(pct>=90)return{text:"Відмінно",cls:"ok"};
-  if(pct>=75)return{text:"Добре",cls:"ok"};
-  if(pct>=60)return{text:"Потрібна практика",cls:"warn"};
-  return{text:"Потрібно повторити",cls:"bad"};
+  if(pct>=90)return{text:"Excel·lent",uk:"Відмінно",cls:"ok"};
+  if(pct>=75)return{text:"Bé",uk:"Добре",cls:"ok"};
+  if(pct>=60)return{text:"Cal practicar",uk:"Потрібна практика",cls:"warn"};
+  return{text:"Cal repassar",uk:"Потрібно повторити",cls:"bad"};
 }
 
 function showReport(){
@@ -3531,19 +3536,29 @@ function showReport(){
   document.getElementById("mCorrect").textContent=`${progress.correct} / ${progress.maximum}`;
   document.getElementById("mHints").textContent=progress.hints;
   document.getElementById("mAttempts").textContent=progress.attempts;
-  document.getElementById("mTime").textContent=progress.avgTime+" c";
+  document.getElementById("mTime").textContent=progress.avgTime+" s";
   document.getElementById("mSpelling").textContent=progress.spellingHints;
   renderTodayTiming();
 
   const q=qualityText(acc);
   const level=document.getElementById("qualityLevel");
   level.className="level "+q.cls;
-  let msg=`${currentFilterDescription(progress.maximum)} Виконано ${progress.correct} унікальних завдань.`;
-  if(acc===100)msg+=" Увесь вибраний набір завершено.";
-  else if(acc>=75)msg+=" Залишилося виконати невелику частину набору.";
-  else if(acc>=40)msg+=" Виконано частину вибраного набору.";
-  else msg+=" Потрібно продовжити практику.";
-  level.innerHTML=`<b>Результат:</b> ${q.text}. ${msg}`;
+  let ca=`S'han completat <b>${progress.correct}</b> tasques úniques.`;
+  let uk=`Виконано <b>${progress.correct}</b> унікальних завдань.`;
+  if(acc===100){
+    ca+=" S'ha completat tot el conjunt seleccionat.";
+    uk+=" Увесь вибраний набір завершено.";
+  }else if(acc>=75){
+    ca+=" Només falta una petita part del conjunt.";
+    uk+=" Залишилося виконати невелику частину набору.";
+  }else if(acc>=40){
+    ca+=" S'ha completat una part del conjunt seleccionat.";
+    uk+=" Виконано частину вибраного набору.";
+  }else{
+    ca+=" Cal continuar practicant.";
+    uk+=" Потрібно продовжити практику.";
+  }
+  level.innerHTML=currentFilterDescription(progress.maximum)+bi(`<b>Resultat:</b> ${q.text}. ${ca}`,`<b>Результат:</b> ${q.uk}. ${uk}`);
 
   renderBlockTable();
   renderLessonTable();
@@ -3551,7 +3566,6 @@ function showReport(){
   renderRecommendations();
   renderMistakes();
 }
-
 function renderAggregateTable(selector,items,getRecords,getLabel){
   const tbody=document.querySelector(selector+" tbody");
   tbody.innerHTML="";
@@ -3560,13 +3574,14 @@ function renderAggregateTable(selector,items,getRecords,getLabel){
     const total=arr.length;
     const good=arr.filter(r=>r.correct).length;
     const pct=percent(good,total);
-    tbody.innerHTML+=`<tr><td>${getLabel(item)}</td><td>${good}</td><td>${total}</td><td>${total?pct+"%":"—"}</td><td>${total?qualityText(pct).text:"Немає даних"}</td></tr>`;
+    const quality=qualityText(pct);
+    tbody.innerHTML+=`<tr><td>${getLabel(item)}</td><td>${good}</td><td>${total}</td><td>${total?pct+"%":"—"}</td><td>${total?bi(quality.text,quality.uk):bi("Sense dades","Немає даних")} </td></tr>`;
   });
 }
 function renderBlockTable(){renderAggregateTable("#blockTable",BLOCKS,b=>records.filter(r=>r.blockId===b.id),b=>b.title)}
 function renderLessonTable(){
   const keys=Object.keys(LESSONS).filter(k=>k!=="mixed");
-  renderAggregateTable("#lessonTable",keys,k=>records.filter(r=>(r.actualLesson||r.lesson)===k),k=>LESSONS[k].label);
+  renderAggregateTable("#lessonTable",keys,k=>records.filter(r=>(r.actualLesson||r.lesson)===k),k=>bi(LESSONS[k].label,LESSONS[k].labelUk));
 }
 function renderPersonTable(){renderAggregateTable("#personTable",PERSONS,p=>records.filter(r=>r.personId===p.id),p=>p.label)}
 
@@ -3581,31 +3596,39 @@ function renderRecommendations(){
   }).filter(x=>x.total>0&&x.pct<75);
 
   let html="";
-  if(weakLessons.length) html+=`<p><b>Повторити мініуроки:</b></p><ul>${weakLessons.map(x=>`<li>${LESSONS[x.k].label} — ${x.pct}%</li>`).join("")}</ul>`;
-  if(weakPersons.length) html+=`<p><b>Повторити особи:</b></p><ul>${weakPersons.map(x=>`<li>${x.p.label} — ${x.pct}%</li>`).join("")}</ul>`;
-  if(!html) html="<p><b>Слабких тем не виявлено.</b></p>";
+  if(weakLessons.length) html+=bi(
+    `<p><b>Mini lliçons per repassar:</b></p><ul>${weakLessons.map(x=>`<li>${LESSONS[x.k].label} — ${x.pct}%</li>`).join("")}</ul>`,
+    `<p><b>Повторити мініуроки:</b></p><ul>${weakLessons.map(x=>`<li>${LESSONS[x.k].labelUk} — ${x.pct}%</li>`).join("")}</ul>`
+  );
+  if(weakPersons.length) html+=bi(
+    `<p><b>Persones per repassar:</b></p><ul>${weakPersons.map(x=>`<li>${x.p.label} — ${x.pct}%</li>`).join("")}</ul>`,
+    `<p><b>Повторити особи:</b></p><ul>${weakPersons.map(x=>`<li>${x.p.label} — ${x.pct}%</li>`).join("")}</ul>`
+  );
+  if(!html) html=bi("<p><b>No s'han detectat temes febles.</b></p>","<p><b>Слабких тем не виявлено.</b></p>");
   document.getElementById("recommendations").innerHTML=html;
 }
-
 function renderMistakes(){
   const items=records.filter(r=>!r.correct).slice(-15).reverse();
   const container=document.getElementById("mistakes");
-  if(!items.length){container.innerHTML='<p class="muted">Незарахованих відповідей немає.</p>';return}
+  if(!items.length){
+    container.innerHTML=bi('<p class="muted">No hi ha respostes no comptabilitzades.</p>','<p class="muted">Незарахованих відповідей немає.</p>');
+    return;
+  }
   container.innerHTML=items.map(r=>`
     <div class="mistake">
       <b>${escapeHtml(r.blockTitle||"")}</b> / ${escapeHtml(r.lessonLabel||"")}
       ${r.personLabel?` / ${escapeHtml(r.personLabel)}`:""}<br>
-      Українською: ${escapeHtml(r.phraseUk||"")}<br>
-      Відповідь: <code>${escapeHtml(r.answer||"—")}</code><br>
-      Правильно: <code>${escapeHtml(r.expected||"")}</code><br>
-      ${r.assisted?'<span class="hint-warning">Використано підказку — бал не нараховано.</span><br>':""}
-      <span class="muted">${escapeHtml(r.date||"")}, ${r.timeSec||0} c</span>
+      ${bi("En ucraïnès:","Українською:")} ${escapeHtml(r.phraseUk||"")}<br>
+      ${bi("Resposta:","Відповідь:")} <code>${escapeHtml(r.answer||"—")}</code><br>
+      ${bi("Correcte:","Правильно:")} <code>${escapeHtml(r.expected||"")}</code><br>
+      ${r.assisted?bi('<span class="hint-warning">S’ha utilitzat una pista — no s’ha atorgat cap punt.</span>','<span class="hint-warning">Використано підказку — бал не нараховано.</span>')+"<br>":""}
+      <span class="muted">${escapeHtml(r.date||"")}, ${r.timeSec||0} s</span>
     </div>`).join("");
 }
 function escapeHtml(str){return String(str).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")}
 
 function exportCsv(){
-  if(!records.length){alert("Немає даних для експорту.");return}
+  if(!records.length){alert("No hi ha dades per exportar.\nНемає даних для експорту.");return}
   const headers=["date","block","lesson","person","phrase_uk","phrase_ca","expected","answer","answer_correct","spelling_hint","hint_used","credited","time_sec"];
   const rows=records.map(r=>[r.date,r.blockTitle,r.lessonLabel,r.personLabel||"",r.phraseUk,r.phraseCa,r.expected,r.answer,r.answerCorrect?"yes":"no",r.spellingAdjusted?"yes":"no",r.assisted?"yes":"no",r.correct?"yes":"no",r.timeSec]);
   const csv=[headers,...rows].map(row=>row.map(cell=>`"${String(cell??"").replaceAll('"','""')}"`).join(",")).join("\n");
@@ -3657,7 +3680,7 @@ document.querySelectorAll(".lesson").forEach(btn=>btn.addEventListener("click",(
 nextButton.addEventListener("click",()=>{if(!checkedThisQuestion)return;pickPhrase();render()});
 checkButton.addEventListener("click",check);
 document.getElementById("reset").addEventListener("click",()=>{
-  if(!confirm("Очистити результати вправ і позначки вивчених слів на цьому пристрої?"))return;
+  if(!confirm("Vols esborrar els resultats dels exercicis i les marques de paraules apreses en aquest dispositiu?\n\nОчистити результати вправ і позначки вивчених слів на цьому пристрої?"))return;
   records=[];learnedWords=new Set();activityLog=[];saveActivityLog();saveLearnedWords();saveRecords();showReport();
 });
 document.getElementById("showReport").addEventListener("click",showReport);
