@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="ca">
+<html lang="uk">
 <head>
 <meta name="robots" content="noindex">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Català — vocabulari, verbs i gramàtica</title>
+  <title>Каталонська — слова, дієслова й граматика</title>
   <style>
     :root {
       --bg:#f5f5f0; --card:#fff; --ink:#1f1f1f; --muted:#666; --line:#d8d8d0;
@@ -34,13 +34,6 @@
     .lesson-group-title{font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin:0 0 8px}
     .lesson-group button.lesson:first-of-type{margin-top:0}
     .lesson-group button.lesson:last-child{margin-bottom:0}
-    .i18n-ca{display:block;color:inherit}
-    .i18n-uk{display:block;margin-top:2px;font-size:.84em;line-height:1.3;color:#777;font-weight:400}
-    button .i18n-uk{color:#b9b9b9}
-    button.secondary .i18n-uk,button.lesson:not(.active) .i18n-uk,button.mode:not(.active) .i18n-uk{color:#777}
-    button.lesson.active .i18n-uk,button.mode.active .i18n-uk{color:#d5d5d5}
-    header .i18n-uk{color:#cfcfcf}
-    .bilingual-note{margin-top:4px}
     .muted{color:var(--muted)}
     .phrase-box{background:var(--soft);border-radius:14px;padding:14px;margin:12px 0}
     .phrase-main{font-size:23px;font-weight:bold;margin-bottom:6px}
@@ -138,12 +131,12 @@ main,main>.card{min-width:0}button{white-space:normal}table{overflow-wrap:anywhe
 </head>
 <body>
 <header>
-  <h1><span class="i18n-ca">Català — vocabulari i gramàtica</span><span class="i18n-uk">Каталонська — слова й граматика</span></h1>
+  <h1>Каталонська — слова й граматика</h1>
 </header>
 
 <main>
   <aside class="card">
-    <h2><span class="i18n-ca">Configuració</span><span class="i18n-uk">Налаштування</span></h2>
+    <h2>Налаштування</h2>
 
     <label for="levelSelect"><b>Level</b></label>
     <select id="levelSelect">
@@ -153,19 +146,19 @@ main,main>.card{min-width:0}button{white-space:normal}table{overflow-wrap:anywhe
       <option value="level4">Level 4</option>
     </select>
 
-    <label for="blockSelect"><b><span class="i18n-ca">Bloc de vocabulari</span><span class="i18n-uk">Блок лексики</span></b></label>
+    <label for="blockSelect"><b>Блок лексики</b></label>
     <select id="blockSelect"></select>
     <p class="muted" id="blockDescription"></p>
 
-    <div class="mode-switch" aria-label="Mode de treball / Режим роботи">
-      <button class="mode active" id="studyMode" type="button"><span class="i18n-ca">1. Aprèn les paraules</span><span class="i18n-uk">1. Вивчити слова</span></button>
-      <button class="mode" id="practiceMode" type="button"><span class="i18n-ca">2. Pràctica</span><span class="i18n-uk">2. Практика</span></button>
+    <div class="mode-switch" aria-label="Режим роботи">
+      <button class="mode active" id="studyMode" type="button">1. Вивчити слова</button>
+      <button class="mode" id="practiceMode" type="button">2. Практика</button>
     </div>
 
     <div id="grammarControls" class="hidden">
-      <label for="personSelect"><b><span class="i18n-ca">Persona gramatical</span><span class="i18n-uk">Граматична особа</span></b></label>
+      <label for="personSelect"><b>Граматична особа</b></label>
       <select id="personSelect">
-        <option value="random">Aleatori — totes les persones / Випадково — всі особи</option>
+        <option value="random">Випадково — всі особи</option>
         <option value="jo">jo</option>
         <option value="tu">tu</option>
         <option value="ell">ell / ella</option>
@@ -174,57 +167,57 @@ main,main>.card{min-width:0}button{white-space:normal}table{overflow-wrap:anywhe
         <option value="ells">ells / elles</option>
       </select>
 
-      <h3><span class="i18n-ca">Mini lliçons</span><span class="i18n-uk">Мініуроки</span></h3>
+      <h3>Мініуроки</h3>
       <div class="lesson-group">
-        <div class="lesson-group-title"><span class="i18n-ca">Frases</span><span class="i18n-uk">Фрази</span></div>
-        <button class="lesson active" data-lesson="phrase"><span class="i18n-ca">1. Traducció de la frase</span><span class="i18n-uk">1. Переклад фрази</span></button>
-        <button class="lesson" data-lesson="choice"><span class="i18n-ca">2. Tria la frase</span><span class="i18n-uk">2. Обери фразу</span></button>
+        <div class="lesson-group-title">Фрази</div>
+        <button class="lesson active" data-lesson="phrase">1. Переклад фрази</button>
+        <button class="lesson" data-lesson="choice">2. Обери фразу</button>
       </div>
 
       <div class="lesson-group">
-        <div class="lesson-group-title"><span class="i18n-ca">Construccions modals</span><span class="i18n-uk">Модальні конструкції</span></div>
-        <button class="lesson" data-lesson="modal"><span class="i18n-ca">3. He de / Puc / Vull</span><span class="i18n-uk">3. He de / Puc / Vull</span></button>
+        <div class="lesson-group-title">Модальні конструкції</div>
+        <button class="lesson" data-lesson="modal">3. He de / Puc / Vull</button>
       </div>
 
       <div class="lesson-group">
-        <div class="lesson-group-title"><span class="i18n-ca">Construeix la frase</span><span class="i18n-uk">Склади речення</span></div>
-        <button class="lesson" data-lesson="present_build"><span class="i18n-ca">4. Present</span><span class="i18n-uk">4. Теперішній час</span></button>
-        <button class="lesson" data-lesson="negative_build"><span class="i18n-ca">5. Negació</span><span class="i18n-uk">5. Заперечення</span></button>
-        <button class="lesson" data-lesson="question_build"><span class="i18n-ca">6. Pregunta</span><span class="i18n-uk">6. Питання</span></button>
-        <button class="lesson" data-lesson="past_build"><span class="i18n-ca">7. Passat</span><span class="i18n-uk">7. Минулий час</span></button>
-        <button class="lesson" data-lesson="future_build"><span class="i18n-ca">8. Futur</span><span class="i18n-uk">8. Майбутній час</span></button>
+        <div class="lesson-group-title">Склади речення</div>
+        <button class="lesson" data-lesson="present_build">4. Теперішній час</button>
+        <button class="lesson" data-lesson="negative_build">5. Заперечення</button>
+        <button class="lesson" data-lesson="question_build">6. Питання</button>
+        <button class="lesson" data-lesson="past_build">7. Минулий час</button>
+        <button class="lesson" data-lesson="future_build">8. Майбутній час</button>
       </div>
 
       <div class="lesson-group">
-        <div class="lesson-group-title"><span class="i18n-ca">Completa</span><span class="i18n-uk">Заповни</span></div>
-        <button class="lesson" data-lesson="present_fill"><span class="i18n-ca">9. Present</span><span class="i18n-uk">9. Теперішній час</span></button>
-        <button class="lesson" data-lesson="negative_fill"><span class="i18n-ca">10. Negació</span><span class="i18n-uk">10. Заперечення</span></button>
-        <button class="lesson" data-lesson="question_fill"><span class="i18n-ca">11. Pregunta</span><span class="i18n-uk">11. Питання</span></button>
-        <button class="lesson" data-lesson="past_fill"><span class="i18n-ca">12. Passat</span><span class="i18n-uk">12. Минулий час</span></button>
-        <button class="lesson" data-lesson="future_fill"><span class="i18n-ca">13. Futur</span><span class="i18n-uk">13. Майбутній час</span></button>
+        <div class="lesson-group-title">Заповни</div>
+        <button class="lesson" data-lesson="present_fill">9. Теперішній час</button>
+        <button class="lesson" data-lesson="negative_fill">10. Заперечення</button>
+        <button class="lesson" data-lesson="question_fill">11. Питання</button>
+        <button class="lesson" data-lesson="past_fill">12. Минулий час</button>
+        <button class="lesson" data-lesson="future_fill">13. Майбутній час</button>
       </div>
 
       <div class="lesson-group">
-        <div class="lesson-group-title"><span class="i18n-ca">Repàs</span><span class="i18n-uk">Повторення</span></div>
-        <button class="lesson" data-lesson="mixed"><span class="i18n-ca">14. Pràctica mixta</span><span class="i18n-uk">14. Змішана практика</span></button>
+        <div class="lesson-group-title">Повторення</div>
+        <button class="lesson" data-lesson="mixed">14. Змішана практика</button>
       </div>
     </div>
 
-    <h3><span class="i18n-ca">Resultat actual</span><span class="i18n-uk">Поточний результат</span></h3>
+    <h3>Поточний результат</h3>
     <div class="progress"><div class="bar" id="bar"></div></div>
     <p class="score"><span id="correct">0</span> / <span id="total">0</span></p>
-    <p class="muted"><span class="i18n-ca">Respostes correctes / màxim de tasques per a la configuració seleccionada</span><span class="i18n-uk">Виконано правильно / максимум завдань для вибраних налаштувань</span></p>
+    <p class="muted">Виконано правильно / максимум завдань для вибраних налаштувань</p>
     <p class="muted" id="filterMaximum"></p>
 
-    <button class="secondary" id="showReport"><span class="i18n-ca">Mostra l'informe</span><span class="i18n-uk">Показати звіт</span></button>
-    <button class="secondary" id="exportCsv"><span class="i18n-ca">Exporta CSV</span><span class="i18n-uk">Експорт CSV</span></button>
-    <button class="danger" id="reset"><span class="i18n-ca">Esborra el resultat</span><span class="i18n-uk">Очистити результат</span></button>
+    <button class="secondary" id="showReport">Показати звіт</button>
+    <button class="secondary" id="exportCsv">Експорт CSV</button>
+    <button class="danger" id="reset">Очистити результат</button>
   </aside>
 
   <section class="card">
     <div id="studyPanel">
-      <h2><span class="i18n-ca">Aprenentatge de vocabulari nou</span><span class="i18n-uk">Вивчення нової лексики</span></h2>
-      <p class="muted"><span class="i18n-ca">Repassa les paraules del bloc — com a màxim 5. Llegeix la traducció i marca la frase com a apresa. Per als verbs, estudia també la conjugació de totes les persones.</span><span class="i18n-uk">Переглянь слова у блоці — не більше 5. Прочитай переклад і познач фразу як вивчену. Для дієслів також вивчи відмінювання за всіма особами.</span></p>
+      <h2>Вивчення нової лексики</h2>
+      <p class="muted">Переглянь слова у блоці — не більше 5. Прочитай переклад і познач фразу як вивчену. Для дієслів також вивчи відмінювання за всіма особами.</p>
 
       <div id="beginnerProgress" class="study-progress"></div>
 
@@ -236,20 +229,20 @@ main,main>.card{min-width:0}button{white-space:normal}table{overflow-wrap:anywhe
       </div>
 
       <div class="study-actions">
-        <button class="secondary" id="studyPrev" type="button"><span class="i18n-ca">← Anterior</span><span class="i18n-uk">← Попередня</span></button>
-        <button class="secondary" id="studyNext" type="button"><span class="i18n-ca">Següent →</span><span class="i18n-uk">Наступна →</span></button>
-        <button class="secondary" id="markLearned" type="button"><span class="i18n-ca">Marca com a apresa</span><span class="i18n-uk">Позначити як вивчене</span></button>
+        <button class="secondary" id="studyPrev" type="button">← Попередня</button>
+        <button class="secondary" id="studyNext" type="button">Наступна →</button>
+        <button class="secondary" id="markLearned" type="button">Позначити як вивчене</button>
       </div>
 
       <details>
-        <summary><span class="i18n-ca">Mostra totes les frases del bloc</span><span class="i18n-uk">Показати всі фрази цього блоку</span></summary>
+        <summary>Показати всі фрази цього блоку</summary>
         <table class="vocab-table" id="vocabTable">
-          <thead><tr><th><span class="i18n-ca">Català</span><span class="i18n-uk">Каталонською</span></th><th><span class="i18n-ca">Ucraïnès</span><span class="i18n-uk">Українською</span></th><th><span class="i18n-ca">Estat</span><span class="i18n-uk">Статус</span></th></tr></thead>
+          <thead><tr><th>Каталонською</th><th>Українською</th><th>Статус</th></tr></thead>
           <tbody></tbody>
         </table>
       </details>
 
-      <button id="goToPractice" type="button"><span class="i18n-ca">Ves a la pràctica gramatical</span><span class="i18n-uk">Перейти до граматичної практики</span></button>
+      <button id="goToPractice" type="button">Перейти до граматичної практики</button>
     </div>
 
     <div id="practicePanel" class="hidden">
@@ -257,62 +250,62 @@ main,main>.card{min-width:0}button{white-space:normal}table{overflow-wrap:anywhe
 
       <div class="phrase-box">
         <div class="phrase-main" id="ukPhrase"></div>
-        <div class="muted"><span class="i18n-ca">Bloc</span><span class="i18n-uk">Блок</span>: <b id="activeBlockTitle"></b></div>
-        <div class="muted"><span class="i18n-ca">Frase catalana després de comprovar</span><span class="i18n-uk">Каталонська фраза після перевірки</span>: <b id="caPhrase">—</b></div>
+        <div class="muted">Блок: <b id="activeBlockTitle"></b></div>
+        <div class="muted">Каталонська фраза після перевірки: <b id="caPhrase">—</b></div>
       </div>
 
       <div class="grammar-note" id="grammarNote"></div>
       <div id="exercise"></div>
       <div id="feedback" class="feedback"></div>
 
-      <button id="check"><span class="i18n-ca">Comprova</span><span class="i18n-uk">Перевірити</span></button>
-      <button class="secondary" id="next" disabled><span class="i18n-ca">Tasca següent</span><span class="i18n-uk">Наступне завдання</span></button>
-      <p class="muted"><span class="i18n-ca">Només s'avalua la primera comprovació. Les majúscules/minúscules i els accents catalans no redueixen la puntuació. Si obres una pista abans de comprovar, no s'atorga cap punt.</span><span class="i18n-uk">Оцінюється тільки перша перевірка. Великі/малі літери та каталонські наголоси не знижують бал. Якщо відкрити підказку до перевірки, бал не нараховується.</span></p>
+      <button id="check">Перевірити</button>
+      <button class="secondary" id="next" disabled>Наступне завдання</button>
+      <p class="muted">Оцінюється тільки перша перевірка. Великі/малі літери та каталонські наголоси не знижують бал. Якщо відкрити підказку до перевірки, бал не нараховується.</p>
     </div>
 
     <div id="reportPanel" class="hidden">
-      <h2><span class="i18n-ca">Informe de resultats</span><span class="i18n-uk">Звіт про якість роботи</span></h2>
-      <p class="muted"><span class="i18n-ca">Les dades es desen localment al navegador d'aquest dispositiu.</span><span class="i18n-uk">Дані зберігаються локально в браузері цього пристрою.</span></p>
+      <h2>Звіт про якість роботи</h2>
+      <p class="muted">Дані зберігаються локально в браузері цього пристрою.</p>
 
       <div id="qualityLevel" class="level"></div>
 
       <div class="metrics">
-        <div class="metric"><div class="value" id="mAccuracy">0%</div><div><span class="i18n-ca">Progrés del conjunt seleccionat</span><span class="i18n-uk">Виконання вибраного набору</span></div></div>
-        <div class="metric"><div class="value" id="mCorrect">0</div><div><span class="i18n-ca">Correctes sense pista</span><span class="i18n-uk">Правильно без підказки</span></div></div>
-        <div class="metric"><div class="value" id="mHints">0</div><div><span class="i18n-ca">Pistes utilitzades</span><span class="i18n-uk">Використано підказок</span></div></div>
-        <div class="metric"><div class="value" id="mAttempts">0</div><div><span class="i18n-ca">Intents totals</span><span class="i18n-uk">Усього спроб</span></div></div>
-        <div class="metric"><div class="value" id="mTime">0 c</div><div><span class="i18n-ca">Temps mitjà</span><span class="i18n-uk">Середній час</span></div></div>
-        <div class="metric"><div class="value" id="mSpelling">0</div><div><span class="i18n-ca">Avisos d'ortografia</span><span class="i18n-uk">Підказки з написання</span></div></div>
+        <div class="metric"><div class="value" id="mAccuracy">0%</div><div>Виконання вибраного набору</div></div>
+        <div class="metric"><div class="value" id="mCorrect">0</div><div>Правильно без підказки</div></div>
+        <div class="metric"><div class="value" id="mHints">0</div><div>Використано підказок</div></div>
+        <div class="metric"><div class="value" id="mAttempts">0</div><div>Усього спроб</div></div>
+        <div class="metric"><div class="value" id="mTime">0 c</div><div>Середній час</div></div>
+        <div class="metric"><div class="value" id="mSpelling">0</div><div>Підказки з написання</div></div>
       </div>
 
-      <h3><span class="i18n-ca">Temps d'estudi d'avui — bloc actual</span><span class="i18n-uk">Час роботи сьогодні — поточний блок</span></h3>
+      <h3>Час роботи сьогодні — поточний блок</h3>
       <div class="time-summary" id="todayTimeSummary">
         <div class="metrics">
-          <div class="metric"><div class="value" id="tElapsed">—</div><div><span class="i18n-ca">De l'inici al final</span><span class="i18n-uk">Від початку до завершення</span></div></div>
-          <div class="metric"><div class="value" id="tActive">—</div><div><span class="i18n-ca">Temps actiu</span><span class="i18n-uk">Активний час</span></div></div>
-          <div class="metric"><div class="value" id="tIdle">—</div><div><span class="i18n-ca">Temps inactiu</span><span class="i18n-uk">Неактивний час</span></div></div>
-          <div class="metric"><div class="value" id="tWindow">—</div><div><span class="i18n-ca">Inici → última activitat</span><span class="i18n-uk">Початок → остання активність</span></div></div>
+          <div class="metric"><div class="value" id="tElapsed">—</div><div>Від початку до завершення</div></div>
+          <div class="metric"><div class="value" id="tActive">—</div><div>Активний час</div></div>
+          <div class="metric"><div class="value" id="tIdle">—</div><div>Неактивний час</div></div>
+          <div class="metric"><div class="value" id="tWindow">—</div><div>Початок → остання активність</div></div>
         </div>
         <div id="tLessons" class="grammar-note"></div>
-        <p class="muted"><span class="i18n-ca">La inactivitat es calcula a partir de les pauses entre accions. Si no hi ha clics, tecles ni desplaçament durant més de 2 minuts, el temps posterior als primers 2 minuts de pausa es compta com a inactiu. No es compta el temps anterior a la primera activitat ni posterior a l'última.</span><span class="i18n-uk">Неактивність визначається за паузами між діями. Якщо немає кліків, вводу з клавіатури або прокручування понад 2 хвилини, час після перших 2 хвилин паузи рахується як неактивний. Час до першої та після останньої активності не враховується.</span></p>
+        <p class="muted">Неактивність визначається за паузами між діями. Якщо немає кліків, вводу з клавіатури або прокручування понад 2 хвилини, час після перших 2 хвилин паузи рахується як неактивний. Час до першої та після останньої активності не враховується.</p>
       </div>
 
-      <h3><span class="i18n-ca">Resultats per blocs</span><span class="i18n-uk">Результат за блоками</span></h3>
-      <table id="blockTable"><thead><tr><th><span class="i18n-ca">Bloc</span><span class="i18n-uk">Блок</span></th><th><span class="i18n-ca">Correctes</span><span class="i18n-uk">Правильно</span></th><th><span class="i18n-ca">Total</span><span class="i18n-uk">Усього</span></th><th><span class="i18n-ca">Precisió</span><span class="i18n-uk">Точність</span></th><th><span class="i18n-ca">Valoració</span><span class="i18n-uk">Оцінка</span></th></tr></thead><tbody></tbody></table>
+      <h3>Результат за блоками</h3>
+      <table id="blockTable"><thead><tr><th>Блок</th><th>Правильно</th><th>Усього</th><th>Точність</th><th>Оцінка</th></tr></thead><tbody></tbody></table>
 
-      <h3><span class="i18n-ca">Resultats per mini lliçons</span><span class="i18n-uk">Результат за мініуроками</span></h3>
-      <table id="lessonTable"><thead><tr><th><span class="i18n-ca">Mini lliçó</span><span class="i18n-uk">Мініурок</span></th><th><span class="i18n-ca">Correctes</span><span class="i18n-uk">Правильно</span></th><th><span class="i18n-ca">Total</span><span class="i18n-uk">Усього</span></th><th><span class="i18n-ca">Precisió</span><span class="i18n-uk">Точність</span></th><th><span class="i18n-ca">Valoració</span><span class="i18n-uk">Оцінка</span></th></tr></thead><tbody></tbody></table>
+      <h3>Результат за мініуроками</h3>
+      <table id="lessonTable"><thead><tr><th>Мініурок</th><th>Правильно</th><th>Усього</th><th>Точність</th><th>Оцінка</th></tr></thead><tbody></tbody></table>
 
-      <h3><span class="i18n-ca">Resultats per persones</span><span class="i18n-uk">Результат за особами</span></h3>
-      <table id="personTable"><thead><tr><th><span class="i18n-ca">Persona</span><span class="i18n-uk">Особа</span></th><th><span class="i18n-ca">Correctes</span><span class="i18n-uk">Правильно</span></th><th><span class="i18n-ca">Total</span><span class="i18n-uk">Усього</span></th><th><span class="i18n-ca">Precisió</span><span class="i18n-uk">Точність</span></th><th><span class="i18n-ca">Valoració</span><span class="i18n-uk">Оцінка</span></th></tr></thead><tbody></tbody></table>
+      <h3>Результат за особами</h3>
+      <table id="personTable"><thead><tr><th>Особа</th><th>Правильно</th><th>Усього</th><th>Точність</th><th>Оцінка</th></tr></thead><tbody></tbody></table>
 
-      <h3><span class="i18n-ca">Què cal repassar</span><span class="i18n-uk">Що потрібно повторити</span></h3>
+      <h3>Що потрібно повторити</h3>
       <div id="recommendations"></div>
 
-      <h3><span class="i18n-ca">Últimes respostes no comptabilitzades</span><span class="i18n-uk">Останні незараховані відповіді</span></h3>
+      <h3>Останні незараховані відповіді</h3>
       <div id="mistakes" class="mistakes"></div>
 
-      <button class="secondary" id="backToPractice"><span class="i18n-ca">Torna als exercicis</span><span class="i18n-uk">Повернутися до вправ</span></button>
+      <button class="secondary" id="backToPractice">Повернутися до вправ</button>
     </div>
   </section>
 </main>
@@ -2331,94 +2324,90 @@ const COMPLETIONS = {
 const SINGULAR_ONLY = new Set(["estar orgullós de","estar relacionat amb","sentir-se segur"]);
 const THIRD_PERSON_ONLY = new Set(["tenir lloc"]);
 
-function bi(ca,uk){
-  return `<span class="i18n-ca">${ca}</span><span class="i18n-uk">${uk}</span>`;
-}
-
 const LESSONS = {
   phrase:{
-    title:"Traducció de la frase",titleUk:"Переклад фрази",
-    label:"Traducció de la frase",labelUk:"Переклад фрази",
-    note:bi("<b>Tasca:</b> tradueix la frase ucraïnesa al català.","<b>Завдання:</b> переклади українську фразу каталонською."),
-    recommendation:bi("Repassa l'escriptura de les frases en català.","Повторити написання каталонських фраз.")
+    title:"Переклад фрази",
+    label:"Переклад фрази",
+    note:"<b>Завдання:</b> переклади українську фразу каталонською.",
+    recommendation:"Повторити написання каталонських фраз."
   },
   choice:{
-    title:"Tria la frase",titleUk:"Обери фразу",
-    label:"Tria la frase",labelUk:"Обери фразу",
-    note:bi("<b>Tasca:</b> tria la frase catalana correcta.","<b>Завдання:</b> обери правильну каталонську фразу."),
-    recommendation:bi("Repassa el significat de les frases que es confonen.","Повторити значення фраз, які плутаються.")
+    title:"Обери фразу",
+    label:"Обери фразу",
+    note:"<b>Завдання:</b> обери правильну каталонську фразу.",
+    recommendation:"Повторити значення фраз, які плутаються."
   },
   present_build:{
-    title:"Present (Construeix la frase)",titleUk:"Теперішній час (Склади речення)",
-    label:"Present — construeix la frase",labelUk:"Теперішній час — склади речення",
-    note:bi("<b>Tasca:</b> construeix una frase completa en present. La forma del verb depèn de la persona.","<b>Завдання:</b> склади повне речення у теперішньому часі. Форма дієслова залежить від особи."),
-    recommendation:bi("Repassa l'ordre de les paraules i la conjugació en present.","Повторити порядок слів і відмінювання у теперішньому часі.")
+    title:"Теперішній час (Склади речення)",
+    label:"Теперішній час — склади речення",
+    note:"<b>Завдання:</b> склади повне речення у теперішньому часі. Форма дієслова залежить від особи.",
+    recommendation:"Повторити порядок слів і відмінювання у теперішньому часі."
   },
   negative_build:{
-    title:"Negació (Construeix la frase)",titleUk:"Заперечення (Склади речення)",
-    label:"Negació — construeix la frase",labelUk:"Заперечення — склади речення",
-    note:bi("<b>Regla:</b> en una frase negativa fem servir <b>no + verb</b>.","<b>Правило:</b> у заперечному реченні використовуємо <b>no + дієслово</b>."),
-    recommendation:bi("Repassa l'ordre de les paraules en frases negatives.","Повторити порядок слів у заперечних реченнях.")
+    title:"Заперечення (Склади речення)",
+    label:"Заперечення — склади речення",
+    note:"<b>Правило:</b> у заперечному реченні використовуємо <b>no + дієслово</b>.",
+    recommendation:"Повторити порядок слів у заперечних реченнях."
   },
   question_build:{
-    title:"Pregunta (Construeix la frase)",titleUk:"Питання (Склади речення)",
-    label:"Pregunta — construeix la frase",labelUk:"Питання — склади речення",
-    note:bi("<b>Tasca:</b> construeix una pregunta completa amb la forma verbal correcta.","<b>Завдання:</b> склади повне питальне речення з правильною формою дієслова."),
-    recommendation:bi("Repassa l'ordre de les paraules i les formes verbals en les preguntes.","Повторити порядок слів і дієслівні форми у питаннях.")
+    title:"Питання (Склади речення)",
+    label:"Питання — склади речення",
+    note:"<b>Завдання:</b> склади повне питальне речення з правильною формою дієслова.",
+    recommendation:"Повторити порядок слів і дієслівні форми у питаннях."
   },
   past_build:{
-    title:"Passat (Construeix la frase)",titleUk:"Минулий час (Склади речення)",
-    label:"Passat — construeix la frase",labelUk:"Минулий час — склади речення",
-    note:bi("<b>Regla:</b> passat perifràstic: <b>vaig / vas / va / vam / vau / van + infinitiu</b>.","<b>Правило:</b> перифрастичний минулий час: <b>vaig / vas / va / vam / vau / van + інфінітив</b>."),
-    recommendation:bi("Repassa l'ordre de les paraules en passat.","Повторити порядок слів у минулому часі.")
+    title:"Минулий час (Склади речення)",
+    label:"Минулий час — склади речення",
+    note:"<b>Правило:</b> перифрастичний минулий час: <b>vaig / vas / va / vam / vau / van + інфінітив</b>.",
+    recommendation:"Повторити порядок слів у минулому часі."
   },
   future_build:{
-    title:"Futur (Construeix la frase)",titleUk:"Майбутній час (Склади речення)",
-    label:"Futur — construeix la frase",labelUk:"Майбутній час — склади речення",
-    note:bi("<b>Tasca:</b> construeix una frase completa en futur.","<b>Завдання:</b> склади повне речення у майбутньому часі."),
-    recommendation:bi("Repassa l'ordre de les paraules i les formes de futur.","Повторити порядок слів і майбутні форми дієслів.")
+    title:"Майбутній час (Склади речення)",
+    label:"Майбутній час — склади речення",
+    note:"<b>Завдання:</b> склади повне речення у майбутньому часі.",
+    recommendation:"Повторити порядок слів і майбутні форми дієслів."
   },
   modal:{
-    title:"He de / Puc / Vull",titleUk:"He de / Puc / Vull",
-    label:"He de / Puc / Vull",labelUk:"He de / Puc / Vull",
-    note:bi("<b>Regla:</b> després de <b>he de / puc / vull</b> i les formes corresponents de les altres persones, fem servir l'infinitiu.","<b>Правило:</b> після <b>he de / puc / vull</b> та відповідних форм для інших осіб ставимо інфінітив."),
-    recommendation:bi("Repassa les construccions he de, puc, vull i l'infinitiu.","Повторити конструкції he de, puc, vull та інфінітив.")
+    title:"He de / Puc / Vull",
+    label:"He de / Puc / Vull",
+    note:"<b>Правило:</b> після <b>he de / puc / vull</b> та відповідних форм для інших осіб ставимо інфінітив.",
+    recommendation:"Повторити конструкції he de, puc, vull та інфінітив."
   },
   present_fill:{
-    title:"Present (Completa)",titleUk:"Теперішній час (Заповни)",
-    label:"Present — completa",labelUk:"Теперішній час — заповни",
-    note:bi("<b>Tasca:</b> escriu la forma correcta del verb en present.","<b>Завдання:</b> впиши правильну форму дієслова у теперішньому часі."),
-    recommendation:bi("Repassa la conjugació dels verbs en present.","Повторити відмінювання дієслів у теперішньому часі.")
+    title:"Теперішній час (Заповни)",
+    label:"Теперішній час — заповни",
+    note:"<b>Завдання:</b> впиши правильну форму дієслова у теперішньому часі.",
+    recommendation:"Повторити відмінювання дієслів у теперішньому часі."
   },
   negative_fill:{
-    title:"Negació (Completa)",titleUk:"Заперечення (Заповни)",
-    label:"Negació — completa",labelUk:"Заперечення — заповни",
-    note:bi("<b>Tasca:</b> completa l'espai amb <b>no + la forma correcta del verb</b>.","<b>Завдання:</b> заповни пропуск конструкцією <b>no + правильна форма дієслова</b>."),
-    recommendation:bi("Repassa la construcció no + verb.","Повторити конструкцію no + дієслово.")
+    title:"Заперечення (Заповни)",
+    label:"Заперечення — заповни",
+    note:"<b>Завдання:</b> заповни пропуск конструкцією <b>no + правильна форма дієслова</b>.",
+    recommendation:"Повторити конструкцію no + дієслово."
   },
   question_fill:{
-    title:"Pregunta (Completa)",titleUk:"Питання (Заповни)",
-    label:"Pregunta — completa",labelUk:"Питання — заповни",
-    note:bi("<b>Tasca:</b> escriu la forma correcta del verb a la pregunta.","<b>Завдання:</b> впиши правильну форму дієслова у питальному реченні."),
-    recommendation:bi("Repassa les formes verbals de totes les persones en les preguntes.","Повторити форми дієслова для всіх осіб у питаннях.")
+    title:"Питання (Заповни)",
+    label:"Питання — заповни",
+    note:"<b>Завдання:</b> впиши правильну форму дієслова у питальному реченні.",
+    recommendation:"Повторити форми дієслова для всіх осіб у питаннях."
   },
   past_fill:{
-    title:"Passat (Completa)",titleUk:"Минулий час (Заповни)",
-    label:"Passat — completa",labelUk:"Минулий час — заповни",
-    note:bi("<b>Tasca:</b> completa l'espai amb la construcció correcta del passat.","<b>Завдання:</b> заповни пропуск правильною конструкцією минулого часу."),
-    recommendation:bi("Repassa vaig / vas / va / vam / vau / van + infinitiu.","Повторити vaig / vas / va / vam / vau / van + інфінітив.")
+    title:"Минулий час (Заповни)",
+    label:"Минулий час — заповни",
+    note:"<b>Завдання:</b> заповни пропуск правильною конструкцією минулого часу.",
+    recommendation:"Повторити vaig / vas / va / vam / vau / van + інфінітив."
   },
   future_fill:{
-    title:"Futur (Completa)",titleUk:"Майбутній час (Заповни)",
-    label:"Futur — completa",labelUk:"Майбутній час — заповни",
-    note:bi("<b>Tasca:</b> escriu la forma correcta del verb en futur.","<b>Завдання:</b> впиши правильну форму дієслова у майбутньому часі."),
-    recommendation:bi("Repassa les formes de futur de totes les persones.","Повторити форми майбутнього часу для всіх осіб.")
+    title:"Майбутній час (Заповни)",
+    label:"Майбутній час — заповни",
+    note:"<b>Завдання:</b> впиши правильну форму дієслова у майбутньому часі.",
+    recommendation:"Повторити форми майбутнього часу для всіх осіб."
   },
   mixed:{
-    title:"Pràctica mixta",titleUk:"Змішана практика",
-    label:"Pràctica mixta",labelUk:"Змішана практика",
-    note:bi("<b>Tasca:</b> el sistema utilitza els 13 tipus d'exercicis.","<b>Завдання:</b> система використовує всі 13 типів вправ."),
-    recommendation:bi("Repassa els temes amb més errors.","Повторити теми з найбільшою кількістю помилок.")
+    title:"Змішана практика",
+    label:"Змішана практика",
+    note:"<b>Завдання:</b> система використовує всі 13 типів вправ.",
+    recommendation:"Повторити теми з найбільшою кількістю помилок."
   }
 };
 
@@ -2560,7 +2549,7 @@ function analyzePhrase(phrase){
   const forms=PRESENT_FORMS[verb];
   const futures=futureForms(verb);
   if(!forms||!futures){
-    return {supported:false,reason:bi("Per a aquesta frase, de moment només hi ha exercicis de vocabulari.","Для цієї фрази поки що доступні лише лексичні вправи."),fullInf,verb};
+    return {supported:false,reason:"Для цієї фрази поки що доступні лише лексичні вправи.",fullInf,verb};
   }
   const rest=fullInf.slice(first.length).trim();
   return {supported:true,fullInf,verb,pronominal,rest,forms,futures};
@@ -2691,14 +2680,14 @@ function ukrainianSentenceTranslation(phrase,person,lesson){
 function checkedTranslationHtml(){
   const translation=ukrainianSentenceTranslation(currentPhrase,currentPerson,actualLesson);
   if(actualLesson==="phrase"||actualLesson==="choice"){
-    return `<br>${bi("<b>En ucraïnès:</b>","<b>Українською:</b>")} ${escapeHtml(currentPhrase.uk)}`;
+    return `<br><b>Українською:</b> ${escapeHtml(currentPhrase.uk)}`;
   }
 
-  const sentenceCa=translation.generated?"Traducció de la frase":"Significat bàsic";
-  const sentenceUk=translation.generated?"Переклад речення":"Базове значення";
-  return `<br>${bi(`<b>${sentenceCa}:</b>`,`<b>${sentenceUk}:</b>`)} ${escapeHtml(translation.text)}
-    <div class="phrase-translation">${bi("<b>Frase:</b>","<b>Фраза:</b>")} ${escapeHtml(currentPhrase.ca)} — ${escapeHtml(currentPhrase.uk)}</div>`;
+  const sentenceLabel=translation.generated?"Переклад речення":"Базове значення";
+  return `<br><b>${sentenceLabel}:</b> ${escapeHtml(translation.text)}
+    <div class="phrase-translation"><b>Фраза:</b> ${escapeHtml(currentPhrase.ca)} — ${escapeHtml(currentPhrase.uk)}</div>`;
 }
+
 function sentenceData(person){
   const i=PERSONS.findIndex(p=>p.id===person.id);
   const form=generated.forms[i];
@@ -2825,12 +2814,8 @@ function selectedLevelLabel(){
 }
 
 function currentFilterDescription(maximum){
-  const lessonCa=LESSONS[currentLesson]?.label||"";
-  const lessonUk=LESSONS[currentLesson]?.labelUk||lessonCa;
-  return bi(
-    `${selectedLevelLabel()} · ${currentBlockTitle()} · ${selectedPersonLabel()} · ${lessonCa}: màxim ${maximum} tasques = 100%.`,
-    `${selectedLevelLabel()} · ${currentBlockTitle()} · ${selectedPersonLabel()} · ${lessonUk}: максимум ${maximum} завдань = 100%.`
-  );
+  const lessonLabel=LESSONS[currentLesson]?.label||"";
+  return `${selectedLevelLabel()} · ${currentBlockTitle()} · ${selectedPersonLabel()} · ${lessonLabel}: максимум ${maximum} завдань = 100%.`;
 }
 
 function pickPhrase(){
@@ -2904,9 +2889,9 @@ function formatDuration(ms){
   const h=Math.floor(totalSec/3600);
   const min=Math.floor((totalSec%3600)/60);
   const sec=totalSec%60;
-  if(h)return `${h} h ${min} min`;
-  if(min)return `${min} min ${sec} s`;
-  return `${sec} s`;
+  if(h)return `${h} год ${min} хв`;
+  if(min)return `${min} хв ${sec} с`;
+  return `${sec} с`;
 }
 
 function formatClock(ts){
@@ -2920,11 +2905,10 @@ function lessonNumberAndLabel(id){
     "present_build","negative_build","question_build","past_build","future_build",
     "present_fill","negative_fill","question_fill","past_fill","future_fill","mixed"
   ];
-  if(id==="study")return bi("Aprenentatge de paraules","Вивчення слів");
+  if(id==="study")return "Вивчення слів";
   const index=ordered.indexOf(id);
-  const ca=LESSONS[id]?.title||id;
-  const uk=LESSONS[id]?.titleUk||ca;
-  return bi(index>=0?`${index+1}. ${ca}`:ca,index>=0?`${index+1}. ${uk}`:uk);
+  const label=LESSONS[id]?.title||id;
+  return index>=0?`${index+1}. ${label}`:label;
 }
 
 function todayBlockTiming(blockId=selectedBlockId){
@@ -2984,7 +2968,7 @@ function renderTodayTiming(){
 
   const lessonsEl=document.getElementById("tLessons");
   if(!timing.hasData){
-    lessonsEl.innerHTML=bi("<b>Avui encara no hi ha dades d’activitat per a aquest bloc.</b>","<b>Сьогодні для цього блока ще немає даних про активність.</b>");
+    lessonsEl.innerHTML="<b>Сьогодні для цього блока ще немає даних про активність.</b>";
     return;
   }
 
@@ -2994,7 +2978,7 @@ function renderTodayTiming(){
 
   lessonsEl.innerHTML=`
     <b>${escapeHtml(currentBlockTitle())}</b><br>
-    ${bi("<b>Avui hi ha hagut activitat a:</b>","<b>Сьогодні була активність у:</b>")}<br>${lessons}
+    <b>Сьогодні була активність у:</b><br>${lessons}
   `;
 }
 
@@ -3011,7 +2995,7 @@ function updateMiniScore(){
   correctEl.textContent=progress.correct;
   totalEl.textContent=progress.maximum;
   bar.style.width=progress.percent+"%";
-  filterMaximum.innerHTML=currentFilterDescription(progress.maximum);
+  filterMaximum.textContent=currentFilterDescription(progress.maximum);
 }
 function setFeedback(kind,html){feedback.className="feedback "+kind;feedback.innerHTML=html}
 function clearFeedback(){feedback.className="feedback";feedback.innerHTML=""}
@@ -3042,26 +3026,17 @@ function beginnerCompletion(){
 }
 function renderBeginnerProgress(){
   const p=beginnerCompletion();
-  let ca=`Paraules apreses: <b>${p.learned} / ${p.total}</b>. Pràctica gramatical: <b>${p.attempts}</b> intents, precisió <b>${p.attempts?p.accuracy+"%":"—"}</b>.`;
-  let uk=`Вивчено <b>${p.learned} / ${p.total}</b> слів. Граматична практика: <b>${p.attempts}</b> спроб, точність <b>${p.attempts?p.accuracy+"%":"—"}</b>.`;
-  if(p.complete){
-    ca+=`<br><b>Level 1 completat. Pots passar al Level 2 — vocabulari quotidià A1–A2.</b>`;
-    uk+=`<br><b>Level 1 завершено. Можна переходити до Level 2 — повсякденна лексика A1–A2.</b>`;
-  }else{
-    ca+=`<br>Per completar-lo: aprèn les 100 paraules, fes com a mínim 10 exercicis de cada bloc del Level 1 i aconsegueix una precisió general mínima del 80%.`;
-    uk+=`<br>Для завершення: вивчити всі 100 слів, виконати щонайменше 10 вправ у кожному блоці Level 1 та отримати загальну точність не нижче 80%.`;
-  }
-  document.getElementById("beginnerProgress").innerHTML=bi(ca,uk);
+  let status=`Вивчено <b>${p.learned} / ${p.total}</b> слів. Граматична практика: <b>${p.attempts}</b> спроб, точність <b>${p.attempts?p.accuracy+"%":"—"}</b>.`;
+  if(p.complete) status+=`<br><b>Level 1 завершено. Можна переходити до Level 2 — повсякденна лексика A1–A2.</b>`;
+  else status+=`<br><span class="muted">Для завершення: вивчити всі 100 слів, виконати щонайменше 10 вправ у кожному блоці Level 1 та отримати загальну точність не нижче 80%.</span>`;
+  document.getElementById("beginnerProgress").innerHTML=status;
 }
 function renderStudyTable(){
   const block=currentBlock();
   const tbody=document.querySelector("#vocabTable tbody");
   tbody.innerHTML=block.phrases.map((p,i)=>{
     const learned=learnedWords.has(phraseKey(block.id,p));
-    const status=learned
-      ?'<span class="learned-badge">'+bi("Apresa","Вивчено")+'</span>'
-      :`<button class="secondary learn-word" data-index="${i}" type="button">${bi("Marca","Позначити")}</button>`;
-    return `<tr class="${learned?"learned-row":""}"><td>${escapeHtml(p.ca)}</td><td>${escapeHtml(p.uk)}</td><td>${status}</td></tr>`;
+    return `<tr class="${learned?"learned-row":""}"><td>${escapeHtml(p.ca)}</td><td>${escapeHtml(p.uk)}</td><td>${learned?'<span class="learned-badge">Вивчено</span>':`<button class="secondary learn-word" data-index="${i}" type="button">Позначити</button>`}</td></tr>`;
   }).join("");
   document.querySelectorAll(".learn-word").forEach(btn=>btn.addEventListener("click",()=>{
     const p=block.phrases[Number(btn.dataset.index)];
@@ -3072,10 +3047,7 @@ function renderStudyTable(){
 function renderStudyConjugation(phrase){
   const info=analyzePhrase(phrase);
   if(!info.supported){
-    studyConjugation.innerHTML=bi(
-      "Per a aquesta frase, la taula de conjugació encara no està disponible.",
-      "Для цієї фрази таблиця відмінювання поки що недоступна."
-    );
+    studyConjugation.innerHTML=`<p class="muted">Для цієї фрази таблиця відмінювання поки що недоступна.</p>`;
     return;
   }
 
@@ -3097,26 +3069,24 @@ function renderStudyConjugation(phrase){
   }).join("");
 
   studyConjugation.innerHTML=`
-    <h3>${bi("Conjugació del verb","Відмінювання дієслова")}</h3>
-    <div class="verb-label">${bi(`Infinitiu: <b>${escapeHtml(infinitive)}</b> · present`,`Інфінітив: <b>${escapeHtml(infinitive)}</b> · теперішній час`)}</div>
+    <h3>Відмінювання дієслова</h3>
+    <div class="verb-label">Інфінітив: <b>${escapeHtml(infinitive)}</b> · теперішній час</div>
     <table>
-      <thead><tr><th>${bi("Persona","Особа")}</th><th>${bi("Forma","Форма")}</th><th>${bi("Exemple amb la frase","Приклад із фразою")}</th></tr></thead>
+      <thead><tr><th>Особа</th><th>Форма</th><th>Приклад із фразою</th></tr></thead>
       <tbody>${rows}</tbody>
     </table>`;
 }
+
 function renderStudy(){
   const block=currentBlock();
   if(studyIndex>=block.phrases.length)studyIndex=0;
   const phrase=block.phrases[studyIndex];
   const learned=learnedWords.has(phraseKey(block.id,phrase));
-  studyCounter.innerHTML=bi(
-    `${escapeHtml(block.title)}: paraula ${studyIndex+1} de ${block.phrases.length}`,
-    `${escapeHtml(block.title)}: слово ${studyIndex+1} з ${block.phrases.length}`
-  );
+  studyCounter.textContent=`${block.title}: слово ${studyIndex+1} з ${block.phrases.length}`;
   studyCa.textContent=phrase.ca;
   studyUk.textContent=phrase.uk;
   renderStudyConjugation(phrase);
-  markLearned.innerHTML=learned?bi("✓ Apresa","✓ Вивчено"):bi("Marca com a apresa","Позначити як вивчене");
+  markLearned.textContent=learned?"✓ Вивчено":"Позначити як вивчене";
   markLearned.disabled=learned;
   renderBeginnerProgress();
   renderStudyTable();
@@ -3139,9 +3109,9 @@ function render(){
   startQuestion();
 
   const displayedLesson=currentLesson==="mixed"?actualLesson:currentLesson;
-  lessonTitle.innerHTML=currentLesson==="mixed"
-    ?bi(`Pràctica mixta — ${LESSONS[actualLesson].title}`,`Змішана практика — ${LESSONS[actualLesson].titleUk}`)
-    :bi(LESSONS[currentLesson].title,LESSONS[currentLesson].titleUk);
+  lessonTitle.textContent=currentLesson==="mixed"
+    ?`Змішана практика — ${LESSONS[actualLesson].title}`
+    :LESSONS[currentLesson].title;
   grammarNote.innerHTML=LESSONS[displayedLesson].note;
   ukPhrase.textContent=currentPhrase.uk;
   caPhrase.textContent="—";
@@ -3154,29 +3124,19 @@ function render(){
   const data=sentenceData(currentPerson);
 
   if(actualLesson==="present_build"){
-    return renderBuildSentence(data.present,
-      `Construeix una frase en present per a ${currentPerson.label}`,
-      `Склади речення у теперішньому часі для ${currentPerson.label}`);
+    return renderBuildSentence(data.present,`Склади речення у теперішньому часі для ${currentPerson.label}`);
   }
   if(actualLesson==="negative_build"){
-    return renderBuildSentence(data.negative,
-      `Construeix una frase negativa per a ${currentPerson.label}`,
-      `Склади заперечне речення для ${currentPerson.label}`);
+    return renderBuildSentence(data.negative,`Склади заперечне речення для ${currentPerson.label}`);
   }
   if(actualLesson==="question_build"){
-    return renderBuildSentence(data.question,
-      `Construeix una pregunta per a ${currentPerson.label}`,
-      `Склади питальне речення для ${currentPerson.label}`);
+    return renderBuildSentence(data.question,`Склади питальне речення для ${currentPerson.label}`);
   }
   if(actualLesson==="past_build"){
-    return renderBuildSentence(data.past,
-      `Construeix una frase en passat per a ${currentPerson.label}`,
-      `Склади речення у минулому часі для ${currentPerson.label}`);
+    return renderBuildSentence(data.past,`Склади речення у минулому часі для ${currentPerson.label}`);
   }
   if(actualLesson==="future_build"){
-    return renderBuildSentence(data.futureSentence,
-      `Construeix una frase en futur per a ${currentPerson.label}`,
-      `Склади речення у майбутньому часі для ${currentPerson.label}`);
+    return renderBuildSentence(data.futureSentence,`Склади речення у майбутньому часі для ${currentPerson.label}`);
   }
   if(actualLesson==="modal") return renderModalChoice();
   if(actualLesson==="present_fill") return renderPresentFill();
@@ -3185,46 +3145,37 @@ function render(){
   if(actualLesson==="past_fill") return renderPastFill();
   if(actualLesson==="future_fill") return renderFutureFill();
 }
+
 function renderPhrase(){
   currentAnswerKind="input";
   currentExpected=currentPhrase.ca;
-  exercise.innerHTML=`
-    <div class="step-title">${bi("Escriu la frase en català","Напиши каталонську фразу")}</div>
-    <div class="task">${currentPhrase.uk}</div>
-    <input id="answer" placeholder="Escriu en català">`;
+  exercise.innerHTML=`<div class="step-title">Напиши каталонську фразу</div><div class="task">${currentPhrase.uk}</div><input id="answer" placeholder="Введи каталонською">`;
 }
 
 function renderChoice(){
   currentAnswerKind="choice";
   currentExpected=currentPhrase.ca;
   const options=shuffle([currentPhrase.ca,...shuffle(getPhrases().filter(p=>p.ca!==currentPhrase.ca)).slice(0,3).map(p=>p.ca)]);
-  exercise.innerHTML=`
-    <div class="step-title">${bi("Tria la frase catalana correcta","Обери правильну каталонську фразу")}</div>
-    <div class="task">${currentPhrase.uk}</div>
-    <div class="choices">${options.map(o=>`<button type="button" data-value="${escapeAttr(o)}">${o}</button>`).join("")}</div>`;
+  exercise.innerHTML=`<div class="step-title">Обери правильну каталонську фразу</div><div class="task">${currentPhrase.uk}</div><div class="choices">${options.map(o=>`<button type="button" data-value="${escapeAttr(o)}">${o}</button>`).join("")}</div>`;
   attachChoiceHandlers();
 }
 
 function renderUnsupported(){
   currentAnswerKind="input";
   currentExpected=currentPhrase.ca;
-  exercise.innerHTML=`
-    <div class="step-title">${bi("Exercici de vocabulari","Лексична вправа")}</div>
-    <div class="task">${currentPhrase.uk}</div>
-    <div class="muted">${generated.reason}</div>
-    <input id="answer" placeholder="Escriu la frase en català">`;
+  exercise.innerHTML=`<div class="step-title">Лексична вправа</div><div class="task">${currentPhrase.uk}</div><p class="muted">${generated.reason}</p><input id="answer" placeholder="Введи каталонську фразу">`;
 }
 
 function conjugationHintTable(highlightIndex, tense="present"){
   return `<table>
-    <tr><th>${bi("Persona","Особа")}</th><th>${bi("Forma","Форма")}</th></tr>
+    <tr><th>Особа</th><th>Форма</th></tr>
     ${PERSONS.map((p,i)=>`<tr><td>${p.label}</td><td>${i===highlightIndex?"<b>":""}${tense==="future"?generated.futures[i]:generated.forms[i]}${i===highlightIndex?"</b>":""}</td></tr>`).join("")}
   </table>`;
 }
 
 function hintBlock(html){
-  return `<button type="button" class="secondary" id="hintBtn">${bi("Mostra la pista","Показати підказку")}</button>
-    <div class="hint-warning">${bi("Després d'obrir la pista, la resposta no comptarà.","Після відкриття підказки відповідь не буде зарахована.")}</div>
+  return `<button type="button" class="secondary" id="hintBtn">Показати підказку</button>
+    <p class="hint-warning">Після відкриття підказки відповідь не буде зарахована.</p>
     <div id="hintPanel" class="hint-panel hidden">${html}</div>`;
 }
 
@@ -3235,7 +3186,7 @@ function attachHintHandler(){
     if(checkedThisQuestion) return;
     hintUsed=true;
     document.getElementById("hintPanel").classList.remove("hidden");
-    btn.innerHTML=bi("Pista oberta — no s'atorga cap punt","Підказку відкрито — бал не нараховується");
+    btn.textContent="Підказку відкрито — бал не нараховується";
     btn.disabled=true;
   });
 }
@@ -3247,12 +3198,9 @@ function renderPresentFill(){
   currentExpected=data.form;
   const reflexive=generated.pronominal?`${currentPerson.reflexive} `:"";
   exercise.innerHTML=`
-    <div class="step-title">${bi(
-      `Escriu la forma del verb <b>${generated.verb}</b> per a <b>${currentPerson.label}</b>`,
-      `Встав форму дієслова <b>${generated.verb}</b> для <b>${currentPerson.label}</b>`
-    )}</div>
+    <div class="step-title">Встав форму дієслова <b>${generated.verb}</b> для <b>${currentPerson.label}</b></div>
     <div class="task">${currentPerson.subject} ${reflexive}____${generated.rest?" "+generated.rest:""}.</div>
-    <input id="answer" placeholder="Escriu la forma del verb">
+    <input id="answer" placeholder="Впиши форму дієслова">
     ${hintBlock(conjugationHintTable(i,"present"))}`;
   attachHintHandler();
 }
@@ -3263,12 +3211,9 @@ function renderNegativeFill(){
   currentAnswerKind="input";
   currentExpected=`no ${reflexive}${data.form}`.trim();
   exercise.innerHTML=`
-    <div class="step-title">${bi(
-      `Completa l'espai de la frase negativa per a <b>${currentPerson.label}</b>`,
-      `Заповни пропуск у заперечному реченні для <b>${currentPerson.label}</b>`
-    )}</div>
+    <div class="step-title">Заповни пропуск у заперечному реченні для <b>${currentPerson.label}</b></div>
     <div class="task">${currentPerson.subject} ____${generated.rest?" "+generated.rest:""}.</div>
-    <input id="answer" placeholder="Exemple: no parlo o no em llevo">`;
+    <input id="answer" placeholder="Наприклад: no parlo або no em llevo">`;
 }
 
 function renderQuestionFill(){
@@ -3278,12 +3223,9 @@ function renderQuestionFill(){
   currentExpected=data.form;
   const reflexive=generated.pronominal?`${currentPerson.reflexive} `:"";
   exercise.innerHTML=`
-    <div class="step-title">${bi(
-      `Escriu la forma del verb <b>${generated.verb}</b> a la pregunta per a <b>${currentPerson.label}</b>`,
-      `Встав форму дієслова <b>${generated.verb}</b> у питанні для <b>${currentPerson.label}</b>`
-    )}</div>
+    <div class="step-title">Встав форму дієслова <b>${generated.verb}</b> у питанні для <b>${currentPerson.label}</b></div>
     <div class="task">${currentPerson.subject} ${reflexive}____${generated.rest?" "+generated.rest:""}?</div>
-    <input id="answer" placeholder="Escriu la forma del verb">
+    <input id="answer" placeholder="Впиши форму дієслова">
     ${hintBlock(conjugationHintTable(i,"present"))}`;
   attachHintHandler();
 }
@@ -3296,16 +3238,7 @@ function renderModalChoice(){
   const wrong2=data.present;
   const wrong3=data.futureSentence;
   const options=shuffle([data.modal,wrong1,wrong2,wrong3]);
-  exercise.innerHTML=`
-    <div class="step-title">${bi(
-      `Tria la frase correcta per a <b>${currentPerson.label}</b>`,
-      `Обери правильне речення для <b>${currentPerson.label}</b>`
-    )}</div>
-    <div class="task">${bi(
-      `Després de <b>${currentPerson.modal}</b> hi ha d'haver un infinitiu.`,
-      `Після <b>${currentPerson.modal}</b> має бути інфінітив.`
-    )}</div>
-    <div class="choices">${options.map(o=>`<button type="button" data-value="${escapeAttr(o)}">${o}</button>`).join("")}</div>`;
+  exercise.innerHTML=`<div class="step-title">Обери правильне речення для <b>${currentPerson.label}</b></div><div class="task">Після <b>${currentPerson.modal}</b> має бути інфінітив.</div><div class="choices">${options.map(o=>`<button type="button" data-value="${escapeAttr(o)}">${o}</button>`).join("")}</div>`;
   attachChoiceHandlers();
 }
 
@@ -3314,12 +3247,9 @@ function renderPastFill(){
   currentAnswerKind="input";
   currentExpected=`${reflexive}${currentPerson.past} ${generated.verb}`.trim();
   exercise.innerHTML=`
-    <div class="step-title">${bi(
-      `Completa l'espai en passat per a <b>${currentPerson.label}</b>`,
-      `Заповни пропуск у минулому часі для <b>${currentPerson.label}</b>`
-    )}</div>
+    <div class="step-title">Заповни пропуск у минулому часі для <b>${currentPerson.label}</b></div>
     <div class="task">Ahir ${currentPerson.subject.toLowerCase()} ____${generated.rest?" "+generated.rest:""}.</div>
-    <input id="answer" placeholder="Exemple: vaig parlar o em vaig llevar">`;
+    <input id="answer" placeholder="Наприклад: vaig parlar або em vaig llevar">`;
 }
 
 function renderFutureFill(){
@@ -3329,29 +3259,26 @@ function renderFutureFill(){
   currentExpected=data.future;
   const reflexive=generated.pronominal?`${currentPerson.reflexive} `:"";
   exercise.innerHTML=`
-    <div class="step-title">${bi(
-      `Escriu la forma del verb <b>${generated.verb}</b> en futur per a <b>${currentPerson.label}</b>`,
-      `Встав форму дієслова <b>${generated.verb}</b> у майбутньому часі для <b>${currentPerson.label}</b>`
-    )}</div>
+    <div class="step-title">Встав форму дієслова <b>${generated.verb}</b> у майбутньому часі для <b>${currentPerson.label}</b></div>
     <div class="task">Demà ${currentPerson.subject.toLowerCase()} ${reflexive}____${generated.rest?" "+generated.rest:""}.</div>
-    <input id="answer" placeholder="Escriu la forma de futur">
+    <input id="answer" placeholder="Впиши форму майбутнього часу">
     ${hintBlock(conjugationHintTable(i,"future"))}`;
   attachHintHandler();
 }
 
-function renderBuildSentence(sentence,titleCa,titleUk){
+function renderBuildSentence(sentence,title){
   currentAnswerKind="build";
   currentExpected=sentence.replace(/[.?!]/g,"");
   const words=shuffle(currentExpected.split(" "));
   const selectedSpans=[];
 
   exercise.innerHTML=`
-    <div class="step-title">${bi(titleCa,titleUk)}</div>
+    <div class="step-title">${title}</div>
     <div class="target" id="target"></div>
     <div class="word-bank">${words.map((w,i)=>`<span data-word-index="${i}">${w}</span>`).join("")}</div>
     <div class="build-actions">
-      <button type="button" class="secondary" id="undoBuild" disabled>${bi("Desfés l'última paraula","Скасувати останнє слово")}</button>
-      <button type="button" class="secondary" id="resetBuild" disabled>${bi("Esborra la frase","Очистити речення")}</button>
+      <button type="button" class="secondary" id="undoBuild" disabled>Скасувати останнє слово</button>
+      <button type="button" class="secondary" id="resetBuild" disabled>Очистити речення</button>
     </div>
     <input id="answer" type="hidden">`;
 
@@ -3392,6 +3319,7 @@ function renderBuildSentence(sentence,titleCa,titleUk){
     updateBuiltSentence();
   });
 }
+
 function attachChoiceHandlers(){
   document.querySelectorAll(".choices button").forEach(btn=>{
     btn.addEventListener("click",()=>{
@@ -3411,45 +3339,46 @@ function getUserAnswer(){
 
 function explainWrong(){
   if(actualLesson==="phrase"||actualLesson==="choice"||!generated.supported){
-    return bi(`Frase correcta: <b>${currentPhrase.ca}</b>.`,`Правильна фраза: <b>${currentPhrase.ca}</b>.`);
+    return `Правильна фраза: <b>${currentPhrase.ca}</b>.`;
   }
 
   const data=sentenceData(currentPerson);
 
   if(actualLesson==="present_build"||actualLesson==="present_fill"){
-    return bi(`Per a <b>${currentPerson.label}</b> cal la forma <b>${data.form}</b>.`,`Для <b>${currentPerson.label}</b> потрібна форма <b>${data.form}</b>.`);
+    return `Для <b>${currentPerson.label}</b> потрібна форма <b>${data.form}</b>.`;
   }
   if(actualLesson==="negative_build"){
-    return bi(`Frase negativa correcta: <b>${data.negative}</b>`,`Правильне заперечне речення: <b>${data.negative}</b>`);
+    return `Правильне заперечне речення: <b>${data.negative}</b>`;
   }
   if(actualLesson==="negative_fill"){
     const reflexive=generated.pronominal?`${currentPerson.reflexive} `:"";
-    return bi(`A l'espai cal <b>no ${reflexive}${data.form}</b>.`,`У пропуску потрібна конструкція <b>no ${reflexive}${data.form}</b>.`);
+    return `У пропуску потрібна конструкція <b>no ${reflexive}${data.form}</b>.`;
   }
   if(actualLesson==="question_build"){
-    return bi(`Pregunta correcta: <b>${data.question}</b>`,`Правильне питання: <b>${data.question}</b>`);
+    return `Правильне питання: <b>${data.question}</b>`;
   }
   if(actualLesson==="question_fill"){
-    return bi(`A la pregunta, per a <b>${currentPerson.label}</b>, cal la forma <b>${data.form}</b>.`,`У питанні для <b>${currentPerson.label}</b> потрібна форма <b>${data.form}</b>.`);
+    return `У питанні для <b>${currentPerson.label}</b> потрібна форма <b>${data.form}</b>.`;
   }
   if(actualLesson==="modal"){
-    return bi(`Després de <b>${currentPerson.modal}</b> cal un infinitiu.`,`Після <b>${currentPerson.modal}</b> потрібен інфінітив.`);
+    return `Після <b>${currentPerson.modal}</b> потрібен інфінітив.`;
   }
   if(actualLesson==="past_build"){
-    return bi(`Frase correcta: <b>${data.past}</b>`,`Правильне речення: <b>${data.past}</b>`);
+    return `Правильне речення: <b>${data.past}</b>`;
   }
   if(actualLesson==="past_fill"){
-    return bi(`Fes servir <b>${currentPerson.past} + infinitiu</b>.`,`Використай <b>${currentPerson.past} + інфінітив</b>.`);
+    return `Використай <b>${currentPerson.past} + інфінітив</b>.`;
   }
   if(actualLesson==="future_build"){
-    return bi(`Frase correcta: <b>${data.futureSentence}</b>`,`Правильне речення: <b>${data.futureSentence}</b>`);
+    return `Правильне речення: <b>${data.futureSentence}</b>`;
   }
   if(actualLesson==="future_fill"){
-    return bi(`Per a <b>${currentPerson.label}</b> cal la forma <b>${data.future}</b>.`,`Для <b>${currentPerson.label}</b> потрібна форма <b>${data.future}</b>.`);
+    return `Для <b>${currentPerson.label}</b> потрібна форма <b>${data.future}</b>.`;
   }
 
-  return bi("Compara la resposta amb la forma correcta.","Порівняй відповідь із правильним варіантом.");
+  return "Порівняй відповідь із правильним варіантом.";
 }
+
 function disableExercise(){
   document.querySelectorAll("#exercise button,#exercise input,#exercise .word-bank span").forEach(el=>{
     if(el.tagName==="SPAN") el.style.pointerEvents="none";
@@ -3460,7 +3389,7 @@ function disableExercise(){
 function check(){
   trackActivity(true);
   if(checkedThisQuestion){
-    setFeedback("bad",bi("<b>Aquesta tasca ja està avaluada.</b><br>Prem <b>Tasca següent</b>.","<b>Це завдання вже оцінено.</b><br>Натисни <b>Наступне завдання</b>."));
+    setFeedback("bad","<b>Це завдання вже оцінено.</b><br>Натисни <b>Наступне завдання</b>.");
     return;
   }
   const user=getUserAnswer();
@@ -3504,26 +3433,26 @@ function check(){
   checkButton.disabled=true;
   nextButton.disabled=false;
 
-  const spellingMessage=spellingAdjusted?`<div class="spelling-note">${bi("<b>Nota d’ortografia:</b> "+currentExpected,"<b>Підказка з написання:</b> "+currentExpected)}</div>`:"";
+  const spellingMessage=spellingAdjusted?`<div class="spelling-note"><b>Підказка з написання:</b> ${currentExpected}</div>`:"";
   const translationMessage=checkedTranslationHtml();
   if(answerCorrect&&hintUsed){
-    setFeedback("assisted",`${bi("<b>Resposta correcta, però no compta.</b><br>Motiu: s’ha obert una pista.","<b>Відповідь правильна, але не зарахована.</b><br>Причина: була відкрита підказка.")}${spellingMessage}${bi("Correcte: <b>"+currentExpected+"</b>","Правильно: <b>"+currentExpected+"</b>")}${translationMessage}`);
+    setFeedback("assisted",`<b>Відповідь правильна, але не зарахована.</b><br>Причина: була відкрита підказка.${spellingMessage}<br>Правильно: <b>${currentExpected}</b>${translationMessage}`);
   }else if(credited&&spellingAdjusted){
-    setFeedback("ok",`${bi("<b>Resposta comptada com a correcta.</b><br>Els errors només de majúscules/minúscules o accents catalans no redueixen la puntuació.","<b>Зараховано правильно.</b><br>Помилки лише у великих/малих літерах або каталонських наголосах не знижують бал.")}${spellingMessage}${translationMessage}${bi("Temps: "+timeSec+" s.","Час: "+timeSec+" с.")}`);
+    setFeedback("ok",`<b>Зараховано правильно.</b><br>Помилки лише у великих/малих літерах або каталонських наголосах не знижують бал.${spellingMessage}${translationMessage}<br>Час: ${timeSec} c.`);
   }else if(credited){
-    setFeedback("ok",`${bi("<b>Correcte.</b><br>Resposta: <b>"+currentExpected+"</b>","<b>Правильно.</b><br>Відповідь: <b>"+currentExpected+"</b>")}${translationMessage}${bi("Temps: "+timeSec+" s.","Час: "+timeSec+" с.")}`);
+    setFeedback("ok",`<b>Правильно.</b><br>Відповідь: <b>${currentExpected}</b>${translationMessage}<br>Час: ${timeSec} c.`);
   }else{
-    setFeedback("bad",`${bi("<b>Cal corregir-ho.</b><br>Correcte: <b>"+currentExpected+"</b>","<b>Потрібно виправити.</b><br>Правильно: <b>"+currentExpected+"</b>")}${translationMessage}${explainWrong()}${bi("Temps: "+timeSec+" s.","Час: "+timeSec+" с.")}`);
+    setFeedback("bad",`<b>Потрібно виправити.</b><br>Правильно: <b>${currentExpected}</b>${translationMessage}<br>${explainWrong()}<br>Час: ${timeSec} c.`);
   }
   saveRecords();
 }
 
 function percent(a,b){return b?Math.round(a/b*100):0}
 function qualityText(pct){
-  if(pct>=90)return{text:"Excel·lent",uk:"Відмінно",cls:"ok"};
-  if(pct>=75)return{text:"Bé",uk:"Добре",cls:"ok"};
-  if(pct>=60)return{text:"Cal practicar",uk:"Потрібна практика",cls:"warn"};
-  return{text:"Cal repassar",uk:"Потрібно повторити",cls:"bad"};
+  if(pct>=90)return{text:"Відмінно",cls:"ok"};
+  if(pct>=75)return{text:"Добре",cls:"ok"};
+  if(pct>=60)return{text:"Потрібна практика",cls:"warn"};
+  return{text:"Потрібно повторити",cls:"bad"};
 }
 
 function showReport(){
@@ -3536,29 +3465,19 @@ function showReport(){
   document.getElementById("mCorrect").textContent=`${progress.correct} / ${progress.maximum}`;
   document.getElementById("mHints").textContent=progress.hints;
   document.getElementById("mAttempts").textContent=progress.attempts;
-  document.getElementById("mTime").textContent=progress.avgTime+" s";
+  document.getElementById("mTime").textContent=progress.avgTime+" c";
   document.getElementById("mSpelling").textContent=progress.spellingHints;
   renderTodayTiming();
 
   const q=qualityText(acc);
   const level=document.getElementById("qualityLevel");
   level.className="level "+q.cls;
-  let ca=`S'han completat <b>${progress.correct}</b> tasques úniques.`;
-  let uk=`Виконано <b>${progress.correct}</b> унікальних завдань.`;
-  if(acc===100){
-    ca+=" S'ha completat tot el conjunt seleccionat.";
-    uk+=" Увесь вибраний набір завершено.";
-  }else if(acc>=75){
-    ca+=" Només falta una petita part del conjunt.";
-    uk+=" Залишилося виконати невелику частину набору.";
-  }else if(acc>=40){
-    ca+=" S'ha completat una part del conjunt seleccionat.";
-    uk+=" Виконано частину вибраного набору.";
-  }else{
-    ca+=" Cal continuar practicant.";
-    uk+=" Потрібно продовжити практику.";
-  }
-  level.innerHTML=currentFilterDescription(progress.maximum)+bi(`<b>Resultat:</b> ${q.text}. ${ca}`,`<b>Результат:</b> ${q.uk}. ${uk}`);
+  let msg=`${currentFilterDescription(progress.maximum)} Виконано ${progress.correct} унікальних завдань.`;
+  if(acc===100)msg+=" Увесь вибраний набір завершено.";
+  else if(acc>=75)msg+=" Залишилося виконати невелику частину набору.";
+  else if(acc>=40)msg+=" Виконано частину вибраного набору.";
+  else msg+=" Потрібно продовжити практику.";
+  level.innerHTML=`<b>Результат:</b> ${q.text}. ${msg}`;
 
   renderBlockTable();
   renderLessonTable();
@@ -3566,6 +3485,7 @@ function showReport(){
   renderRecommendations();
   renderMistakes();
 }
+
 function renderAggregateTable(selector,items,getRecords,getLabel){
   const tbody=document.querySelector(selector+" tbody");
   tbody.innerHTML="";
@@ -3574,14 +3494,13 @@ function renderAggregateTable(selector,items,getRecords,getLabel){
     const total=arr.length;
     const good=arr.filter(r=>r.correct).length;
     const pct=percent(good,total);
-    const quality=qualityText(pct);
-    tbody.innerHTML+=`<tr><td>${getLabel(item)}</td><td>${good}</td><td>${total}</td><td>${total?pct+"%":"—"}</td><td>${total?bi(quality.text,quality.uk):bi("Sense dades","Немає даних")} </td></tr>`;
+    tbody.innerHTML+=`<tr><td>${getLabel(item)}</td><td>${good}</td><td>${total}</td><td>${total?pct+"%":"—"}</td><td>${total?qualityText(pct).text:"Немає даних"}</td></tr>`;
   });
 }
 function renderBlockTable(){renderAggregateTable("#blockTable",BLOCKS,b=>records.filter(r=>r.blockId===b.id),b=>b.title)}
 function renderLessonTable(){
   const keys=Object.keys(LESSONS).filter(k=>k!=="mixed");
-  renderAggregateTable("#lessonTable",keys,k=>records.filter(r=>(r.actualLesson||r.lesson)===k),k=>bi(LESSONS[k].label,LESSONS[k].labelUk));
+  renderAggregateTable("#lessonTable",keys,k=>records.filter(r=>(r.actualLesson||r.lesson)===k),k=>LESSONS[k].label);
 }
 function renderPersonTable(){renderAggregateTable("#personTable",PERSONS,p=>records.filter(r=>r.personId===p.id),p=>p.label)}
 
@@ -3596,39 +3515,31 @@ function renderRecommendations(){
   }).filter(x=>x.total>0&&x.pct<75);
 
   let html="";
-  if(weakLessons.length) html+=bi(
-    `<p><b>Mini lliçons per repassar:</b></p><ul>${weakLessons.map(x=>`<li>${LESSONS[x.k].label} — ${x.pct}%</li>`).join("")}</ul>`,
-    `<p><b>Повторити мініуроки:</b></p><ul>${weakLessons.map(x=>`<li>${LESSONS[x.k].labelUk} — ${x.pct}%</li>`).join("")}</ul>`
-  );
-  if(weakPersons.length) html+=bi(
-    `<p><b>Persones per repassar:</b></p><ul>${weakPersons.map(x=>`<li>${x.p.label} — ${x.pct}%</li>`).join("")}</ul>`,
-    `<p><b>Повторити особи:</b></p><ul>${weakPersons.map(x=>`<li>${x.p.label} — ${x.pct}%</li>`).join("")}</ul>`
-  );
-  if(!html) html=bi("<p><b>No s'han detectat temes febles.</b></p>","<p><b>Слабких тем не виявлено.</b></p>");
+  if(weakLessons.length) html+=`<p><b>Повторити мініуроки:</b></p><ul>${weakLessons.map(x=>`<li>${LESSONS[x.k].label} — ${x.pct}%</li>`).join("")}</ul>`;
+  if(weakPersons.length) html+=`<p><b>Повторити особи:</b></p><ul>${weakPersons.map(x=>`<li>${x.p.label} — ${x.pct}%</li>`).join("")}</ul>`;
+  if(!html) html="<p><b>Слабких тем не виявлено.</b></p>";
   document.getElementById("recommendations").innerHTML=html;
 }
+
 function renderMistakes(){
   const items=records.filter(r=>!r.correct).slice(-15).reverse();
   const container=document.getElementById("mistakes");
-  if(!items.length){
-    container.innerHTML=bi('<p class="muted">No hi ha respostes no comptabilitzades.</p>','<p class="muted">Незарахованих відповідей немає.</p>');
-    return;
-  }
+  if(!items.length){container.innerHTML='<p class="muted">Незарахованих відповідей немає.</p>';return}
   container.innerHTML=items.map(r=>`
     <div class="mistake">
       <b>${escapeHtml(r.blockTitle||"")}</b> / ${escapeHtml(r.lessonLabel||"")}
       ${r.personLabel?` / ${escapeHtml(r.personLabel)}`:""}<br>
-      ${bi("En ucraïnès:","Українською:")} ${escapeHtml(r.phraseUk||"")}<br>
-      ${bi("Resposta:","Відповідь:")} <code>${escapeHtml(r.answer||"—")}</code><br>
-      ${bi("Correcte:","Правильно:")} <code>${escapeHtml(r.expected||"")}</code><br>
-      ${r.assisted?bi('<span class="hint-warning">S’ha utilitzat una pista — no s’ha atorgat cap punt.</span>','<span class="hint-warning">Використано підказку — бал не нараховано.</span>')+"<br>":""}
-      <span class="muted">${escapeHtml(r.date||"")}, ${r.timeSec||0} s</span>
+      Українською: ${escapeHtml(r.phraseUk||"")}<br>
+      Відповідь: <code>${escapeHtml(r.answer||"—")}</code><br>
+      Правильно: <code>${escapeHtml(r.expected||"")}</code><br>
+      ${r.assisted?'<span class="hint-warning">Використано підказку — бал не нараховано.</span><br>':""}
+      <span class="muted">${escapeHtml(r.date||"")}, ${r.timeSec||0} c</span>
     </div>`).join("");
 }
 function escapeHtml(str){return String(str).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")}
 
 function exportCsv(){
-  if(!records.length){alert("No hi ha dades per exportar.\nНемає даних для експорту.");return}
+  if(!records.length){alert("Немає даних для експорту.");return}
   const headers=["date","block","lesson","person","phrase_uk","phrase_ca","expected","answer","answer_correct","spelling_hint","hint_used","credited","time_sec"];
   const rows=records.map(r=>[r.date,r.blockTitle,r.lessonLabel,r.personLabel||"",r.phraseUk,r.phraseCa,r.expected,r.answer,r.answerCorrect?"yes":"no",r.spellingAdjusted?"yes":"no",r.assisted?"yes":"no",r.correct?"yes":"no",r.timeSec]);
   const csv=[headers,...rows].map(row=>row.map(cell=>`"${String(cell??"").replaceAll('"','""')}"`).join(",")).join("\n");
@@ -3680,7 +3591,7 @@ document.querySelectorAll(".lesson").forEach(btn=>btn.addEventListener("click",(
 nextButton.addEventListener("click",()=>{if(!checkedThisQuestion)return;pickPhrase();render()});
 checkButton.addEventListener("click",check);
 document.getElementById("reset").addEventListener("click",()=>{
-  if(!confirm("Vols esborrar els resultats dels exercicis i les marques de paraules apreses en aquest dispositiu?\n\nОчистити результати вправ і позначки вивчених слів на цьому пристрої?"))return;
+  if(!confirm("Очистити результати вправ і позначки вивчених слів на цьому пристрої?"))return;
   records=[];learnedWords=new Set();activityLog=[];saveActivityLog();saveLearnedWords();saveRecords();showReport();
 });
 document.getElementById("showReport").addEventListener("click",showReport);
