@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Catalan · Практика</title>
+<link rel="stylesheet" href="assets/styles.css">
+<script src="assets/data.js"></script>
+</head>
+<body>
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">CA</span><span>Catalan</span></a>
+    <h1 class="header-title">Практика словникового запасу</h1>
+    <p class="header-sub">Три прості режими: обрати правильну фразу, написати переклад або скласти каталонську фразу зі слів.</p>
+    <nav class="topnav"><a href="index.html">Головна</a><a href="vocabulary.html">Вивчення слів</a><a class="active" href="practice.html">Практика</a><a href="progress.html">Прогрес</a></nav>
+  </div>
+</header>
+
+<main class="page practice-shell">
+  <section class="card toolbar">
+    <label>Рівень<select id="levelSelect"><option value="level1">Level 1</option><option value="level2">Level 2</option><option value="level3">Level 3</option><option value="level4">Level 4</option></select></label>
+    <label>Блок<select id="blockSelect"></select></label>
+  </section>
+
+  <section class="card" style="margin-top:16px">
+    <div class="section-title"><div><h2>Тип вправи</h2><p class="muted">Можна працювати одним типом або перемішувати всі три.</p></div></div>
+    <div class="mode-grid">
+      <button class="mode-btn active" data-mode="choice"><strong>Обери фразу</strong><span class="muted">Українська → 4 варіанти</span></button>
+      <button class="mode-btn" data-mode="write"><strong>Напиши фразу</strong><span class="muted">Українська → Català</span></button>
+      <button class="mode-btn" data-mode="build"><strong>Склади фразу</strong><span class="muted">Збери слова у правильному порядку</span></button>
+      <button class="mode-btn" data-mode="mixed"><strong>Змішана практика</strong><span class="muted">Випадковий тип щоразу</span></button>
+    </div>
+  </section>
+
+  <section class="card practice-card" style="margin-top:16px">
+    <div class="section-title">
+      <div><span class="chip" id="modeChip">Обери фразу</span></div>
+      <div class="muted"><span id="sessionCorrect">0</span> / <span id="sessionTotal">0</span> правильно</div>
+    </div>
+    <div class="prompt-label">Переклади / впізнай</div>
+    <div class="prompt" id="prompt"></div>
+    <div id="exercise"></div>
+    <div id="feedback" class="feedback"></div>
+    <div class="flash-actions" style="justify-content:flex-start">
+      <button class="btn green" id="checkBtn">Перевірити</button>
+      <button class="btn secondary" id="nextBtn" disabled>Наступне завдання</button>
+    </div>
+  </section>
+</main>
+
+<script>
+const BLOCKS=window.CATALAN_BLOCKS||[];
+const RECORD_KEY="catVocabularyPracticeV1";
+let records=JSON.parse(localStorage.getItem(RECORD_KEY)||"[]");
+let level="level1",block=null,mode="choice",actualMode="choice",phrase=null,expected="",selected="",built=[],checked=false;
+let sessionCorrect=0,sessionTotal=0;
+const levelSelect=document.getElementById("levelSelect"),blockSelect=document.getElementById("blockSelect");
+const exercise=document.getElementById("exercise"),feedback=document.getElementById("feedback");
+
+function esc(s){return String(s).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")}
+function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
+function normalize(s){return String(s||"").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[.?!,;:]/g,"").replace(/\s+/g," ")}
+function levelBlocks(){return BLOCKS.filter(b=>b.level===level)}
+function initBlocks(){
+ const items=levelBlocks(); blockSelect.innerHTML=items.map(b=>'<option value="'+b.id+'">'+b.title+'</option>').join(""); block=items[0]; blockSelect.value=block.id; nextQuestion();
+}
+function choosePhrase(){phrase=block.phrases[Math.floor(Math.random()*block.phrases.length)]}
+function nextQuestion(){
+ checked=false;selected="";built=[];feedback.className="feedback";feedback.innerHTML="";document.getElementById("checkBtn").disabled=false;document.getElementById("nextBtn").disabled=true;
+ actualMode=mode==="mixed"?["choice","write","build"][Math.floor(Math.random()*3)]:mode;
+ choosePhrase(); expected=phrase.ca; document.getElementById("prompt").textContent=phrase.uk;
+ const names={choice:"Обери фразу",write:"Напиши фразу",build:"Склади фразу"};
+ document.getElementById("modeChip").textContent=mode==="mixed"?"Змішана · "+names[actualMode]:names[actualMode];
+ if(actualMode==="choice")renderChoice(); else if(actualMode==="write")renderWrite(); else renderBuild();
+}
+function renderChoice(){
+ const pool=shuffle(BLOCKS.filter(b=>b.level===level).flatMap(b=>b.phrases).filter(p=>p.ca!==phrase.ca)).slice(0,3).map(p=>p.ca);
+ const opts=shuffle([phrase.ca,...pool]);
+ exercise.innerHTML='<div class="options">'+opts.map(o=>'<button class="option" data-value="'+esc(o)+'">'+esc(o)+'</button>').join("")+'</div>';
+ document.querySelectorAll(".option").forEach(b=>b.addEventListener("click",()=>{if(checked)return;selected=b.dataset.value;document.querySelectorAll(".option").forEach(x=>x.classList.remove("selected"));b.classList.add("selected")}));
+}
+function renderWrite(){exercise.innerHTML='<input id="answer" type="text" autocomplete="off" placeholder="Напиши каталонською">'}
+function renderBuild(){
+ const words=shuffle(phrase.ca.replace(/[.?!]/g,"").split(/\s+/));
+ exercise.innerHTML='<div class="target" id="target"></div><div class="word-bank">'+words.map((w,i)=>'<button class="word" data-i="'+i+'">'+esc(w)+'</button>').join("")+'</div><button class="btn ghost" id="clearBuild" type="button">Очистити</button>';
+ const target=document.getElementById("target");
+ function paint(){target.textContent=built.map(x=>x.word).join(" ")}
+ document.querySelectorAll(".word").forEach(b=>b.addEventListener("click",()=>{if(checked||b.disabled)return;built.push({word:b.textContent,el:b});b.disabled=true;paint()}));
+ document.getElementById("clearBuild").addEventListener("click",()=>{built.forEach(x=>x.el.disabled=false);built=[];paint()});
+}
+function answer(){if(actualMode==="choice")return selected;if(actualMode==="write")return document.getElementById("answer").value;return built.map(x=>x.word).join(" ")}
+function check(){
+ if(checked)return;checked=true;
+ const user=answer();const ok=normalize(user)===normalize(expected);
+ sessionTotal++;if(ok)sessionCorrect++;
+ records.push({timestamp:Date.now(),level,blockId:block.id,blockTitle:block.title,mode:actualMode,phraseCa:phrase.ca,phraseUk:phrase.uk,answer:user,correct:ok});
+ localStorage.setItem(RECORD_KEY,JSON.stringify(records.slice(-3000)));
+ document.getElementById("sessionCorrect").textContent=sessionCorrect;document.getElementById("sessionTotal").textContent=sessionTotal;
+ feedback.className="feedback show "+(ok?"ok":"bad");
+ feedback.innerHTML=ok?'<strong>Правильно.</strong><br>'+esc(expected):'<strong>Потрібно повторити.</strong><br>Правильно: <strong>'+esc(expected)+'</strong>';
+ document.getElementById("checkBtn").disabled=true;document.getElementById("nextBtn").disabled=false;
+ document.querySelectorAll("#exercise button,#exercise input").forEach(x=>x.disabled=true);
+}
+levelSelect.addEventListener("change",()=>{level=levelSelect.value;initBlocks()});
+blockSelect.addEventListener("change",()=>{block=BLOCKS.find(b=>b.id===blockSelect.value);nextQuestion()});
+document.querySelectorAll(".mode-btn").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll(".mode-btn").forEach(x=>x.classList.remove("active"));b.classList.add("active");mode=b.dataset.mode;nextQuestion()}));
+document.getElementById("checkBtn").addEventListener("click",check);
+document.getElementById("nextBtn").addEventListener("click",nextQuestion);
+initBlocks();
+</script>
+</body></html>
