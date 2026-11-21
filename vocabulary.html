@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Catalan · Вивчення слів</title>
+<link rel="stylesheet" href="assets/styles.css">
+<script src="assets/data.js"></script>
+</head>
+<body>
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">CA</span><span>Catalan</span></a>
+    <h1 class="header-title">Вивчення слів</h1>
+    <p class="header-sub">Працюй картками: спочатку пригадай значення, потім переверни картку та перевір себе.</p>
+    <nav class="topnav">
+      <a href="index.html">Головна</a><a class="active" href="vocabulary.html">Вивчення слів</a><a href="practice.html">Практика</a><a href="progress.html">Прогрес</a>
+    </nav>
+  </div>
+</header>
+
+<main class="page">
+  <section class="card toolbar">
+    <label>Рівень
+      <select id="levelSelect">
+        <option value="level1">Level 1</option><option value="level2">Level 2</option><option value="level3">Level 3</option><option value="level4">Level 4</option>
+      </select>
+    </label>
+    <label>Блок
+      <select id="blockSelect"></select>
+    </label>
+    <div>
+      <div class="muted" id="blockDescription"></div>
+    </div>
+  </section>
+
+  <section class="split" style="margin-top:16px">
+    <aside class="card sticky">
+      <h2 style="margin-top:0">Прогрес блоку</h2>
+      <div class="progress-line"><span id="blockBar"></span></div>
+      <p><strong id="learnedCount">0 / 5</strong> вивчено</p>
+      <p class="muted">Позначай фрази як вивчені. Ці позначки використовуються також на сторінці «Прогрес».</p>
+      <button class="btn secondary" id="shuffleBtn" type="button">Перемішати картки</button>
+    </aside>
+
+    <section>
+      <div class="flash-wrap">
+        <div class="flashcard" id="flashcard" tabindex="0" role="button" aria-label="Перевернути картку">
+          <div class="flash-face flash-front">
+            <div class="flash-lang">Català</div>
+            <div class="flash-main" id="frontText"></div>
+            <div class="flash-hint">Натисни, щоб побачити переклад</div>
+          </div>
+          <div class="flash-face flash-back">
+            <div class="flash-lang">Українська</div>
+            <div class="flash-main" id="backText"></div>
+            <div class="flash-hint" id="backCatalan"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flash-actions">
+        <button class="btn secondary" id="prevBtn" type="button">← Попередня</button>
+        <button class="btn" id="flipBtn" type="button">Перевернути</button>
+        <button class="btn secondary" id="nextBtn" type="button">Наступна →</button>
+      </div>
+      <div class="flash-actions">
+        <button class="btn ghost" id="notLearnedBtn" type="button">Ще вчу</button>
+        <button class="btn green" id="learnedBtn" type="button">✓ Вивчено</button>
+      </div>
+
+      <div class="card" style="margin-top:20px">
+        <div class="section-title">
+          <div><h2>Усі картки блоку</h2><p class="muted">Швидкий огляд без перевертання.</p></div>
+        </div>
+        <div style="overflow:auto">
+          <table class="list-table">
+            <thead><tr><th>Català</th><th>Українська</th><th>Статус</th></tr></thead>
+            <tbody id="wordTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </section>
+</main>
+
+<script>
+const BLOCKS=window.CATALAN_BLOCKS||[];
+const STORAGE_KEY="catVocabularyLearnedV3";
+let learned=new Set(JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]"));
+let level="level1", block=null, order=[], index=0;
+
+const levelSelect=document.getElementById("levelSelect");
+const blockSelect=document.getElementById("blockSelect");
+const flashcard=document.getElementById("flashcard");
+
+function key(b,p){return b.id+"::"+p.ca}
+function levelBlocks(){return BLOCKS.filter(b=>b.level===level)}
+function currentPhrase(){return block.phrases[order[index]]}
+function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify([...learned]))}
+function initBlocks(){
+  const items=levelBlocks();
+  blockSelect.innerHTML=items.map(b=>'<option value="'+b.id+'">'+b.title+'</option>').join("");
+  block=items[0];
+  blockSelect.value=block.id;
+  resetOrder();
+}
+function resetOrder(){
+  order=block.phrases.map((_,i)=>i); index=0; flashcard.classList.remove("flipped"); render();
+}
+function render(){
+  const p=currentPhrase();
+  document.getElementById("frontText").textContent=p.ca;
+  document.getElementById("backText").textContent=p.uk;
+  document.getElementById("backCatalan").textContent=p.ca;
+  document.getElementById("blockDescription").textContent=block.description;
+  const count=block.phrases.filter(p=>learned.has(key(block,p))).length;
+  document.getElementById("learnedCount").textContent=count+" / "+block.phrases.length;
+  document.getElementById("blockBar").style.width=(count/block.phrases.length*100)+"%";
+  document.getElementById("learnedBtn").textContent=learned.has(key(block,p))?"✓ Вивчено":"✓ Позначити як вивчене";
+  document.getElementById("wordTable").innerHTML=block.phrases.map(p=>{
+    const yes=learned.has(key(block,p));
+    return '<tr><td><strong>'+esc(p.ca)+'</strong></td><td>'+esc(p.uk)+'</td><td class="'+(yes?'status-learned':'muted')+'">'+(yes?'Вивчено':'Ще вчу')+'</td></tr>';
+  }).join("");
+}
+function esc(s){return String(s).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")}
+function flip(){flashcard.classList.toggle("flipped")}
+function move(delta){index=(index+delta+order.length)%order.length;flashcard.classList.remove("flipped");render()}
+levelSelect.addEventListener("change",()=>{level=levelSelect.value;initBlocks()});
+blockSelect.addEventListener("change",()=>{block=BLOCKS.find(b=>b.id===blockSelect.value);resetOrder()});
+flashcard.addEventListener("click",flip);
+flashcard.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();flip()}});
+document.getElementById("flipBtn").addEventListener("click",flip);
+document.getElementById("prevBtn").addEventListener("click",()=>move(-1));
+document.getElementById("nextBtn").addEventListener("click",()=>move(1));
+document.getElementById("shuffleBtn").addEventListener("click",()=>{order.sort(()=>Math.random()-.5);index=0;flashcard.classList.remove("flipped");render()});
+document.getElementById("learnedBtn").addEventListener("click",()=>{learned.add(key(block,currentPhrase()));save();render()});
+document.getElementById("notLearnedBtn").addEventListener("click",()=>{learned.delete(key(block,currentPhrase()));save();render()});
+initBlocks();
+</script>
+</body></html>
