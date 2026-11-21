@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Catalan · Прогрес</title>
+<link rel="stylesheet" href="assets/styles.css">
+<script src="assets/data.js"></script>
+</head>
+<body>
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">CA</span><span>Catalan</span></a>
+    <h1 class="header-title">Прогрес</h1>
+    <p class="header-sub">Зараз дані зберігаються локально в браузері. Пізніше цю сторінку можна підключити до центральної бази для історії з різних пристроїв.</p>
+    <nav class="topnav"><a href="index.html">Головна</a><a href="vocabulary.html">Вивчення слів</a><a href="practice.html">Практика</a><a class="active" href="progress.html">Прогрес</a></nav>
+  </div>
+</header>
+
+<main class="page">
+  <section class="stat-grid">
+    <div class="stat violet"><div class="value" id="learnedTotal">0</div><div>вивчено слів / фраз</div></div>
+    <div class="stat green"><div class="value" id="attempts">0</div><div>вправ виконано</div></div>
+    <div class="stat orange"><div class="value" id="accuracy">—</div><div>точність практики</div></div>
+    <div class="stat blue"><div class="value" id="completeBlocks">0</div><div>блоків вивчено повністю</div></div>
+  </section>
+
+  <section class="card" style="margin-top:18px">
+    <div class="section-title"><div><h2>Прогрес за блоками</h2><p class="muted">Основний показник — скільки фраз у кожному блоці позначено як вивчені.</p></div></div>
+    <label>Рівень
+      <select id="levelSelect" style="max-width:260px"><option value="level1">Level 1</option><option value="level2">Level 2</option><option value="level3">Level 3</option><option value="level4">Level 4</option></select>
+    </label>
+    <div class="block-progress" id="blocks"></div>
+  </section>
+
+  <section class="card" style="margin-top:18px">
+    <div class="section-title"><div><h2>Остання практика</h2><p class="muted">Останні 15 відповідей у новому спрощеному режимі.</p></div></div>
+    <div style="overflow:auto">
+      <table class="list-table"><thead><tr><th>Фраза</th><th>Переклад</th><th>Результат</th></tr></thead><tbody id="recent"></tbody></table>
+    </div>
+  </section>
+
+  <div class="notice" style="margin-top:18px"><strong>Наступний технічний крок:</strong> перенести ці результати з localStorage у центральну базу, щоб історія не залежала від конкретного браузера або iPad.</div>
+</main>
+
+<script>
+const BLOCKS=window.CATALAN_BLOCKS||[];
+const learned=new Set(JSON.parse(localStorage.getItem("catVocabularyLearnedV3")||"[]"));
+const records=JSON.parse(localStorage.getItem("catVocabularyPracticeV1")||"[]");
+const levelSelect=document.getElementById("levelSelect");
+function key(b,p){return b.id+"::"+p.ca}
+function esc(s){return String(s).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")}
+function render(){
+ const totalWords=BLOCKS.reduce((n,b)=>n+b.phrases.length,0);
+ document.getElementById("learnedTotal").textContent=learned.size+" / "+totalWords;
+ document.getElementById("attempts").textContent=records.length;
+ const good=records.filter(r=>r.correct).length;
+ document.getElementById("accuracy").textContent=records.length?Math.round(good/records.length*100)+"%":"—";
+ const complete=BLOCKS.filter(b=>b.phrases.every(p=>learned.has(key(b,p)))).length;
+ document.getElementById("completeBlocks").textContent=complete+" / "+BLOCKS.length;
+ const level=levelSelect.value;
+ document.getElementById("blocks").innerHTML=BLOCKS.filter(b=>b.level===level).map(b=>{
+   const n=b.phrases.filter(p=>learned.has(key(b,p))).length,pct=Math.round(n/b.phrases.length*100);
+   return '<div class="block-row"><div><strong>'+esc(b.title)+'</strong><div class="muted">'+n+' / '+b.phrases.length+' вивчено</div></div><div class="smallbar"><span style="width:'+pct+'%"></span></div><strong>'+pct+'%</strong></div>';
+ }).join("");
+ const last=[...records].slice(-15).reverse();
+ document.getElementById("recent").innerHTML=last.length?last.map(r=>'<tr><td><strong>'+esc(r.phraseCa)+'</strong></td><td>'+esc(r.phraseUk)+'</td><td class="'+(r.correct?'status-learned':'')+'">'+(r.correct?'Правильно':'Повторити')+'</td></tr>').join(""):'<tr><td colspan="3" class="muted">Нових результатів практики ще немає.</td></tr>';
+}
+levelSelect.addEventListener("change",render);render();
+</script>
+</body></html>
